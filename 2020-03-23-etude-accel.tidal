@@ -1,0 +1,44 @@
+d1 $ degrade $  sound "sid:4*16" # gain 0.8 # accelerate ((cF 0 "v5") |*| 4)
+
+-- Etude: Accel
+do
+  hush
+  let lvl = cF 1 "f1"
+      croom = cF 0 "f2"
+      csize = cF 0 "f3"
+      bus = room (cF 0 "room") # size (cF 0 "size")
+      spice x = rarely (# n x)
+      vk = s "vk" # n 3
+      vs = s "vs" # n 117
+      vh = s "vh" # n 2 # sus 0.08
+      vo = s "vh" # n 15 # sus 1
+  d2 $ degrade
+    $ fast 16
+    $ sometimes (# speed (-1))
+    $ sometimesBy 0.9 (# sus 0.015)
+    $ sound "808:0"
+    # accelerate (cF 0 "f4" |* (-4))
+    # cut 1
+    # gain 0
+    # bus
+  d3 $ fast ((cF 1 "v5") |* 8) $ sound "sid:4"
+  d1
+    $ (sound . fast 16 . randcat)
+    [ "{vk:3 hh:0}%1"
+    , "{vs:117}%1"
+    ]
+    # gain 0.6
+    # bus
+  -- d1
+  --   $ fast 4
+  --   $ rarely ((# n 0) . (# accelerate 1))
+  --   $ rarely ((# n 5) . (# accelerate 1))
+  --   $ sometimes ((# s "vk"). (# (n . choose) [3, 117]))
+  --   $ sound "808*4"
+  --   -- $ up (struct "asd")
+  --   # gain lvl
+  --   # room croom
+  --   # room csize
+
+
+d1 $ sound "bd"

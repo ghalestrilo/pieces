@@ -1,0 +1,34 @@
+-- Aggregates
+do
+  setcps 0.8
+  let bus = room croom # size csize # orbit 0
+  let master = 1
+  let fader vol = gain (vol * master)
+  let vibe =  s "supervibe" # fader 0.8 # lpf 500 |* sus "{4@6 10@7}%4" # bus
+  let piano =  s "superpiano" # fader 1 # lpf 250 # bus # sus 6
+  let root = (|+ 5)
+  let tonal scalename pat = (root . scale scalename) pat
+  -- # sound "reface" # sus 0.1 # octave 2 # gain 1.1
+
+  let reface x = n x # sound "reface" # midichan 0
+  -- xfadeIn "piano" 16
+    -- $ slow 4
+    -- $ tonal "minor" "{~@3 -3@3 0@8}%4"
+    -- $ tonal "minor" "{0@4 -3 -1 0 2}%4"
+    -- $ tonal "phrygian" "{ -3 -1 0 2 0@4 1 -2 <-4>@3 }%4"
+    -- $ (tonal "phrygian" . stack)
+    --   [ "{ -3 -1  0  2  0@4 1  -2 -4@3 4 2@3 }%4"
+    --   -- , "{ -4 -3 -2 -1  0@4 1@9 }%4" |- 7 |+ "[0,2,6]"
+    --   ]
+    -- # piano
+    -- # fader 0.8
+    -- # lpf 800
+    -- # bus
+  p "piano"
+    $ slow 4
+    -- $ (reface . tonal "phrygian") "{ -3 -1  0  2  0@4 1  -2 -4@3 4 2@3 }%4"
+    $ (reface . tonal "phrygian" . stack)
+      [ "{ -3 -1  0  2  0@4 1  -2 -4@3 4 2@3 }%4"
+      , "{ -4 -3 -2 -1  0@4 1@9 }%4" |- 7 |+ "[0,2,6]"
+      ]
+    # sus 6

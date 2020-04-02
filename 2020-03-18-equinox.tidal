@@ -1,0 +1,51 @@
+let croom = 0.3
+let csize = 0.3
+let tonal scalename pat = (root . scale scalename) pat
+let reface x = n x # sound "reface" # midichan 0 # gain 0.6
+
+let vks = [3, 4, 7, 2, 112]
+let vhs = [2, 15, 91]
+
+let vk = s "vk" # n 3
+let vs = s "vs" # n 117
+let vh = s "vh" # n 2 # sus 0.08
+let vo = s "vh" # n 15 # sus 1
+
+unsolo 2
+
+
+
+
+
+do
+  setcps (105/120)
+  hush
+  d1 $ slow 2 $ sound "vk(3,8)"
+    -- # gain 1 # sus 0.1 # n 2
+    # gain 1.4 # n 3
+  d2 $ slow 2 $ sound "~ vs"
+    # gain 0.8 # sus 1 # n 40 # n 69 # n 117
+  d3 $ slow 2
+    $ rarely (# vo)
+    $ density 2
+    $ note "0 0*2 0 0 0*2 0 0 0"
+    # vh
+  d4
+    $ degradeBy 0.1
+    $ sometimes (# s "industrial")
+    $ rarely (fast 2)
+    $ n ("0*8" |+ (irand 7) |+ "[130 24 79 80]/8") # s "vk" # gain 0.8 # sus 0.03
+  p "piano"
+    $ (reface . scale "phrygian") ("<0 1 ~ ~>" |+ "[0,2,6]")
+      # octave 4 # gain 1 # sus "<1.5 4>"
+      # gain 0
+  p "pianohi"
+    $ (reface . scale "phrygian") ("0 2 4 6" |+ "<0 1 <~ 8> ~>")
+      # octave 6 # gain 1 # sus "0.1@3 4"
+      # gain 0
+  p "pianohi"
+    $ degrade
+    $ sometimes (fast 2)
+    $ sometimesBy 0.6 (# sus 0.7)
+    $ (reface . scale "phrygian") ("0*8" |+ "[0,2,6]")
+    # gain 1 # sus 0.03

@@ -1,0 +1,136 @@
+let croom = 0.3
+let csize = 0.3
+
+-- Aggregates
+do
+  setcps 0.8
+  let bus = room croom # size csize # orbit 1
+  let master = 0.9
+  let fader vol = gain (vol * master)
+  let vibe =  s "supervibe" # fader 0.8 # lpf 500 |* sus "{4@6 10@7}%4" # bus
+  let piano =  s "superpiano" # fader 1 # lpf 250 # bus
+  let root = (|- 2)
+  let tonal scalename pat = (note . root . scale scalename) pat
+  p "mainvibe"
+    $ slow 3
+    $ (note . (|- 2) . scale "chromatic" . stack)
+      [ "{2 0 2 0 3 2 0@7}%4" |+ 5
+      , (0.01 <~ "{~ ~ -4 -5 -2 -4 -5@7}%4")
+      , (0.005 <~ "{~ ~ ~ ~ <1 ~> <0 ~> <-2 ~>@7}%4")
+      ]
+    # vibe
+    # n 4
+  -- xfadeIn "plucks" 64
+  p "plucks"
+    -- $ degrade
+    $ (note . (|- 31) . scale "minor") "~ <0 <4 -3>> 0 ~"
+    # s "superfm"
+    # lpf 600
+    # bus
+    # gain 1
+
+
+do
+  setcps 0.8
+  let bus = room croom # size csize # orbit 1
+  let bus2 = room croom # size csize # orbit 0
+  let master = 1
+  let fader vol = gain (vol * master)
+  let vibe =  s "supervibe" # fader 0.8 # lpf 500 |* sus "{4@6 10@7}%4" # bus
+  let piano =  s "superpiano" # fader 1 # lpf 250 # bus
+  let root = (|- 2)
+  let tonal scalename pat = (note . root . scale scalename) pat
+  p "plucks"
+    -- $ degrade
+    $ (note . (|- 31) . scale "minor") "~ <0 <4 -3>> 0 ~"
+    # s "superfm"
+    # lpf 600
+    # bus
+    # gain 1.1
+  -- clutchIn "glitchverb" 64
+  p "glitchverb"
+    -- $ sometimes ghost
+    -- $ sometimes ghost
+    $ degradeBy 0.6
+    $ n ("3*8" |- irand 9)
+    # s "glitch"
+    -- # (s . choose) ["glitch", "glitch2", "sid", "match", "lighter", "can"]
+    # pan (range (-1) 1 $ rand)
+    # cut 1
+    # up 12
+    -- # speed (-1)
+    # bus
+    # fader 0.7
+    # orbit 0
+
+
+do
+  setcps 0.8
+  let bus = room croom # size csize # orbit 1
+  let bus2 = room croom # size csize # orbit 0
+  let master = 0.8
+  let fader vol = gain (vol * master)
+  let vibe =  s "supervibe" # fader 0.8 # lpf 500 |* sus "{4@6 10@7}%4" # bus
+  let piano =  s "superpiano" # fader 1 # lpf 250 # bus
+  let root = (|- 2)
+  let tonal scalename pat = (note . root . scale scalename) pat
+  p "glitchverb"
+    $ sometimes ghost
+    $ rarely (# bus2)
+    $ degradeBy 0.3
+    $ n ("3*4" |- irand 9)
+    # (s . fast 4 . randcat) [ "glitch", "lighter" ]
+    # pan (range (-1) 1 $ rand)
+    # cut 1
+    # up 12
+    -- # speed (-1)
+    # bus
+    # fader 0.8
+    # orbit 0
+
+
+
+-- Aggregates
+do
+  setcps 0.8
+  let bus = room croom # size csize # orbit 0
+  let master = 1
+  let fader vol = gain (vol * master)
+  let vibe =  s "supervibe" # fader 0.8 # lpf 500 |* sus "{4@6 10@7}%4" # bus
+  let piano =  s "superpiano" # fader 1 # lpf 250 # bus # sus 6
+  let root = (|+ 5)
+  let tonal scalename pat = (note . root . scale scalename) pat
+  -- # sound "reface" # sus 0.1 # octave 2 # gain 1.1
+  let reface x = n x # sound "reface" # midichan 0
+  -- xfadeIn "piano" 16
+    -- $ slow 4
+    -- $ tonal "minor" "{~@3 -3@3 0@8}%4"
+    -- $ tonal "minor" "{0@4 -3 -1 0 2}%4"
+    -- $ tonal "phrygian" "{ -3 -1 0 2 0@4 1 -2 <-4>@3 }%4"
+    -- $ (tonal "phrygian" . stack)
+    --   [ "{ -3 -1  0  2  0@4 1  -2 -4@3 4 2@3 }%4"
+    --   -- , "{ -4 -3 -2 -1  0@4 1@9 }%4" |- 7 |+ "[0,2,6]"
+    --   ]
+    -- # piano
+    -- # fader 0.8
+    -- # lpf 800
+    -- # bus
+  p "piano"
+    $ reface "{ -3 -1  0  2  0@4 1  -2 -4@3 4 2@3 }%4"
+
+do
+  let reface x = n x # sound "reface" # midichan 0
+  p "piano" $ reface "0 0"
+
+xfadeIn "plucks" 16 $ silence
+
+xfadeIn "mainvibe" 32 $ silence
+
+xfadeIn "glitchverb" 32 $ silence
+
+p "plucks" $ silence
+
+
+d2 $ sound "bd" # orbit 1
+
+d1 $ sound "pluck"
