@@ -1,109 +1,100 @@
--- Triangles
-do
-  setcps 2
-    -- # sus (0.1 +| (slow 16 sine |* 1
-  d1
-    -- $ (randcat) ["bd hh bd", "bd hh gretsch:2"]
-    $ (n . fastcat)
-      [ randcat ["13", "13", "2"]
-      , "10"
-      , randcat ["13", "5", "11", "2", "6"]
-      ]
-    # pan (range (-1) 1 $ rand)
-    # s "gretsch"
-    -- # gain 0
-    # lpf 8000
-    # gain 1
-  d2 $ (n . root . scale "minor") "<2 4 6>@2 <0 2 3>"
-    # vibe
-    # sus 0.1
-  d3 $ (note . root . scale "minor") ("{0@5 1@4 0@8 1}%3" |- 4 |+ "[-3,0,2,6]")
-    # piano
-  d4 $ (note . root . scale "minor") ("{4 5 7 11@4 10@5 9 7 5 8 6 4@4}%3" |+ "[0]")
-      # piano
-      # sus 2
-      # lpf 800
-
+-- -- -- Triangles
+-- do
+--   setcps 2
+--   d1
+--     $ (n . fastcat)
+--       [ randcat ["13", "13", "2"]
+--       , "10"
+--       , randcat ["13", "5", "11", "2", "6"]
+--       ]
+--     # pan (range (-1) 1 $ rand)
+--     # s "gretsch"
+--     # bus
+--     # lpf 8000
+--     # fader 1
+--
+--   d2 $ (note . root . scale "minor") "<2 4 6>@2 <0 2 3>"
+--     # vibe
+--
+--   d3 $ (note . root . scale "minor") ("{0@5 1@4 0@8 1}%3" |- 4 |+ "[-3,0,2,6]")
+--     # piano
+--
+--   d4 $ (note . root . scale "minor") ("{4 5 7 11@4 10@5 9 7 5 8 6 4@4}%3" |+ "[0,2]")
+--       # piano
+--       # sus 2
+--       # lpf 800
 
 setcps 2
 
 let
-  bus = room 0.5 # size 0.5
+  bus = room (cF 0.1 "room") # size (cF 0.1 "size") # orbit 0
   fx n = cF 0 $ "f" ++ (show n) -- Maps ID to FX Fader
   vx n = cF 0 $ "v" ++ (show n) -- Maps ID to Volume Fader
   px n = cF 0 $ "p" ++ (show n) -- Maps ID to Pan Knob
-  master = 1
-  fader vol = gain (vol * master)
+  fader vol = gain (vol |* cF 0 "master")
   -- vibe =  s "reface" # midichan 0 # fader 0.8 # lpf 700 # sus 0.3
-  vibe = s "supervibe" # fader (vx 1) # lpf 500 # bus |* sus 2 # octave 6
-  -- vibe =  s "reface" # midichan 0 # fader 0.8 # lpf 700 # sus 0.3
-  piano =  s "superpiano" # fader 1 # lpf 250 # bus
+  vibe = s "supervibe" # fader (vx 1) # lpf 500 # bus # sus (fx 1 |* 2 ) # octave 5
+  piano =  s "superpiano" # fader (vx 2) # lpf (fx 3 |* 2000) # bus
+  gretsch x = n x # s "gretsch" # fader (vx 3) # bus
   root = (|- 2)
-
-d1 $ sound "hh*2"
-
-
-setcps 2
-let bus = room 0 # size 0
-let master = 1
-let fader vol = gain (vol * master)
-let vibe =  s "reface" # midichan 0 # fader 0.9 # lpf 700 # sus 0.1
-let piano =  s "superpiano" # fader 0.96 # lpf 270 # bus
-let root = (|- 2)
 
 -- Enter first loop
 d2 $ (n . root . scale "minor") "<2 4 6>@2 <0 2 3>"
   # vibe
-  # pan (0.25)
+  # pan (0.20)
 
 -- Enter Second voice
-clutchIn 3 8 $ (n . root . scale "minor" . slow 3) "~ 7@3 6@2 2@2 3"
+clutchIn 3 12
+-- d3
+  $ (n . root . scale "minor" . slow 3) "~ 7@3 6@2 2@2 3"
   # vibe
-  # pan 0.75
+  # pan 0.8
 
 -- Enter Drums
--- clutchIn 1 64
-d1
+clutchIn 1 64
+-- d1
   $ (n . fastcat)
     [ randcat ["13", "13", "2"]
     , "10"
     , randcat ["13", "5", "11", "2", "6"]
     ]
   # s "gretsch"
-  # bus
   # lpf 8000
-  # fader 0.95
+  # fader 1
+  # bus
 
 -- Enter piano
 d4
-  $ (note . root . scale "minor") ("{0@5 1@4 0@8 1}%3" |- 4 |+ "[-3,0,2,6]")
+  $ (note . root . scale "minor")
+    ("{0@5 1@4 0@8 1}%3" |- 4 |+ "[-3,0,2,6]")
   # piano
 
 -- Enter top phrase
 xfadeIn 5 64
+-- d5
   $ (note . root . scale "minor") "{4 5 7 11@4 10@5 9 7 5 8 6 4@4}%3"
   # piano
+  # gain (vx 4)
   # sus 2
-  # lpf 800
+  # lpf (fx 2 |* 3000)
 
 -- Enter thirds
 xfadeIn 5 32
-
-d5
-  $ (n . root . scale "minor") ("{4 5 7 11@4 10@5 9 7 5 8 6 4@4}%3" |+ "[0,2]")
-  -- # piano
-  # vibe
-  # gain 0.9
+-- d5
+  $ (n . root . scale "minor")
+    ("{4 5 7 11@4 10@5 9 7 5 8 6 4@4}%3" |+ "[0,2]")
+  # piano
+  # gain (vx 4)
   # sus 1
-  -- # lpf 800
+  # lpf (fx 2 |* 3000)
 
 -- Leave circles
 do
-  xfadeIn 2 8 $ silence
-  xfadeIn 3 8 $ silence
+  xfadeIn 2 16 $ silence
+  xfadeIn 3 16 $ silence
 
 -- Leave base piano
-xfadeIn 4 4
+xfadeIn 4 32
   $ silence
 
 -- Drum fades out

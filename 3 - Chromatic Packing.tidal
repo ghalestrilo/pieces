@@ -1,136 +1,155 @@
-
 -- Chromatic Packing
-do
-  setcps (105/120)
-  let bus = room 0.3 # size 0.3 # orbit 0
-  let master = 0.9
-  let root = (|- 2)
-  let fader vol = gain (vol * master)
-  let tonal scalename pat = (note . root . scale scalename) pat
-  p "perc" $ n ("0 0 ~ ~" |+ 5) # up (-5) # s "bd" # cut 1 # begin 0.02 # gain 1
-  xfadeIn "bongos" 16
-    $ sew "t f <t f> f. f f <f <f t>> f"
-      (n "0*8" # s "bo")
-      (n "1 7 <2 6> 1 7 7 6 7" # s "bc")
-    # cut 1 # fader 0.9
-    -- # bus
-    # lpf 4200
+setcps (105/120)
 
-do
-  setcps (105/120)
-  let bus = room 0 # size 0 # orbit 0
-  let master = 0.9
-  let fader vol = gain (vol * master)
-  let root = (|- 2)
-  let tonal scalename pat = (note . root . scale scalename) pat
-  p "bongos"
-    $ sew "t f <t f> f. f f <f <f t>> f"
-      (n "0*8" # s "bo")
-      (n "1 7 <2 6> 1 7 7 6 7" # s "bc")
-    # cut 1 # fader 0.9
-    # bus
-    # lpf 4200
-  p "shaker"
-    $ fast 2
-    $ s "hh*4"
-    # up "12 0 0 0"
-    # fader ("1.2 0.9 1.1 0.9" |* 0.9)
-    # speed (-2)
-    # end 0.07
-    # bus
+let
+  bus = room (cF 0.1 "room") # size (cF 0.1 "size") # orbit 0
+  fx n = cF 0 $ "f" ++ (show n) -- Maps ID to FX Fader
+  vx n = cF 0 $ "v" ++ (show n) -- Maps ID to Volume Fader
+  px n = cF 0 $ "p" ++ (show n) -- Maps ID to Pan Knob
+  fader vol = gain (vol |* cF 0 "master")
+  -- vibe =  s "reface" # midichan 0 # fader 0.8 # lpf 700 # sus 0.3
+  vibe = s "supervibe" # fader (vx 1) # lpf 500 # bus # sus (fx 1 |* 2 ) # octave 5
+  piano =  s "superpiano" # fader (vx 6) # lpf (fx 3 |* 2000) # bus
+  gretsch x = n x # s "gretsch" # fader (vx 3) # bus
+  root = (|- 2)
 
-  -- $ sew "t <f t> <f [f t] t>" (n "0 .. 15" # s "future") (s "cp:3*16" # speed saw + 1.2)
+--
+-- -- Chromatic Packing
+-- do
+--   setcps (105/120)
+--   let bus = room 0.3 # size 0.3 # orbit 0
+--   let master = 0.9
+--   let root = (|- 2)
+--   let fader vol = gain (vol * master)
+--   let tonal scalename pat = (note . root . scale scalename) pat
+  -- p "perc" $ n ("0 0 ~ ~" |+ 5) # up (-5) # s "bd" # cut 1 # begin 0.02 # gain 1
+  -- xfadeIn "bongos" 16
+  --   $ sew "t f <t f> f. f f <f <f t>> f"
+  --     (n "0*8" # s "bo")
+  --     (n "1 7 <2 6> 1 7 7 6 7" # s "bc")
+  --   # cut 1 # fader 0.9
+  --   -- # bus
+  --   # lpf 4200
 
-do
-  setcps (105/120)
-  let bus = room 0.6 # size 0.6 # orbit 0
-  let master = 0.9
-  let fader vol = gain (vol * master)
-  let root = (|- 2)
-  let tonal scalename pat = (note . root . scale scalename) pat
-  p "bass"
-    $ note "{~ 12@3 7@3 10@2 5@3 5 5@3 5@4 5 5@3 5@4 5 7 9 16}%4"
-    # n 0
-    # s "pluck"
-    # gain 0.85
-    |+ up (-11.3)
-    -- # bus
-  -- xfadeIn "hats" 16
-  p "hats"
-    $ n "~ ~ ~ <~ 0> . <[0 0 0 ~] [~ ~ ~ 0]>" # s "hh"
-    # gain ("2 <[1.6 2 1.6 ~] [2]>" |/ 2)
-    # pan "0 1"
-    -- # bus
+-- Enter Hats
+p "perc" $ n ("0 0 ~ ~" |+ 5)
+  # up (-5) # s "bd" # cut 1 # begin 0.02
+  # fader (vx 1 |* 1.1)
+  # bus
 
--- Chromatic Packing
-do
-  setcps (105/120)
-  let bus = room 0.6 # size 0.6 # orbit 0
-  let master = 0.9
-  let fader vol = gain (vol * master)
-  let vibe =  s "supergong" # fader 0.75 # lpf 1500 # sus 8 # bus
-  let piano =  s "superpiano" # fader 1 # lpf 1000
-  let root = (|- 2)
-  let jump x = (|+ up (12 * x))
-  let tonal scalename pat = (note . root . scale scalename) pat
-  xfadeIn "piano" 16
-    $ tonal "chromatic" ("{~ 12@3 7@3 10@2 5@23}%4" |- 24 |+ "[0,7,11,14]")
-    # n 1
-    |* sus ("{1.5@9 7@20 2.5@3}%4")
-    # piano
+-- Enter Bongos
+xfadeIn "bongos" 16
+-- p "bongos"
+  $ sew "t f <t f> f. f f <f <f t>> f"
+    (n "0*8" # s "bo")
+    (n "1 7 <2 6> 1 7 7 6 7" # s "bc")
+  # cut 1
+  # fader (vx 2)
+  # pan (0.3 |+ "0.7 0 0 0.7 0 0 0 0")
+  # bus
+  # lpf 4200
 
-do
-  setcps (105/120)
-  let bus = room 0.6 # size 0.6 # orbit 0
-  let master = 0.9
-  let fader vol = gain (vol * master)
-  let vibe =  s "supergong" # fader 0.75 # lpf 1500 # sus 8 # bus
-  let piano =  s "superpiano" # fader 1 # lpf 1000
-  let root = (|- 2)
-  let jump x = (|+ up (12 * x))
-  let tonal scalename pat = (note . root . scale scalename) pat
-  p "piano"
-    $ (tonal "chromatic" . stack)
-      [ "{4 11 9 11 6 4 2 9@2 7@20 -1 0 2}%4"
-      , "{~ 12@3 7@3 10@2 5@23}%4" |- 24 |+ "[0,7,11]"
-      ]
-    # n 1
-    |* sus ("{1.5@9 7@20 2.5@3}%4")
-    # piano
-  clutchIn "hats" 16
-    $ n "~ ~ ~ <~ 0> . <[0 0 0 ~] [~ ~ ~ 0]>" # s "hh"
-    # gain ("2 <[1.6 2 1.6 ~] [2]>" |/ 2)
-    # up 5
+-- Enter Shaker
+xfadeIn "shaker" 4
+-- p "shaker"
+  $ fast 2
+  $ s "hh*4"
+  # up "12 0 0 0"
+  # fader ("1.2 0.9 1.1 0.9" |* vx 3)
+  # speed (-2)
+  # end 0.07
+  # pan 0.7
+  # bus
 
 
--- d1 $ sound "bd"
+-- Enter Hats
+clutchIn "hats" 8
+-- p "hats"
+  $ n "~ ~ ~ <~ 0> . <[0 0 0 ~] [~ ~ ~ 0]> " # s "hh"
+  # fader (("2 <[1.6 2 1.6 ~] [2]>" |/ 2) |* vx 5)
+  # pan "0 1"
+  # bus
+
+-- Enter Bass
+p "bass"
+  $ note "{~ 12@3 7@3 10@2 5@3 5 5@3 5@4 5 5@3 5@4 5 7 9 16}%4"
+  # n 0
+  # s "pluck"
+  # fader (vx 8 |* 1.1)
+  |+ up (-11.3)
+  # bus
+
+-- Enter Piano Chords
+xfadeIn "piano" 16
+-- p "piano"
+  $ tonal "chromatic" ("{~ 12@3 7@3 10@2 5@23}%4" |- 24 |+ "[0,7,11,14]")
+  # n 1
+  |* sus ("{1.5@9 7@20 2.5@3}%4")
+  # piano
 
 
-do
-  setcps (105/120)
-  let bus = room 0.6 # size 0.6 # orbit 0
-  let master = 0.9
-  let fader vol = gain (vol * master)
-  let vibe =  s "supergong" # fader 0.75 # lpf 1500 # sus 8 # bus
-  let piano =  s "superpiano" # fader 1 # lpf 1000
-  let root = (|- 2)
-  let jump x = (|+ up (12 * x))
-  let tonal scalename pat = (note . root . scale scalename) pat
-  p "pianoleads"
-    $ degradeBy 0.8
-    $ tonal "major" ("{ ~ ~@3 ~@3 ~@2 ~ [0*22]@22 }%4" |+ (irand 12) |+ "[0,3]")
-    # n 1
-    |* sus 4
-    # piano
-    # fader 0.6
-    # lpf 800
+--Enter Piano Melody
+p "piano"
+  $ (tonal "chromatic" . stack)
+    [ "{4 11 9 11 6 4 2 9@2 7@20 -1 0 2}%4"
+    , "{~ 12@3 7@3 10@2 5@23}%4" |- 24 |+ "[0,7,11]"
+    ]
+  # n 1
+  # piano
+  |* sus ("{1.5@9 7@20 2.5@3}%4")
+  # bus
+
+-- --
+-- clutchIn "hats" 16
+--   $ n "~ ~ ~ <~ 0> . <[0 0 0 ~] [~ ~ ~ 0]>" # s "hh"
+--   # gain ("2 <[1.6 2 1.6 ~] [2]>" |/ 2)
+--   # up 5
+--   # bus
+
+-- Piano Leads Enter
+clutchIn "pianoleads" 8
+-- p "pianoleads"
+  $ degradeBy 0.81
+  $ tonal "major" ("{ ~ ~@3 ~@3 ~@2 ~ [0*22]@22 }%4"
+                    |- 5
+                    |+ (irand 12)
+                    |+ "[0,3]")
+  # n 1
+  |* sus 4
+  # piano
+  # fader (vx 7)
+  # lpf 800
+  # bus
 
 
+-- Leave Hats
 xfadeIn "hats" 16 $ silence
 
+-- Leave Shaker
 xfadeIn "shaker" 16 $ silence
 
-p "bongos" $ silence
+xfadeIn "pianoleads" 16 $ silence
+
+-- Leave Percussion
+-- End Song
+hush
+-- p "bongos" $ silence
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 -- Chromatic Packing
