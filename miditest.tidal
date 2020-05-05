@@ -1,2 +1,0 @@
-
-p "midi" $ note "0" # s "reface" # gain 0.5

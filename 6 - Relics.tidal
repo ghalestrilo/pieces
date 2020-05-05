@@ -125,3 +125,21 @@ xfadeIn "piano" 16 $ silence
 xfadeIn "drums" 16 $ silence
 
 p "drone" $ silence
+
+d1 $ s "bd"
+
+
+{-| TODO: Test if this in fact implements the behavior
+  This means, I can tag a pattern and later manipulate what I tagged
+ -}
+let tag = pI "tag"
+    ntag = grp [mF "note", mI "tag"]
+    phrase = "{16 14 11 0 ~     16 14 11 4 6 7 6 7 9 7 9 11:1 ~   16:1 14 11:1 6:2 ~ }%8"
+    on tagname lambda = fix lambda (tag tagname)
+in d1
+  $ (on 1 . every 2) (|- up 1)
+  $ (on 2 . every 2) (|+ up 3)
+  $ ntag phrase
+  # sound "superpiano"
+  # velocity 0.45
+  # octave 4

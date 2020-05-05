@@ -112,7 +112,7 @@ clutchIn "pianoleads" 8
   $ degradeBy 0.81
   $ tonal "major" ("{ ~ ~@3 ~@3 ~@2 ~ [0*22]@22 }%4"
                     |- 5
-                    |+ (irand 12)
+                    |+ (irand 17)
                     |+ "[0,3]")
   # n 1
   |* sus 4

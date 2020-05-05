@@ -34,8 +34,8 @@ let
   fader vol = gain (vol |* cF 0 "master")
   -- vibe =  s "reface" # midichan 0 # fader 0.8 # lpf 700 # sus 0.3
   vibe = s "supervibe" # fader (vx 1) # lpf 500 # bus # sus (fx 1 |* 2 ) # octave 5
-  piano =  s "superpiano" # fader (vx 2) # lpf (fx 3 |* 2000) # bus
-  gretsch x = n x # s "gretsch" # fader (vx 3) # bus
+  piano =  s "superpiano" # fader (vx ) # lpf (fx 3 |* 2000) # bus
+  gretsch x = n x # s "gretsch" # fader (vx 8) # bus
   root = (|- 2)
 
 -- Enter first loop
@@ -51,16 +51,15 @@ clutchIn 3 12
   # pan 0.8
 
 -- Enter Drums
-clutchIn 1 64
--- d1
-  $ (n . fastcat)
+-- clutchIn 1 64
+d1
+  $ (gretsch . fastcat)
     [ randcat ["13", "13", "2"]
     , "10"
     , randcat ["13", "5", "11", "2", "6"]
     ]
-  # s "gretsch"
+  -- # s ""
   # lpf 8000
-  # fader 1
   # bus
 
 -- Enter piano
@@ -68,25 +67,30 @@ d4
   $ (note . root . scale "minor")
     ("{0@5 1@4 0@8 1}%3" |- 4 |+ "[-3,0,2,6]")
   # piano
+  # resonance 0.1
 
 -- Enter top phrase
-xfadeIn 5 64
--- d5
+-- xfadeIn 5 64
+d5
   $ (note . root . scale "minor") "{4 5 7 11@4 10@5 9 7 5 8 6 4@4}%3"
   # piano
+  # pan 0.75
   # gain (vx 4)
   # sus 2
   # lpf (fx 2 |* 3000)
+  # resonance (fx 8)
 
 -- Enter thirds
-xfadeIn 5 32
--- d5
+xfadeIn 6 32
+-- d6
   $ (n . root . scale "minor")
-    ("{4 5 7 11@4 10@5 9 7 5 8 6 4@4}%3" |+ "[0,2]")
+    ("{4 5 7 11@4 10@5 9 7 5 8 6 4@4}%3" |+ "2")
   # piano
+  # pan 0.25
   # gain (vx 4)
   # sus 1
   # lpf (fx 2 |* 3000)
+  # resonance (fx 8)
 
 -- Leave circles
 do
@@ -101,4 +105,6 @@ xfadeIn 4 32
 clutchIn 1 32 $ silence
 
 -- End of Song
-d5 $ silence
+do
+  d5 $ silence
+  d6 $ silence
