@@ -24,6 +24,8 @@ p "vibes" $ stack
     -- , vibe ("{ 0 -2 2 0 4 2 }%4" |+ 6) # pan 0.5
     ]
 
+all $ (# gain 1)
+
 xfadeIn "vibes" 4 $ stack
     [ vibe "{3 0 1 2@2}%4" # pan 0
     -- , vibe ("{ 0 1 2 -2 -4 -7 }%4" |- 1) # pan 1

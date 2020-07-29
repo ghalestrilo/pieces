@@ -34,7 +34,7 @@ let
 -- Enter Hats
 p "perc" $ n ("0 0 ~ ~" |+ 5)
   # up (-5) # s "bd" # cut 1 # begin 0.02
-  # fader (vx 1 |* 1.1)
+  -- # fader (vx 1 |* 1.1)
   # bus
 
 -- Enter Bongos
@@ -44,7 +44,7 @@ xfadeIn "bongos" 16
     (n "0*8" # s "bo")
     (n "1 7 <2 6> 1 7 7 6 7" # s "bc")
   # cut 1
-  # fader (vx 2)
+  -- # fader (vx 2)
   # pan (0.3 |+ "0.7 0 0 0.7 0 0 0 0")
   # bus
   # lpf 4200
@@ -75,7 +75,7 @@ p "bass"
   $ note "{~ 12@3 7@3 10@2 5@3 5 5@3 5@4 5 5@3 5@4 5 7 9 16}%4"
   # n 0
   # s "pluck"
-  # fader (vx 8 |* 1.1)
+  -- # fader (vx 8 |* 1.1)
   |+ up (-11.3)
   # bus
 
@@ -117,7 +117,7 @@ clutchIn "pianoleads" 8
   # n 1
   |* sus 4
   # piano
-  # fader (vx 7)
+  -- # fader (vx 7)
   # lpf 800
   # bus
 
@@ -136,7 +136,7 @@ hush
 -- p "bongos" $ silence
 
 
-
+all $ (# bus)
 
 
 
@@ -176,6 +176,7 @@ do
     # n 1
     |* sus ("{1.5@9 7@20 2.5@3}%4")
     # piano
+    # bus
   p "vibes"
     $ degradeBy 0.3
     $ sometimes ghost
@@ -185,5 +186,49 @@ do
     # vibe
     |* gain "{0@9 1@20 ~@3}%4"
     # gain 0
+    # bus
   -- p "fx" $ n ("0*4" |+ irand 8) # s "8g" # cut 1 # fader 0.9
-  p "bongos" $ n ("0*4" |+ irand 120) # s "bc" # cut 1 # fader 0.9
+  p "bongos" $ n ("0*4" |+ irand 120) # s "bc" # cut 1
+    -- # fader 0.9
+    # bus
+
+d1 $ s "bd"
+
+
+-- Song Reimplementation
+
+let fromparts sectionname parts = (sectionname, section { parts = parts })
+    chromatic = song
+      { key = ("0", "major")
+      , voices = []
+      , sections = Map.fromList $ l (fromparts "1" ["~"])
+      }
+
+let chromatic = Song
+      ("0", "major")
+      -- Sections
+      (Map.fromList $ l
+        (fromparts "intro" $ l
+          "5 5 ~ ~"
+          "0*8"
+          "0*8"))
+      -- Voices
+      [ s "bd" # cut 1 # begin 0.02 # bus  -- 1: Kick
+      , sew "t f <t f> f. f f <f <f t>> f"
+          (n "0*8" # s "bo")
+          (n "1 7 <2 6> 1 7 7 6 7" # s "bc")
+        # cut 1
+        -- # fader (vx 2)
+        # pan (0.3 |+ "0.7 0 0 0.7 0 0 0 0")
+        # bus
+        # lpf 4200
+      , fast 2 $ s "hh" # up "12 0 0 0" # gain "1.2 0.9 1.1 0.9" # speed (-2) # end 0.07 # pan 0.7 # bus
+      ]
+in d1 $ ps chromatic "intro"
+
+
+-- Enter Shaker
+p "shaker"
+-- p "shaker"
+  $ fast 2
+  $ s "hh" # up "12 0 0 0" # gain "1.2 0.9 1.1 0.9" # speed (-2) # end 0.07 # pan 0.7 # bus
