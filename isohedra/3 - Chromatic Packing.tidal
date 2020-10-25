@@ -13,7 +13,6 @@ let
   gretsch x = n x # s "gretsch" # fader (vx 3) # bus
   root = (|- 2)
 
---
 -- -- Chromatic Packing
 -- do
 --   setcps (105/120)
@@ -31,11 +30,16 @@ let
   --   -- # bus
   --   # lpf 4200
 
+all $ (# bus)
+
 -- Enter Hats
 p "perc" $ n ("0 0 ~ ~" |+ 5)
   # up (-5) # s "bd" # cut 1 # begin 0.02
   -- # fader (vx 1 |* 1.1)
+  # gain 2
   # bus
+
+list
 
 -- Enter Bongos
 xfadeIn "bongos" 16
@@ -70,6 +74,8 @@ clutchIn "hats" 8
   # pan "0 1"
   # bus
 
+p "bass" $ silence
+
 -- Enter Bass
 p "bass"
   $ note "{~ 12@3 7@3 10@2 5@3 5 5@3 5@4 5 5@3 5@4 5 7 9 16}%4"
@@ -88,15 +94,21 @@ xfadeIn "piano" 16
   # piano
 
 
+let tonal scalename
+
+let tonal scalename root = (|+ root) . scale scalename
+
+
 --Enter Piano Melody
 p "piano"
-  $ (tonal "chromatic" . stack)
+  $ (n . tonal "chromatic" (-2) . stack)
     [ "{4 11 9 11 6 4 2 9@2 7@20 -1 0 2}%4"
     , "{~ 12@3 7@3 10@2 5@23}%4" |- 24 |+ "[0,7,11]"
     ]
-  # n 1
-  # piano
-  |* sus ("{1.5@9 7@20 2.5@3}%4")
+  -- # n 1
+  # s "onyx"
+  # velocity 0.1
+  |* sus ("{1.5@9 9@20 2.5@3}%4")
   # bus
 
 -- --
@@ -194,6 +206,8 @@ do
 
 d1 $ s "bd"
 
+p "piano" silence
+
 
 -- Song Reimplementation
 
@@ -231,4 +245,107 @@ in d1 $ ps chromatic "intro"
 p "shaker"
 -- p "shaker"
   $ fast 2
-  $ s "hh" # up "12 0 0 0" # gain "1.2 0.9 1.1 0.9" # speed (-2) # end 0.07 # pan 0.7 # bus
+  $ s "hh*4" # up "12 0 0 0" # gain "1.2 0.9 1.1 0.9" # speed (-2) # end 0.07 # pan 0.7 # bus
+
+
+setcps 1.3
+
+d1
+  $ n "0"
+  # octave 2
+  # s "smidi"
+
+bus = bus' 0.6 0.6
+
+d2
+  $ slow 4
+  $ n "1 3 3 1 . 2 1 4 5 . 1 4 10 1 . 2 1 1 1"
+  -- $ n "1 3 3 3"
+  # s "amencutup"
+  # speed 0.7
+  # bus
+  # cut 1
+  # lpf 3000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+data Section = Section
+  { timesig :: Pattern Time
+  -- , parts   :: [Pattern Int]
+  , parts   :: [Pattern Double]
+  } deriving (Show)
+section = Section 1 []
+data Song = Song
+  { key      :: (Pattern Integer, Pattern String)
+  , sections :: Map.Map String Section
+  , voices   :: [Pattern ControlMap]
+  } deriving (Show)
+song = Song (0, "chromatic") (Map.fromList []) []
+
+
+onkey' b r s pat = ((|+ r) . scale s . (|+ b)) pat
+
+onkey :: Pattern Int -> Pattern Double
+onkey key'@(r,s) pat = (onkey' 0 r s) pat
+
+-- Checkpoint 2: Can stretch sections
+let pR name = fmap (Map.singleton name . VR)
+    sig = pR "sig"
+    onsig pat = slow n pat where n = maybe 1 rvalue <$> Map.lookup "sig" <$> pat
+    -- Section helpers
+    fromparts name parts' = (name, section { parts = parts' })
+    -- Song helpers
+    listsections = Map.keys . sections
+    -- Main Playback Methods
+    -- playSectionWith sng sct players = ((|/ cps sig) $ stack $ zipWith (#) (n <$> tracks) players)
+    playSectionWith sng sct players = (stack $ zipWith (#) (n <$> tracks) players) # sig signature
+    -- playSectionWith sng sct players = (stack $ zipWith (#) (n <$> tracks) players) # sig signature
+        where section' = (Map.findWithDefault section sct . sections) sng
+              signature = timesig section'
+              -- key' = key sng
+              -- tracks = map (onkey key') $ parts section'
+              tracks = parts section'
+    playSection sng sct = playSectionWith sng sct (voices sng)
+    psw = playSectionWith
+    ps = playSection
+
+-- operators (Song ++ Section)
+
+let chromaticpacking = song
+          { voices = [s "smidi"]
+          , sections = Map.fromList
+            [ ("1", section
+                { parts = [ stack [ "{4 11 9 11 6 4 2 9@2 7@20 -1 0 2}%4"
+                          , "{~ 12@3 7@3 10@2 5@23}%4" |- 24 |+ "[0,7,11]"
+                          ]]
+                }
+              )
+            ]
+          }
+in d1 $ ps chromaticpacking "1" # cps (105/120) # gain 0.6

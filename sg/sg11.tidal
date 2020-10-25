@@ -1,0 +1,20 @@
+let bus = bus' 0.35 0.35
+
+do
+  setkey "0" "harris"
+  d1
+    $ (t . (|+ "[0,4,6,10]")) "0"
+    # s "superpiano"
+    # lpf 1200
+    # octave 4
+    # bus
+
+p "chords" ## [s "superpiano", lpf "[1100,300]", hpf 0, bus, gain 1.45, octave 4, velocity 0.5]
+  $ (t . (|+ "[-4,0,4,6,10]"))
+    "{0@5 2 ~@2 4 ~@2 6@18}%4"
+
+p "drums" $ stack
+  [ s "gretsch:5*4" # gain (0.1 *| run 4 -| 1)
+  , slow 2 $ n "0 0 [~ 0] ~" # s "bbd"
+  ]
+  # bus

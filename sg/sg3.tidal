@@ -1,0 +1,90 @@
+let tonal root mode = n . (|+ root) . scale mode
+
+let bus = bus' 0.6 0.6
+
+setcps 0.85
+
+let bes = s "gtr" # octave 4 # sus 0.3 # rel 0.2 # bus
+    mel = s "supervibe" # lpf 1200 # resonance 0.1 # sus 0.8 # bus
+    harm = s "superhammond" # lpf 1000 # resonance 0.2 # bus
+
+setkey ("{0 2 0 [0@2 2 1] 0 2 3}%1" |- 8) "dorian"
+
+do
+  hush
+
+  p "drums"
+    $ slow 2
+    $ (n . stack)
+      [ "5*4"
+      , "[~|[~ 21]] 2"
+      , slow 2 $ (|* 13) $ "1@3 1@3 1 1 . [~ [1 1]]!2"
+      ]
+    # s "gretsch"
+    # bus
+    # gain 1.1
+    # distort "[0,0.1]"
+    # lpf 3000
+    # resonance 0.04
+    # orbit 0
+
+  p "chords"
+    $ slow 2
+    $ ((t . (|+ stack
+        [ "[0, 4, 8]" |- 7
+        , "[2, 4, 6]"
+        ]) . cat)
+          [ "0", "~ 0"
+          , "0@5 0@0.5 ~@2.5 ", "~ ~ 0 0"
+          , "0", "~ 0"
+          , "0"
+          ])
+    -- $ n
+    -- # mel
+    # harm
+    # gain ("{0@2 [0@5 0.12@3] 0@4}%1" |+ 0.9)
+    # orbit 1
+
+  p "bass"
+    $ (|+ up 4)
+    $ (tonal 0 "dorian" . slow 2) "[0|0|7] . 0@3 4?"
+    -- $ (t . slow 2) "[0|0|7] . 0@3 4?"
+    -- $ note
+    # bes
+    # n 0
+    # octave 3
+    # sus 4 # rel 0.8
+    # gain 1.19
+    # orbit 2
+
+
+  p "melody"
+    $ slow 2
+    $ (note . (|+ 4) . cat)
+      [ "2 0 2 [7 5]", "2 0 [-2 0] [2 -5]"
+      , "~", "~"
+      , "2 0 2 [7 5]", "2 0 -2 0"
+      , "1 3 8 10"
+      ]
+    # gain 1.06
+    # mel
+    # sus 1.25
+    # orbit 3
+
+do
+  p "perc"
+    $ slow 2
+    $ s "~@3 can . ~@2 can!2"
+    # n "0 3"
+    # pan "0.25 0.75"
+    # bus
+    # gain 0.8
+  p "shaker"
+    $ n "0*4"
+    # s "shaker" # gain ("1.1 0.8 0.9 0.8" |* 0.6)
+    # speed 0.9
+    # bus
+
+xfadeIn "melody" 8 silence
+
+xfadeIn "bass" 16 silence

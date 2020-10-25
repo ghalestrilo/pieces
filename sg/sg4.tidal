@@ -1,0 +1,84 @@
+d1
+  $ (# bus)
+  $ r "funk"
+  $ l "bbd" "bs:0"
+
+
+
+setbpm 164
+
+let bus = bus' 0.3 0.3
+
+let synth = s "superhammond" # lpf 1000 # resonance 0.2 # bus
+
+do
+  hush
+  let base = ("<0 -2 -4 1>/2" |+ "<0 5>") :: Pattern Int
+      root = ("<0 -2 -4 1>/2" |+ "<0 5>") :: Pattern Double
+      mode = "major"
+      deg = choose [-4..4]
+      tonal rr mm = note . (|+ rr) . scale mm . (|- base)
+  p "drums"
+    $ stack
+      [ fast 2 $ s "bbd:1 bhh:5" # pan "0.4 0.6"
+      , n ("0*8" |+ irand 9 |+ 5) # s "bs"
+      , degradeBy 0.85 $ n ("0*8" |+ irand 4) # s "[btm|btl|bth|br]"
+        # pan 0.3
+      ]
+    # lpf 16000
+    # bus
+    # orbit 0
+
+  p "bass"
+    $ tonal (root |+ 2.65) mode ("0*4" |+ irand 9)
+    # s "pluck"
+    # cut 1
+    # gain 1.15
+    # octave "[5|4]/4"
+    # bus
+    # orbit 1
+
+  p "synth"
+    $ (0.013 <~)
+    -- $ almostNever (fast 4 . (# sus 0.02) . (# octave 6))
+    $ rarely (fast 2 . (# sus 0.08))
+    $ sometimes ((|* sus 2) . (|* rel 2))
+    $ tonal root mode ("0*4"
+      |+ deg
+      |+ "[[-3,0,2,5,8]|[0,4,6,8,10]|[0,3,6,9,12]|[0,2,6,9,11]]")
+    # synth
+        # rel 0.2
+    # bus
+    # orbit 2
+    # octave 5
+
+
+do
+  let a = makerhythmpair
+
+let base = ("<0 -2 -4 1>/2" |+ "<0 5>") :: Pattern Int
+    root = ("<0 -2 -4 1>/2" |+ "<0 5>") :: Pattern Double
+    mode = "major"
+    deg = choose [-4..4]
+    tonal rr mm = note . (|+ rr) . scale mm . (|- base)
+
+
+
+p "solo"
+  -- $ (0.013 <~)
+  $ someCyclesBy 0.4 (slow 2)
+  $ tonal root mode ("0*32" |+ deg |+ ("0" |+ irand 4))
+  # synth
+  # octave 6
+  # gain 1.1
+  # rel 0.09
+  # lpf 20000
+  # sus 0.03
+  # pan sine
+  # bus
+  # orbit 3
+
+
+clutchIn "drums" 16 silence
+
+xfadeIn "synth" 16 silence

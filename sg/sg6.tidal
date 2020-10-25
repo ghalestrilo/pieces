@@ -1,0 +1,111 @@
+
+d1 $ s "bd"
+
+setcps 0.52
+
+p "ghost"
+  $ fast 2
+    $ note "<0 7 4 6>"
+    # s "superfm"
+    # lfma [0]
+    # voice 0
+    # sus 8
+    # rel 5
+    # bus
+    # lpf 2000
+    # distort 0.02
+    # orbit 1
+
+solo "beat"
+
+p "beat"
+  $ swingBy 0.06 4
+  $ stack
+    [
+    fast 4 $ rarely (fast 1.5 . swingBy 0 4) $ almostNever (# s "to") $ n "0*2" # s "th" # gain "1 0.8" # lpf 2000,
+    slow 2 $ n "0 0 . ~@3 0 . ~@3 0 . ~@2 0 0" # gain "<1.3 0>" # s "tk" # n "[0,3]",
+      slow 2
+      $ sometimes (# rel 4)
+      $ degradeBy 0.05
+      -- $ n (rarely (fast 10) $ rarely (fast 5) $ sometimes (fast 3) "0*16")
+      $ n "0*16"
+      # s "tp" # n (irand 12) # pan (range 0 1 $ rand) # gain "<0 1>/2"
+      -- # crush "[3,4]" # distort 0.5 # gain 1.1 # hpf 200
+      -- # rel  0.0001
+      -- # sus  0.005
+    , s "~ [ts:0,ts:1]" # hpf 300 # resonance 0.2 # gain 1.13 # distort 0.2
+    -- , s "~ [ts:0,ts:1]" # hpf 300 # resonance 0.2 # gain 1.13 # distort 0
+    ]
+  # bus
+
+p "chords"
+  $ slow 2
+  $ note "<[0,4,6,10] [-2,3,7,9]>"
+  # s "superhammond"
+    # octave "[5,4]"
+  # gain 0.9
+  # orbit 3
+  # lpf 2000
+  # hpf 400
+  # bus
+
+p "chords"
+  $ swingBy 0.06 4
+  $ slow 2
+  $ (note . randcat)
+    [ "0@3 0 ~@3 0 . ~@3 0 ~ 1@3" |+ "'aug" |+ 4,
+      "0@3 0 ~@3 0 . ~@3 0 ~ 1@3" |+ "[0 -2, 4, 8 6]"
+    ]
+  # s "superhammond"
+  # hpf 800 # resonance 0.4
+  # gain "<0 0.9>"
+  # distort 0.1
+
+xfadeIn "chords" 32 $ silence
+
+xfadeIn "mel" 32 $ silence
+
+do
+  p "mel"
+    $ swingBy 0.1 4
+    -- $ slow 2
+    $ (note . cat)
+      [ "12 ~ 12 ~ 12 10 12 10"
+      , "[~ 6 10 13 ~ 4 8 12]"
+      , "<[~ . ~ 13 12 10] ~>"
+      , "<[9 7 6 4 3 1 0 ~] ~>"
+      ]
+    # bus
+    # speed "<-1 1>/2"
+    # gain 0.75 # s "tm"
+    # n "<2 4>/2" # octave "<4 3>/2"
+    # lpf 4000
+    # pan (range (-0.4) 0.4 $ sine)
+    # resonance 0.2
+    -- # distort 0.8
+    # crush "[3,4,12]"
+    # orbit 3
+
+p "bass"
+  $ swingBy 0.06 4
+  $ (note . cat)
+    [ "-12 -12 . ~@3 -9"
+    , "~@3 -4 . 1 -2 -6 0"
+    , "0?*8" |+ scale "whole" (irand 8)
+    , "0?*8" |+ scale "diminished" (fast "[1|-1]/2" (irand 8))
+    ]
+  # s "pluck"
+  |+ up 2.7
+  # bus
+  # gain 1.3
+  # lpf 1200
+  # distort 0.1
+  # orbit 2
+
+d2 $ fast 4 $ n "0*2" # s "th" # gain "1 0.8"
+    # orbit 0 # bus
+
+d2
+    $
+
+xfadeIn "bass" 32 $ silence

@@ -1,0 +1,117 @@
+setcps (2*106/120)
+
+d1 $ vk # bus # gain 0.9
+
+let bus = bus' 0.35 0.35
+
+p "drums"
+  $ stack
+    [ sometimes ((# n "[19|18]") . (# pan 0.7)) $ n "[11|5|5] 4" # s "gretsch" # gain "0.85 0.7" # pan 0.3
+    , s "bhh:2*2" # gain "0.7 0.5"
+    , rarely (shuffle 2)
+      $ someCyclesBy 0.2 (const $ fast (choose [3,4]) $ s "[btl|btm|bth|br|bsn|bth]" # n (irand 8) # gain (range 0.5 0.8 rand) # pan 0.3)
+      $ sometimesBy 0.6 ((# n "[10|14]") . (# gain 1))
+      $ (n . cat)
+      [ "~ 5 ~ ~" , "~ 5 ~ ~" , "~ 5 ~ ~" , "5@2 ~? ~?" ]
+      # s "bs"
+    , rarely (shuffle 2) $ (s . cat) [ "bbd ~ ~ bbd"
+      , "~ ~ ~ bbd"
+      , "~ ~ bbd ~"
+      , "~@2 bbd? bbd?"
+      ] # n "0" # gain (range 1 1.2 rand)
+    ]
+  # bus
+  |* gain 1.15
+
+p "perc"
+  $ stack
+    [ n "0*4" # s "shaker" # (gain . (0.25 <~) . (|/ 2) . (|+ 1)) saw
+    , (n . cat) ["~ 2", "2 3", "3 2*2", "~ 3*2"] # s "bc" # pan 0.3
+    , (note . cat) ["0 5", "0 5", "0 5 ~ 5", "0 5"] # s "biap:3" # rel 0.2 # pan 0.7 # gain 0.9
+    ]
+  |* gain 0.83
+  # bus
+
+setkey (-8) "lydian"
+
+setkey (-7) "todi"
+
+setkey (-8) "locrian"
+
+scaleList
+
+
+
+p "mel" ## [s "supervibe", lpf "[300, 1500]", bus, resonance 0.1,
+    gain 0.72, octave "[4,5,6]",
+    -- detune 2,
+    -- accelerate ((range (-1) 1 $ rand) |* 0.01), -- brabe
+    nudge,
+    modamp 0,  -- modamp -> fader
+    modfreq 40
+  ]
+  -- $ t
+  -- $ slow 3
+  -- $ ring "0"
+  -- $ "x@6 x@6"
+  $ (|* sus 2)
+  $ t . stack
+  $ l
+    -- "{[0,2,4,6]@3 [0,3,5,6]@3}%1"
+    "{~ 9 6 8 5 ~ \
+    \ 4 [5 6] [~ 2] [~ 4] ~@2 \
+    \ 4 [5 6] [~ 2] ~@0.5 1@2.5 \
+    \ 2 -1@2 \
+    \ }%2"
+
+
+
+
+
+p "chords" ## [s "superpiano", lpf "[1100,300]", hpf 0, bus, gain 1.15, octave 4, velocity 0.7]
+  -- $ t
+  -- $ slow 3
+  -- $ ring "0"
+  -- $ "x@6 x@6"
+  $ t . stack
+  $ l
+    -- "{[0,2,4,6]@3 [0,3,5,6]@3}%1"
+    "{[0,4,9,13]@3 [0,5,10,13]@3}%1"
+
+p "chords" ## [s "superpiano", lpf "[1100,300]", hpf 0, bus, gain 1.15, octave 4, velocity 0.7]
+  $ (# sus 2)
+  $ slow 3
+  $ (0.012 <~)
+  $ (t' (strum 8))
+  $ "<[0,4,9,13] [0,5,10,13]>"
+
+note "[0,4,9,13]@3" # nudge rand
+
+d1 $ s "bd"
+
+stack [ note 0 # nudge (range 1 1.1 $ rand)
+      , note 0 # nudge (range 0 0.1 $ rand)]
+
+fmap id $ note "[0,4,9,13]@3"
+
+let humanize p = withEvents nudge
+in humanize 0.1 $ note "[0,4,9,13]@3"
+
+p "bass" ## [
+    -- s "[tb,tb:2]",
+    s "biam", n "[21,23]", octave 5,
+    -- s "[biam:1]", octave 5, rel 0.2,
+    bus]
+  $ t
+  $ slow 6
+  $ ring "0 1 2 3 7 6 3 5 2 4"
+  $ "x@5 x@3 x@4 x@3 x@4 x@3 x@2"
+
+
+do
+  p "bass" $ silence
+  p "perc" $ silence
+  clutchIn "drums" 32 $ silence
+
+
+xfadeIn 1 16 silence

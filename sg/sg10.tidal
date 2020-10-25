@@ -1,0 +1,38 @@
+setcps (108/120)
+
+setkey (-5) "mixolydian"
+
+bus = bus' 0.3 0.3
+
+p "bass" ## [s "[tb:0,tb:5]", bus, cut 0, rel 1, gain 1.25]
+  -- $ (|+ up 5)
+  $ (t . cat)
+  $ l
+    "-1@3 -1"
+    "0 ~@2 [-1 ~ -1 ~]"
+    "~ [-1]!2 ~!3 -1@2"
+    "0 7?"
+
+
+p "drums" $ stack
+  [ fast 2 $ n "5 10" # s "gretsch" # pan 0.35
+  , n "~ 2" # s "gretsch" # pan 0.4 # gain 1.1
+  , (# s "bbd") $ (# s "bbd") $ (n . cat) $ l "1@3 1" "1@3 [1 1]" "~ 1 1 ~ ~ ~ 1 ~ " "1"
+  ]
+  # bus
+  |* gain 1.12
+
+p "chords" ## [s "superhammond", bus, lpf 600, hpf 150, gain 0.7, resonance 0.1, pan 0.4]
+  $ (t . cat)
+  $ l
+    "[-1,1,3,8]"
+    "<[0,2,4,7] [[0,2,4,7] ~]>"
+
+
+p "horns" ## [s "biam:13", cut 1, octave 7, hpf 500, gain 0.8, rel "<0.6!3 2>", pan 0.6, bus]
+  $ (t.cat)
+  $ l
+    "~ 7 6 5"
+    "4 ~ . 0 2 4 7"
+    "~ 7 7 ~ . 6 5"
+    "4 <~ 0>"
