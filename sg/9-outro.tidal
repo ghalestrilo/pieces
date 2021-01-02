@@ -1,0 +1,40 @@
+let bus = bus' 0 0
+    -- bass pat = p "bass" $ (|- up 7) $ t pat # s "bass" # cut 1 # gain 1.3 # lpf 200 # bus # octave 5 # orbit 2
+    bass pat = p "bass" $ t pat # octave 3 # s "supersquare" # cut 1 # bus # orbit 2 # lpf 200 # resonance 0.1 # gain 1.2
+    chords pat = p "chords" ## [ s "gtr", sus 1.5, bus, hpf 200, lpf 2000, octave "[5,6]" # orbit 1]
+      $ ((3/48) <~)
+      $ strum 7
+      $ t pat
+    drag pat = p "drag" ## [ sus 8, modamp 0, modfreq 0, hpf 300, lpf 700, s "gtr" # stack [octave 5 # cut 2, octave 6 # cut 3], orbit 2] $ pat
+    drums pat = p "drums" $ n pat # s "amencutup" # speed "[0.4,0.34]" # rel 2 # gain 1.3 # orbit 0
+
+do
+  setcps (46/120)
+  setkey (-8) "phrygian"
+  all id
+
+-- Intro
+do
+  resetCycles
+  chords $ (|+ "<0 1 1 1>") "[-3,0,2,6]"
+
+drag
+  $ (# accelerate "[~ 0.13 . 0 . ~ . ~]/4")
+  $ t "[~ -1 . 0 . ~ . ~]/4"
+
+
+
+drums "0 0 2 [3 8]"
+
+do
+  all $ (# hpf (800 + slow 32 sine * 4000))
+
+do
+  all id
+  bass $ ("0@2 . ~@3 7" |+ "<0 1 1 1>")
+
+xfadeIn "bass" 16 silence
+
+xfadeIn "chords" 16 silence
+
+xfadeIn "drums" 16 silence

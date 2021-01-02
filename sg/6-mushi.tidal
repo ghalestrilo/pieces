@@ -1,0 +1,129 @@
+-- ta faltando um pau de chuva (intro = pau de chuva)
+let bus = bus' 0 0
+    vibe = s "supervibe" # bus # octave "[0,1,2]" # gain 1.2 # distort 0.2 # sus 16 # orbit 3
+    chords' n shape pat = xfadeIn "chords" n ## [ s "biam:31" # octave "2" # bus # lpf 1600 # rel 2 # hpf 120 # orbit 1 ]
+                  $ fast 2
+                  $ t
+                  $ (|+ shape)
+                  $ pat
+    chords = chords' 0.1
+    bass pat = p "bes" ## [ s "biam" # n "[0,3]" # octave "[5,4]" # bus # cut 1 # gain 1.13 # orbit 2]
+                $ fast 2
+                $ sometimes (# rel 0.1)
+                $ t pat
+
+do
+  setcps 0.91
+  setkey 0 "phrygian"
+  hush
+  unmute "bass"
+  unmute "bes"
+  unmute "chords"
+  p "click" $ fast 4
+    -- $ jux ((range 0 0.08 $ rand) ~>)
+    $ stack
+    [ ((range 0 0.08 rand) ~> s "bsr") # gain 1 # pan 0
+    , ((100 ~> range 0 0.08 rand) ~> s "bsr") # gain 1 # pan 1
+    , s "shaker" # gain 0.8
+    ]
+    # orbit 0
+  xfadeIn "bongos" 32
+    $ stack
+    [ n "{4!2 ~   ~ 4 ~   ~ 4!2 ~   ~ 4 ~ 4 ~ ~@3}%4" # s "bo"
+    , n "{0!2 0*2 0 0 0*2 0 ~@2 0*2 0 ~ 0 ~ 0*2 0 0 0}%4" # s "bc" # n 1
+    ]
+    # orbit 0
+
+
+-- call
+asap $ stack
+  [ n "0!2 ~ ~" # s "[vc:17,clap:3]" # gain 1.1 # distort 0.1
+  , note "~!2 0 ~" # vibe
+  , note "~!2 0 ~" # s "biakt:72"
+  ]
+
+-- Chord
+asap
+  $ note (strum 10 "[-2,0,4,9]")
+  # s "biam:31" # octave "[3,4]" -- magic <3
+  # orbit 1
+
+xfadeIn "shake" 32
+  $ slow (10/8)
+  $ s "shaker*10"
+  # pan  ("-1 0 0 1 0 0 -1 1 0 0" |+ 1   |/ 2)
+  # gain (" 1 0 0 1 0 0  1 1 0 0" |* 0.2 |+ 0.6)
+  # bus
+
+-- n: 11, 4, 7, 15 <3, 16
+-- n exc: 1, 2, 3
+p "percs1"
+  $ note "0*4"
+  # gain "[1 0.7]*2"
+  # s "biap"
+  # n 24
+  # bus
+  # orbit 0
+
+do
+  mute "shake"
+  chords "[-3,0,2,6]" $ slow 8 $ ring "7 5 4" "t@3 t@3 t@4 t@3 t@3"
+
+do
+  unmute "shake"
+  p "percs1"
+    $ note "0*4"
+    # gain "[1 0.7]*2"
+    # s "biap"
+    # n 24
+    # bus
+    # orbit 0
+
+do
+  mute "click"
+  (bass . randcat) $ l "0*4" "~!3 0" "0*2" "7*2 . 0"
+
+do
+  unmute "click"
+  p "percs"
+    $ note "0 [0 -6??]"
+    # gain "[1 0.8]*2"
+    # s "biap"
+    # n 11
+    # bus
+
+
+setkey 8 "lydian"
+
+
+do
+  setkey "[8 0]/64" "[lydian phrygian]/64"
+
+-- end
+do
+  hush
+  chords "[-3,0,2,6]" $ slow 8 $ ring "7 5 4" "t@3 t@3 t@4 t@3 t@3"
+
+unmute "drums"
+
+p "drums"
+  $ stack
+    [ n "~ 1" # s "biasn" # lpf 1800 # resonance 0.2
+    , fast 2 $ n "0*4" # s "th!2 <to!2 th!2> th"
+    ]
+  |* gain 1
+
+
+
+p "mel" ## [s "superpiano" # velocity  0.8 # gain 1 # sus 4 # octave "[4,5]" # lpf "2400"]
+  -- $ (t . fast 2 . cat)
+  -- $ l "0 1 2 4" "6"
+  $ t "{ 0 1 2 4 6@2 7 4@2 6 3@2 5 2@2 }%8"
+
+
+
+setkey "7" "minor"
+
+setkey "3" "mixolydian"
+
+xfadeIn "bes" 16 silence

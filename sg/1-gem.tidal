@@ -1,0 +1,116 @@
+
+let bus = bus' 0 0
+    bes = s "biam" # n "[21,23]" # octave 5 # bus # gain 0.93 # lpf 200 # orbit 2
+    piano = s "superpiano" # lpf "[1100,300]" # hpf 0 # bus # gain 1.55 # octave 4 # velocity 0.35 # sus 2 # orbit 1
+    vibe = s "supervibe" # lpf "[300, 1500]" # bus # resonance 0.1 # modfreq 40 # octave "[4,5]"
+        # modamp 0  -- modamp -> fader
+        # gain 0.65
+        # orbit 3
+    rides = sometimes ((# n "[19|18]") . (# pan 0.7)) $ n "[11|5|5] 4" # s "gretsch" # gain "0.85 0.7" # pan 0.3 # orbit 0
+    kicks = rarely (shuffle 2) $ (s . cat) [ "bbd ~ ~ bbd"
+                , "~ ~ ~ bbd"
+                , "~ ~ bbd ~"
+                , "~@2 bbd? bbd?"
+                ]
+                # n 0 # octave "[5,6]" # lpf 200 # orbit 0
+                -- # n "[0,1]" # lpf "[60,200]" # resonance 0.2 # gain (range 1 1.2 rand * 0.65)
+    hats = s "bhh:2*2" # gain "0.7 0.5" # pan 0.3 # orbit 0
+    snares = rarely (shuffle 2)
+      -- $ someCyclesBy 0.2 (const $ fast (choose [3,4]) $ s "[btl|btm|bth|br|bs|bth]" # n (irand 8) # gain (range 0.5 0.8 rand) # pan 0.3)
+      $ sometimesBy 0.6 ((# n "[10|14]") . (# gain 1))
+      $ (n . cat) [ "~ 5 ~ ~" , "~ 5 ~ ~" , "~ 5 ~ ~" , "5@2 ~? ~?" ] # s "bs"
+      # orbit 0
+    melody = "{~ 9 6 8 5 ~ \
+      \ [4 [5 6] | 4 5 ~ 6]@2 [~ 2] [~ 4] ~@2 \
+      \ [4 [5 6] | 4 5 ~ 6]@2 [~ 2] ~@0.5 1@2.5 \
+      \ 2 -1@2 \
+      \ }%2"
+
+do
+  setcps (2*106/120)
+  setkey "-8" "lydian"
+
+
+setkey
+
+-- intro
+do
+  -- @name intro
+  hush
+  p "drums" $ stack [ kicks ] # bus
+  xfadeIn "drums" 32 $ stack [ hats, kicks ] # bus
+    -- # octave "[6,5]" |* gain 0.9
+
+-- intro chords
+do
+  -- @name chords
+  p "ch" ## [piano] $ slow 3 $ (0.026 <~) $ strum 24 $ t "<[0,4,9,13] [0,5,10,13]>"
+
+-- enter melody
+do
+  -- @name melody
+  xfadeIn "mel" 24 ## [vibe] $ (|* sus 3) $ t melody
+
+-- enter drums
+do
+  -- @name drums
+  clutchIn "drums" 32 $ stack [hats, snares, kicks, rides] # bus
+
+
+
+-- setkey (-7) "todi"
+-- setkey (-8) "locrian"
+-- setkey (-4) "harmonicMinor"
+-- setkey (-6) "mixolydian"
+
+
+
+
+setkey (-7) "dorian"
+
+do
+  -- @name bridge
+  mute "mel"
+  mute "drums"
+  let perc = stack
+            [ n "0*4" # s "shaker" # (gain . (0.25 <~) . (|/ 2) . (|+ 1)) saw # cut 1 # rel 0.08
+            , (n . cat) ["~ 2", "2 3", "3 2*2", "~ 3*2"]      # gain ((30 <~) $ range 0.9 1.05 rand) # s "bc" # pan 0.3
+            , (n . cat) ["5!2 ~ 4", "~ 4 4 ~", "5 5 ", "4 4"] # gain (range 0.9 1.05 rand) # s "bc" # pan 0.7
+            ] |* gain 0.83
+              # bus
+              # orbit 0
+  p "kick" $ vk # bus # gain 1.1
+  p "bass" ## [bes]
+    $ t
+    $ slow 6
+    $ ring "0 1 2 3 7 6 3 5 2 4"
+    $ "x@5 x@3 x@4 x@3 x@4 x@3 x@2"
+  xfadeIn "perc" 32 $ perc
+
+setkey "<-8 -10>/6" "<lydian!2>/6"
+
+
+-- Enter voice
+
+unmute "drums"
+
+-- Return instruments
+do
+  unmute "mel"
+  unmute "drums"
+
+
+do -- Exit
+  p "bass" $ silence
+  p "perc" $ silence
+  clutchIn "drums" 32 $ silence
+
+-- xfadeIn 1 16 silence
+
+all $ (#crush 1) . (|* gain 0.8)
+
+-- Dry Cut onto next
+
+do
+  hush
+  p "drums2" $ n "{0 4 4 1 4 4 2 4 4 6 4 4 17@2.8 14@2.2 ~@3 [15,19] 4!3}%4" # s "gretsch" # bus # orbit 0 # gain (range 0.9 1.12 rand)

@@ -1,0 +1,117 @@
+
+
+let tonal root mode = note . (|+ root) . scale mode
+    -- kbdi = s "onyx"
+    kbdi = s "supervibe" # sus 0.3 # lpf 400 # resonance 0.13 # modfreq 0
+    phrase = l "9 0" "2 3 4 5" "6 0" "2 3 4 5" "8 6 4 2"
+    introchords = l "0" "~ 2 . ~"
+    basechords = l "0" "~ 2 . ~" "0" "~ 2 . ~" "1"
+    ch pats = p "chords" $ fast 2 $ (0.01 <~) $ (t . stack) pats # kbdi # sus 1.7 # bus # octave 4 # orbit 1 # velocity 0.4
+    mel pats = p "melody" $ fast 2 $ (0.01 <~) $ (t . stack) pats # kbdi # sus 1.7 # bus # orbit 3
+    -- bus = bus' 0.55 0.55
+    bus =  bus' 0 0
+    humanize x = ((range (-(x/100)) (x/100) $ slow 32 sine) <~)
+                                -- (range 0 x rand)
+    h = humanize
+
+do
+  -- @setup
+  setcps 0.69
+  setkey (-3) "lydian"
+  -- all $ (|* speed 0.8)
+  all ((|* speed 0.9) . (# bus) . (|* gain 1.04))
+
+
+do
+  -- @name intro
+  resetCycles
+  hush
+  p "drums" $ h 1 $ stack
+    [ fast 2 $ n "5*2" # gain "1 0.82"
+    , n "<[13!2 [~@3 13]@2] [~ 13 ~@1.5 13@0.5] [13!2 ~ [~ 13]]>"
+    , n  "<[~ 20] [~ [21*3] ~@2 . 20]>" # gain (range 0.93 1.1 $ rand)
+    , n "[~ 20]"
+    , degrade $ n "21*8" # gain (range 0.8 1.1 $ rand)
+    ]
+    # s "gretsch" # bus
+    # lpf 17000
+    # resonance 0.1
+    |* gain 1.1
+  mel [cat phrase]
+
+ch [cat introchords]
+
+do
+
+
+
+
+-- TODO: Break from melody, lower volume, only chords, maybe not even drums?
+
+do
+ -- @name bridge1
+  all $ ((# hpf 800) . (# lpf 3000))
+  p "drums" $ stack
+    [ n "5*4"
+    , n "<[13!2 [~@3 13]@2] [~ 13 ~@1.5 13@0.5] [13!2 ~ [~ 13]]>"
+    , n  "<[~ 20] [~ [21*3] ~@2 . 20]>" # gain (range 0.8 1.1 $ rand)
+    , degrade $ n "21*8" # gain (range 0.8 1.1 $ rand)
+    ]
+    # s "gretsch" # bus
+    # resonance 0.1
+    # gain 1.1
+  ch [(|+ "[0,2,4]") . cat $ l "0" "~ 2 . ~" "0" "~ 2 . ~" "1"]
+  xfadeIn "drums" 16 $ silence
+
+do
+  -- @name fade
+  xfadeIn "melody" 16 $ silence
+  xfadeIn "chords" 16 $ silence
+
+
+-- The Comeback
+do
+  -- @name comeback
+  all ((|* speed 0.9) . (# bus' 0.3 0.3) . (|* gain 1.04))
+  let kbdi = s "supervibe" # sus 0.3 # resonance 0.13 # modfreq 0 # gain 1
+  mel [cat phrase]
+  p "bass" $ fast 2
+    $ (t . cat)
+      [ "0", "7!2 ~@2"
+      , "0", "7!2 6!2"
+      , "~ 5 4 2", "4 5 6 1"
+      ]
+    # octave 3 # s "supersquare" # cut 1 # bus # orbit 2 # lpf 400 # hpf 90 # resonance 0.1 # gain 0.9
+  p "chords" ## [kbdi # sus 1.7 # bus # octave 4 # orbit 1 # velocity 0.4]
+    $ fast 2
+    $ (tonal (-3) "chromatic" . cat)
+    $ l "0'maj7" "~"
+        "0'maj7" "~"
+        "<4'min7 -1'min7>" (cat ["5" |+ "[0,4,10,14]", "-1" |+ "[0,3,7,11]"])
+  p "drums" $ (n . stack)
+    [ "5*4"
+    , "<[13!2 [~@3 13]@2] [~ 13 ~@1.5 13@0.5] [13!2 ~ [~ 13]]>"
+    , "<[~ 20] [~ [21*3] ~@2 . 20]>"
+    , degrade "21*8"
+    ]
+    # s "gretsch" # bus
+    # lpf ((slow 24 sine |* 7000) |+ 3000)
+    -- # distort 0.1
+    # gain 1.2
+
+-- The End
+do
+  -- @name outro
+  ch []
+  p "bass" silence
+  mel [cat phrase]
+  xfadeIn "drums" 32 $ silence
+
+let bus = bus' 0.6 0.6
+
+
+
+
+xfadeIn "chords" 32 silence
+
+all $ (# hpf 800)

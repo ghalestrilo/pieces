@@ -1,3 +1,9 @@
+-- TODO:
+-- 1. Figure out intro
+-- 2. Strum chords, go more giant stepsy
+-- 3. Make breathing pause, maybe some guitar solo?
+-- 4. Push outro into chaos, hard cut into  sg
+
 d1
   $ (# bus)
   $ r "funk"
@@ -9,7 +15,17 @@ setbpm 164
 
 let bus = bus' 0.3 0.3
 
-let synth = s "superhammond" # lpf 1000 # resonance 0.2 # bus
+let synth = s "superpiano" # lpf 1000 # resonance 0.2 # bus
+
+let strum i =  note
+              . (strum i)
+              . (|+ getGlobalRoot)
+              . (scale getGlobalMode)
+
+              base =  :: Pattern Int
+              root =  :: Pattern Double
+
+setkey ("<0 -2 -4 1>/2" |+ "<0 5>") ("<0 -2 -4 1>/2" |+ "<0 5>")
 
 do
   hush
@@ -36,21 +52,41 @@ do
     # gain 1.15
     # octave "[5|4]/4"
     # bus
-    # orbit 1
+    # orbit 0
 
   p "synth"
     $ (0.013 <~)
     -- $ almostNever (fast 4 . (# sus 0.02) . (# octave 6))
-    $ rarely (fast 2 . (# sus 0.08))
+    -- $ rarely (fast 2 . (# sus 0.08))
     $ sometimes ((|* sus 2) . (|* rel 2))
-    $ tonal root mode ("0*4"
-      |+ deg
-      |+ "[[-3,0,2,5,8]|[0,4,6,8,10]|[0,3,6,9,12]|[0,2,6,9,11]]")
+    $ strum 4
+    $ tonal root mode
+      (slow 2 $ "0*4"
+        |+ deg
+        |+ "[[-3,0,2,5,8]|[0,4,6,8,10]|[0,3,6,9,12]|[0,2,6,9,11]]")
     # synth
         # rel 0.2
     # bus
-    # orbit 2
+    # velocity 0.5
+    # orbit 0
     # octave 5
+
+
+
+p "synth"
+  $ fast 2
+  $ strum 4
+    ("0"
+      |+ deg
+      |+ ("[[-3,0,2,5,8]|[0,4,6,8,10]|[0,3,6,9,12]|[0,2,6,9,11]]"))
+  # synth
+  # sus 1
+  -- # rel 0.2
+  # bus
+  # velocity 0.5
+  # orbit 0
+  # octave 5
+
 
 
 do
@@ -76,7 +112,7 @@ p "solo"
   # sus 0.03
   # pan sine
   # bus
-  # orbit 3
+  # orbit 0
 
 
 clutchIn "drums" 16 silence

@@ -1,0 +1,169 @@
+-- TODO: refactor defrhythm and r to account for the gain parameter (as a different dictionary entry)
+defrhythm name pats = mapM_ (\(patname, pat) -> setF patname pat)
+    $ zipWith (\idx voice -> (makertmname name idx, voice)) [0..]
+    $ pats
+
+dr = defrhythm
+
+let b idx = bus' 0.2 0.65 # orbit idx
+
+setcps 0.74
+
+p "test"
+  $ slow 2
+  $ (# b 0)
+  $ (# pan "[0.25@<4 3> 0.75@<4 5>]*2")
+  $ r "ijexa"
+  $ l "can:5" "can:3"
+
+rhythms
+
+setcps 0.84
+
+-- TODO: Create rhythm def with this (wait for gain structure to be in place)
+-- @variables
+let maracasnares = stack
+      [ slow 2 $ "0@3 0@3 0!2 . [~ 0*2]*2" # "bs" # (n . choose) [11,10] # gain 0.8
+      , humanize gain 0.4 $ slow 2 $ "~ 0!2 ~ 0 0*2 ~@2 . [0 0*2 ~@2]*2" # "bs" # n "6" # gain 1.1
+      ]
+    maracakicks = n "[~@7 0!2 ~@2 0!2 ~@2 0]/2" # s "bbd:1" # gain 1
+    maracahats = fast 2 $ "0*4" # s "th" # gs "f f t f" 1.1 0.8 |* gain 0.9
+    maracatings = note "0 5 0 5" # s "tp"
+    batkick = n "[0 . ~@2 0@3 0@3 . 0 . ~ 0 0 ~]/4" # s "bbd:1"
+    batsn1 = fast 2 $ "0!2 0*2!2" # "bs" # n "4" # gs "[t f]*2" 1.1 0.9
+    batsn2 = slow 2 $ "0!2 ~ 0@3 0!2 . ~ 0 0 <0*2 ~>" # "gretsch" # n "[15,21]" # gain 0.95
+    batperc = fast 2 $ n "0*2 <~!3 1*2>" # s "tp" # gain 0.7 # rel 0.1
+    batagogo = (note . (0.5 <~)) "<[0 5]!3 [0 5 ~ 5]>*2" # s "tp:17" # gain 0.9
+    perc = p "perc" . humanize gain 0.4 . (# orbit 0)
+    bes = (p "bass" . (|+ up 5)) ## [s "bass:3" # lpf 300 # gain 1.2 # rel 1 # resonance 0.1 # begin 0.3 # orbit 2]
+    -- replace vibe with onyx
+    vibe pat = p "vibe" $ pat # s "supervibe"
+                    # modamp 0
+                    # velocity 0.3
+                    # lpf 900
+                    # resonance 0.02
+                    # octave 4
+                    # sus 6
+                    # orbit 3
+
+do
+  -- @setup
+  setcps 0.84
+  setkey 0 "lydian"
+  all id
+
+do
+  -- @name intro
+  p "perc" $ humanize gain 0.4
+    $ stack
+    [ maracasnares ]
+
+do
+  -- @name bridge
+  perc
+    $ stack
+    [ batkick, batsn2, batagogo ]
+  xfadeIn "perc" 12 $ stack
+    [ batkick, batsn1, batsn2, batperc, batagogo ]
+  vibe $ slow 2 $ (note . cat)
+    $ l "[2'maj, 14, 18]"
+        "[0'maj7,  18 16]"
+        "[-5'maj7, 23]"
+        "~"
+
+do
+  hush
+  -- @name bridge
+  p "perc"
+    $ stack
+    [ maracakicks, maracasnares, maracahats ]
+  p "kick" $ fast 2 $ vk # gain 1
+
+do
+  bes $ t "[0@3 0@3 -3@2 . 1 <4 ~>]/2"
+
+do
+  vibe $ (t . cat)
+    $ l
+      "[-5,-3,0,1,2,5]" ("[-3,0,1,2,5]" + 1)
+      "[-5,-3,2,4,9]" "~"
+
+
+do
+  -- @name release
+  bes silence
+  vibe $ strum 10 $ (t . cat) $ l "[-5,-3,0,6,9]" "~" "~" "~"
+
+do
+  -- @name outro
+  hush
+  perc $ stack [ maracasnares, maracahats ]
+  vibe $ fast 2 $ (t . (|+ 0)) "{12@3 9@3 11@3 7@3 [3,5,9]@3 8 6 4 [-3,2,-7]@12}%2"
+  -- this goes to onyx and is manipulated until end
+
+
+
+
+
+
+
+
+
+
+
+-- --------------------------
+
+do
+  let root = 8
+      mode = "dorian"
+      -- onyx = (# s "onyx") . (0.022 <~) . (n . (|- 8) . scale "dorian")
+      onyx = (# s "supervibe") . (# modamp 0) . (# velocity 0.3) . (# lpf 2000) . (# gain 0.8) . (0.022 <~) . (n . (|- 8) . scale "dorian")
+  p "chords"
+    $ (onyx . slow 8 . cat)
+    -- $
+        [ "[8,9,11,13]"
+        , "[5, 7, 9, 11]"
+        , "[5, 7, 9, 10]" |- 2
+        , "[5, 7, 9, 10]" |+ 1
+        -- , "[5, 7, 9, 10]" |- 3
+        ]
+    # octave 4
+    # gain 1.01
+    # gain 0
+  p "bass"
+    -- $ onyx "{9@1.5 7@1.5 5 8@1.5 6@1.5 4 2@4}%4"
+    $ onyx ("0 ~ . <[<4 2> 7] -3>" |+ "<0 1 2 1>/8")
+    # octave 3
+    # gain 1.04
+    # gain 0
+  p "melody"
+    $ onyx "{11@3 8@3 10@3 6@3 8@3 7 5 3 [1, -8]@12}%4"
+    # octave 5
+    # sus 4
+
+do
+  p "chords" $ silence
+  p "bass" $ silence
+
+p "tambor" $ silence
+
+xfadeIn "melody" 16 $ silence
+
+
+
+
+setkey 0 "major"
+
+-- p2: cycles
+
+do
+  --
+  mc $ (withvoices' "ile" $ l
+    (gtfo . range 0 7 . (# gain 0.9) . (# open 0.4) . (# sus 0.1))
+    (gtfo)
+    (# gain ("[2 8 9 7]*2" / 10)))
+    ++
+    [gtfo $ tom "ponto1" [-5, 0]
+    , gtfo $ t "{~@3 ~@3 ~@3 ~@3 ~@3 ~ ~ ~ 0@12}%4"
+    , t "{12@3 9@3 11@3 7@3 9@3 8 6 4 2@12}%4"
+    ]
