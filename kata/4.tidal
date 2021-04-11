@@ -1,0 +1,15 @@
+do
+  -- @name kata
+  mc $ l
+    (gtfo $ warp $ degrade $ n "0*4")
+    (gtfo $ warp $ (3 <~) $ degrade $ n "0*4")
+    (gtfo $ warp $ (6 <~) $ degrade $ t ("0*8" |- irand 24) # open (range 0.1 0.6 rand))
+    __
+    (note "[0 0.2 0.4 0.6]/2")
+    (gtfo $ slow 8 0 # sus 2)
+
+
+
+    piano (note "0")
+
+    p "test" $ vk # orbit 0

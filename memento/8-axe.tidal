@@ -37,7 +37,15 @@ let maracasnares = stack
     perc = p "perc" . humanize gain 0.4 . (# orbit 0)
     bes = (p "bass" . (|+ up 5)) ## [s "bass:3" # lpf 300 # gain 1.2 # rel 1 # resonance 0.1 # begin 0.3 # orbit 2]
     -- replace vibe with onyx
-    vibe pat = p "vibe" $ pat # s "supervibe"
+    vibe pat = p "vibe" $ pat # s "onyx"
+                    # modamp 0
+                    # velocity 0.3
+                    # lpf 900
+                    # resonance 0.02
+                    # octave 4
+                    # sus 6
+                    # orbit 3
+    onyx pat = p "onyx" $ pat # s "onyx"
                     # modamp 0
                     # velocity 0.3
                     # lpf 900
@@ -46,9 +54,11 @@ let maracasnares = stack
                     # sus 6
                     # orbit 3
 
+vibe 0
+
 do
   -- @setup
-  setcps 0.84
+  setcps 0.8
   setkey 0 "lydian"
   all id
 
@@ -101,14 +111,22 @@ do
   vibe $ fast 2 $ (t . (|+ 0)) "{12@3 9@3 11@3 7@3 [3,5,9]@3 8 6 4 [-3,2,-7]@12}%2"
   -- this goes to onyx and is manipulated until end
 
+setkey (-7) "minor"
+
+mc $ l __ __ __ __ __ (fast "[4|8|16|32]"
+  $ t ("0" |+ irand 16)
+    # sus 0.01
+    # open 0.05
+    # gain 1.2
+      # cyclesShape rand
+      # cyclesColor (fast 4 rand)
+      # cyclesSweep (fast 8 rand))
 
 
 
+d1 $ s "bd" # gain 1.4
 
-
-
-
-
+setcps 0.6
 
 
 -- --------------------------
@@ -159,11 +177,31 @@ setkey 0 "major"
 do
   --
   mc $ (withvoices' "ile" $ l
-    (gtfo . range 0 7 . (# gain 0.9) . (# open 0.4) . (# sus 0.1))
-    (gtfo)
+    (range 0 7 . (# gain 0.9) . (# open 0.4) . (# sus 0.1))
+    (# gs "[t f f t f f t t f f t f t f f f]/2" 0.9 0.6)
     (# gain ("[2 8 9 7]*2" / 10)))
     ++
-    [gtfo $ tom "ponto1" [-5, 0]
+    [(# open 0.3) $ tom "ponto1" [-5, 0]
     , gtfo $ t "{~@3 ~@3 ~@3 ~@3 ~@3 ~ ~ ~ 0@12}%4"
-    , t "{12@3 9@3 11@3 7@3 9@3 8 6 4 2@12}%4"
+    , gtfo $ t "{12@3 9@3 11@3 7@3 9@3 8 6 4 2@12}%4"
     ]
+
+
+
+
+p "onyx" $ t "0" # s "onyx"
+
+setkey 2 "major"
+
+do
+  vibe $ strum 6 $ (t . cat) $  l
+    __
+    "[-3,0,2,6]" __ __ __ __ __
+    "[-5,-2,0,5]" __ __ __ __ __
+    "[3,7,9,12]" __
+    "[2,6,8,11]" __
+    "[1,5,7,8,10]" __
+    "[-3,-3,-3,3,6,9]" __
+    "[-7,0,5,6,9]" __ __ __ __ __ __
+  resetCycles
+  once $ s $ (0.1 <~) "hh*4"

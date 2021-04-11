@@ -1,0 +1,276 @@
+let bus = bus' 0 0
+    pbase = slow 2 $ n "[8!2 <~ <9 4> > <~ 7>]*4" # s "bc"
+    pcont = n "<0 ~>@3 0*2" # s "bo:0" # pan 0.65 # up (-10) # cut 1
+    popen = slow 2 $ n "~@3 2@2 2?@3 . ~ 2 2 ~" # s "bo:2"
+    pshake = fast 2 $ s "shaker*4" # (gain . (|+ 0.38) . ((5/8) <~) . (|* 0.5)) saw
+    pclick = s "bsr*2"
+    perc pats = p "perc"
+      $ swingBy 0.09 4
+      $ stack pats
+      |* gain 1
+      # bus
+      # orbit 0
+    bes' i pat = clutchIn "bes" i ## [s "pluck", legato 1, gain 1.4, rel 0.5, sus 0.3, bus, orbit 2, lpf 900, begin 0.01, distort 0, orbit 2]
+      $ swingBy 0.1 8
+      $ (|- up 0.35)
+      $ pat
+    bes = bes' 0.1
+    piano' i pat = clutchIn "piano" i ## [s "superpiano" # velocity (range 0.7 0.9 $ rand) # sus 2 # bus # orbit 2]
+      $ swingBy 0.1 4
+      $ t pat
+    piano = piano' 0.1
+    pianosoft pat = p "piano" ## [s "superpiano" # velocity 0.4 # gain 1.4 # sus 8 # bus # orbit 2]
+          $ swingBy 0.1 4
+          $ t pat
+    ch c = (|+ c)
+    dft tt fb = delay 1 # delaytime tt # delayfeedback fb
+    gt pat = p "gt" ## [s "gtr", lpf 300, gain 0.95, bus, octave 6, orbit 3] $ t pat
+    dhats = slow 2 $ s "[bhh|br:3] bhh!2 [bho:1|br:1]" # cut 0 # gain 0.52
+    dkick = slow 2 $ "0@3 0@3 0 0 . ~ 0 ~@2" # s "bbd" # n "[0,1]" # lpf 400 # gain 0.95
+    dsn = slow 2 $ "~@3 11" # s "bs" # gain 0.85 # n 11
+    dsn2 = degrade $ slow 1 $ "[~ 0]*4" # s "bs" # n (irand 9)
+    gtt slo pat = map (\nn -> (# octave 6) $ (# open 0.56) $ (# gain 0.6) $ slow slo $ t $ (|+ nn) $ pat)
+        [0, -3]
+    drums pats = p "drums"
+      $ swing 4
+      $ stack pats
+      # bus
+      |* gain 1.1
+
+-- intro: solo gt
+do
+  setkey 2 "lydian"
+  setcps 0.725
+  gt $ slow (27/8)
+    $ ch "[-3,0]"
+    $ ring "5 4 2 1 0 -2"
+    $ "t@5 t@5 t@3 t@5 t@9"
+
+do
+  perc [ pclick ]
+  bes' 16 $ tonal 2 "octatonic"
+    $ slow (3/8)
+    $ rarely (const "0 -4 -3")
+    $ (someCyclesBy 0.2 . const . ch (irand 8) . (|- 2)) "0*3"
+    $ "0 ~@2"
+
+perc [ popen , pclick ]
+
+perc [ pbase , popen , pclick ]
+
+perc [ pbase , pcont , popen , pclick ]
+
+setkey 2 "octatonic"
+
+unsolo "bes"
+
+p "bes" $ silence
+
+piano' 48 $ slow (19/8) "-2 -1 0 -2 1@3 2@3 -3@3 -2@3 -5@3"
+
+do
+  mute "perc"
+  mute "bes"
+  mute "piano"
+  setkey 3 "scriabin"
+  drums [ dhats , dkick , dsn , dsn2 ]
+
+do
+  unmute "piano"
+  unmute "perc"
+  unmute "bes"
+
+do
+  -- setkey 3 "scriabin"
+  all $ (# hpf "[0!3 500]/16")
+
+-- ending
+do
+  all id
+  solo "piano"
+  solo "drums"
+  solo "bes"
+
+xfadeIn "piano" 16 silence
+
+p "bes" silence
+
+do
+  hush
+  unsolo "piano"
+  unsolo "drums"
+  unsolo "bes"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------------
+
+
+let drums pats = p "drums"
+      $ swingBy 0.1 4
+      $ stack pats
+      # orbit 1
+      |* gain 1.1
+
+resetCycles
+
+do
+  hush
+  -- @intro (M:C)
+  setcps 0.725
+  all $ ((# room 0) . (# size 0))
+  setkey (-1) "minor"
+  mc $
+    [__,__,__,__]
+    ++
+    [] -- (gtt (27/8) $ ring "7 6 4 3 2 0" $ "t@5 t@5 t@3 t@5 t@9")
+  perc [ pbase , popen , pclick ]
+
+do
+  -- @name verse (M:C)
+  drums [ dhats , dkick , dsn , dsn2 ]
+  mc $
+    [__,__, __,
+      (# sus 0.1)
+      $ swingBy 0.1 4
+      $ t $ slow (3/8)
+      $ rarely (const "0 -4 -3")
+      $ (someCyclesBy 0.2 . const . ch (irand 8) . (|- 2)) "0*3"
+      $ "0 ~@2"]
+    ++
+    [] -- (gtt (27/8) $ ring "7 6 4 3 2 0" $ "t@5 t@5 t@3 t@5 t@9")
+
+
+
+do
+  -- @name pause
+  hush
+  drums [ dhats , dkick , dsn , dsn2 ]
+  perc [ pbase , popen , pclick ]
+
+
+do
+  -- @name verse 2 (M:C)
+  hush
+  drums [ dhats , dkick , dsn , dsn2 ]
+  perc  [ pbase , pcont , popen , pclick ]
+  mc $
+    [__,__, __,
+      (# sus 0.1)
+      $ swingBy 0.1 4
+      $ t $ slow (3/8)
+      $ rarely (const "0 -4 -3")
+      $ (someCyclesBy 0.2 . const . ch (irand 8) . (|- 2)) "0*3"
+      $ "0 ~@2"]
+    ++
+    [] -- (gtt (27/8) $ ring "7 6 4 3 2 0" $ "t@5 t@5 t@3 t@5 t@9")
+
+do
+  -- @name alt pause (M:C)
+  setkey 2 "[major diminished]/4"
+  hush
+  let pstroke bases = (pianosoft . (|- 7) . (|+ bases) . cat . map (strum 8))
+  pstroke "[0 -2]/4" (l "[-3,0,2,6]" __ "[-3,0,2,9]" __)
+  drums [ dhats , dsn , dsn2 ]
+  perc  [ every 2 gtfo pcont , popen , pclick ]
+
+do
+-- @name alt bass enter (M:C)
+  hush
+  setkey 2 "[major diminished]/4"
+  let pstroke bases = (pianosoft . (|- 7) . (|+ bases) . cat . map (strum 8))
+  -- pstroke "[0 -2]/4" (l "[-3,0,2,6,8?]" __ "[-3,0,2,10]" __)
+  mc $ l __ __ __
+    (t
+      $ swingBy 0.1 4
+      $ (|- "[0 [4|-4]]/4")
+      $ slow (3/8)
+      $ rarely (const "0 -4 -3")
+      $ (someCyclesBy 0.2 . const . ch (irand 8) . (|- 2)) "0*3"
+      $ "0 ~@2")
+  drums [ dkick, dhats , dsn , dsn2 ]
+  perc  [ pbase, every 2 gtfo pcont , popen , pclick ]
+
+do
+-- @name alt bass enter (M:C)
+  hush
+  let pstroke bases = (pianosoft . (|- 7) . (|+ bases) . cat . map (strum 8))
+  setkey 2 "[mixolydian diminished]/4"
+  pstroke "[0 -2]/4" (l "[-5,-3,2,4,8]" __ "[-3,0,2,6,10]" __)
+  drums [ dkick, dhats , dsn , dsn2 ]
+  perc  [ every 2 gtfo pcont , popen , pclick ]
+
+scaleList
+
+
+do
+  -- @name outro intro (M:C)
+  piano $ silence
+  setkey 3 "scriabin"
+  mc $
+    [__,__, __, __]
+    ++
+    [] -- (gtt (27/8) $ ring "5 4 2 1 0 -2" $ "t@5 t@5 t@3 t@5 t@9")
+
+do
+  -- @name outro piano
+  piano' 0.1 $ slow (19/8) "-2 -1 0 -2 1@3 2@3 -3@3 -2@3 -5@3"
+
+
+do
+  -- @name outro body
+  mc $
+    [__,__, __, t
+      $ swingBy 0.1 4
+      $ slow (3/8)
+      $ rarely (const "0 -4 -3")
+      $ (sometimes . const . ch (irand 8) . (|- 2)) "0*3"
+      $ "0 ~@2"]
+    ++
+    [] -- (gtt (27/8) $ ring "5 4 2 1 0 -2" $ "t@5 t@5 t@3 t@5 t@9")
+
+do
+  -- @name outro
+  hush
+  drums [ dkick, dhats , dsn , dsn2 ]
+
+
+drums [ dhats ]
+drums [ dhats , degrade dsn , dsn2 ]
+drums [ dkick, dhats , dsn , dsn2 ]
+drums [ dkick, dhats , dsn , dsn2 ]

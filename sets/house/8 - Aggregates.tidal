@@ -1,0 +1,128 @@
+-- Aggregates
+setcps 0.8
+
+let
+  vibe =  s "supervibe"   # gain 1 # lpf 500 |* sus "{4@6 10@7}%4" # bus
+  piano =  s "superpiano" # gain 1 # lpf 250 # sus 6 # bus
+  root = (|- 2)
+  tonal scalename pat = (note . root . scale scalename) pat
+
+  -- let root = (|- 2)
+  -- let tonal scalename pat = (note . root . scale scalename) pat
+
+do
+  setkey (-2) "chromatic"
+
+-- Enter First Line
+p "vibe"
+  $ slow 3
+  $ (note . (|- 2) . scale "chromatic" . stack)
+    [ "{2 0 2 0 3 2 0@7}%4" |+ 5
+    -- , (0.01 <~ "{~ ~ -4 -5 -2 -4 -5@7}%4")
+    -- , (0.005 <~ "{~ ~ ~ ~ <1 ~> <0 ~> <-2 ~>@7}%4")
+    ]
+  # vibe
+  # gain 1
+  # orbit 0
+
+p "vibe" $ slow 3 $ t "{2 0 2 0 3 2 0@7}%4" # vibe
+
+p "s" $ s "bd"
+
+p "s" $ silence
+
+-- Enter Second Line
+p "vibe"
+  $ slow 3
+  $ (t . stack)
+    [ "{2 0 2 0 3 2 0@7}%4" |+ 5
+    , (0.01 <~ "{~ ~ -4 -5 -2 -4 -5@7}%4")
+    , (0.005 <~ "{~ ~ ~ ~ <1 ~> <0 ~> <-2 ~>@7}%4")
+    ]
+  # vibe
+
+-- Enter Second Line
+p "vibe"
+  $ slow 3
+  $ (note . (|- 2) . scale "chromatic" . stack)
+    [ "{2 0 2 0 3 2 0@7}%4" |+ 5
+    , (0.01 <~ "{~ ~ -4 -5 -2 -4 -5@7}%4")
+    , (0.005 <~ "{~ ~ ~ ~ <1 ~> <0 ~> <-2 ~>@7}%4")
+    ]
+  # vibe
+  # n 4
+
+
+
+xfadeIn "plucks" 32
+-- p "plucks"
+  $ (note . (|- 31) . scale "minor") "~ <0 <4 -3>> 0 ~"
+  # s "superfm"
+  # lpf 600
+  # bus
+  # fader (vx 2)
+
+
+-- Enter Skits
+clutchIn "glitchverb" 64
+
+p "glitchverb"
+  $ degradeBy 0.6
+  $ n ("3*8" |- irand 9)
+  # s "glitch"
+  # pan (range (-1) 1 $ rand)
+  # cut 1
+  # up 12
+  # bus
+  # orbit 0
+
+-- Skits include lighter
+p "glitchverb"
+  $ sometimes ghost
+  $ degradeBy 0.3
+  $ n ("3*4" |- irand 9)
+  # (s . fast 4 . randcat) [ "glitch", "lighter" ]
+  # pan (range (-1) 1 $ rand)
+  # cut 1
+  # up 12
+  -- # speed (-1)
+  # bus
+  # fader (vx 3)
+  # orbit 0
+
+
+let root = (|+ 5)
+    tonal scalename pat = (note . root . scale scalename) pat
+  -- Enter Final Piano
+
+p "piano"
+  $ slow 4
+  $ (tonal 5 "phrygian" . stack)
+    [ "{ -3 -1  0  2  0@4 1  -2 -4@3 4 2@3 }%4"
+    , "{ -4 -3 -2 -1  0@4 1@9 }%4" |- 7 |+ "[0,2,6]"
+    ]
+  # piano
+  # octave 5
+  # lpf 1500
+  # sus 4
+  # gain 1.8
+  # velocity 0.47
+  # bus
+
+m2 $ n "~ 0"
+
+mc [ __ -- n "<0 ~ 0 0>@3 0"
+   , __ -- n "~ 0"
+   , n "0*8" # open ("[10 1 1 10 1 10 1 1 . [10 1!3]*2]/2" / 10)]
+
+
+-- Leave intro line
+xfadeIn "mainvibe" 32 $ silence
+
+-- Leave glitches
+clutchIn "glitchverb" 32 $ silence
+
+-- Leave bass
+xfadeIn "plucks" 16 $ silence
+
+hush

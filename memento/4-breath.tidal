@@ -74,6 +74,8 @@ do
   -- @name comeback
   all ((|* speed 0.9) . (# bus' 0.3 0.3) . (|* gain 1.04))
   let kbdi = s "supervibe" # sus 0.3 # resonance 0.13 # modfreq 0 # gain 1
+      -- bes = octave 3 # s "supersquare" # cut 1 # bus # orbit 2 # lpf 400 # hpf 90 # resonance 0.1 # gain 0.9
+      bes = s "mc" # midichan 5
   mel [cat phrase]
   p "bass" $ fast 2
     $ (t . cat)
@@ -81,7 +83,7 @@ do
       , "0", "7!2 6!2"
       , "~ 5 4 2", "4 5 6 1"
       ]
-    # octave 3 # s "supersquare" # cut 1 # bus # orbit 2 # lpf 400 # hpf 90 # resonance 0.1 # gain 0.9
+      # bes
   p "chords" ## [kbdi # sus 1.7 # bus # octave 4 # orbit 1 # velocity 0.4]
     $ fast 2
     $ (tonal (-3) "chromatic" . cat)

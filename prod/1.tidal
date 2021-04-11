@@ -1,0 +1,23 @@
+
+do
+  setcps (114/120/2)
+  setkey (-1) "chromatic"
+  all $ (# orbit 0) . (# bus' 0.3 0.3)
+  all (# orbit 0)
+
+do
+  hush
+  m1 $ n (cat $ l "0*4") # sus 0.1
+  m6 $ t ((1/4) <~ "5")
+  m3 $ n "~  0 0 ~ 0 0 ~ 0 . 0!3 0*2" # open "0.05@15 0.4"
+  d6 $ t (cat $ l "0'min7@3 1'maj7@4 ~"
+      "~@2 -4'maj7 ~@2 -5'min7 ~@2 . -7'min7 [~|-2'sevenFlat9]"
+      "[-9'aug,2,7]"
+      -- "-9'7sus2 -4'eleven"
+      -- "-9'7sus2 -4'eleven"
+      "-7'7sus2 -4'dom7"
+      )
+      # s "superpiano" # velocity 0.26 # gain 1.94 # octave 4
+
+
+once $ n 0 # s "superpiano" # sus (-1)

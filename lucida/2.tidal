@@ -1,0 +1,33 @@
+do
+  -- @setup
+  setcps (84/120)
+  setkey 0 "phrygian minor"
+  all (# bus' 0.3 0.3)
+
+setcps (80/120)
+
+do
+  d1 $ n "0*3" # orbit 0 # s "bd"
+  d2 $ n "0 ~ 0 ~ 0 0 ~ 0 ~" # s "th:2" # orbit 0
+  d3 $ n "[~@4 0!2]/2" # s "biam:3" # orbit 0 # orbit 4
+  d6 $ t "[<3!5 2> 7 4]*3" # s "tm:4" # gain 0.6 # orbit 0
+  d5 $ t "[1,5,7,9,11]@4 [6,8,10,11]@5" # s "superpiano" # velocity 0.4 # gain 1.2 # orbit 0 # octave 4
+
+do
+  hush
+  m1 $ n "0*3"
+  m2 $ n "[[~ 0]*3]/2"
+  m2 $ n "[~ ~ 0]*3"
+  m3 $ n "0 ~ 0 ~ 0 0 ~ 0 ~" # open "0.08@2 0.35 0.08"
+  m4 $ n "[~@4 0!2]/2" # gain 0.7 # sus 0.1
+  m6 $ t "[<3!5 2> 7 4]*3" # sus "[0.1 0.02@2]*3"
+  p "piano" $ t "[1,5,7,9,11]@5 [4,6,8,10,11]@4" # s "superpiano" # velocity 0.12 # gain 3 # orbit 0 # octave 4 # lpf 3000
+
+do
+  solo "cycles6"
+  solo "cycles3"
+
+mc [n 0]
+
+do
+  m6 $ t (sew "[t|f|f]*9" ("6*9" |+ irand 8) "[<3!5 2> 7 4]*3") # sus "[0.1 0.02@2]*3"

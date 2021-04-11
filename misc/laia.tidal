@@ -1,0 +1,37 @@
+do
+  -- @setup
+  setkey (-8) "mixolydian"
+  setkey' 0 (-8) "mixolydian"
+  setcps (114/120/2)
+
+all $ (# orbit 0) . (# velocity 0.3)
+
+dr "cuba1" $ l "<~ 1>@3 0 . 0 ~ 1 <~ 1>" "[0!3 ~]*2"
+
+do
+  -- @name perc
+  hush
+  d1 $ rs "axe" ["vk:5", "[bc:9|bo:11]*16" ] # gain 1.2 # brakk # speed 8
+  d3 $ r "cuba1" ["~", "<shaker:0 shaker:6>*4"] # gain (fast 2 $ run 8 |/ 10 + 0.5)
+  d2 $ tom "cuba1" [2] # s "bo" # unit "c" # speed "[8,16]"
+
+
+
+notes = note . stack
+
+do
+  piano $ notes $ flat 6 . onkey 0 <$> voicings "bossa" ["0 <4 <-3 1>>", "[6,9,12]"]
+
+do
+  piano $ (note . flat 6 . flat 1 . onkey 0 . (|- 1) . stack) $ voicings "bossa"
+    [ "<0 <4 -3>>*2"
+    , "[<6 5>,9,11]"
+    ]
+
+do
+  piano $ (note . (|- 1) . stack) $ every 4 (sharp 4 . sharp 11) . onkey 0 . (|- "<2 [3 -3] -3 -3>")
+    <$> voicings "bossa" [ "<0 <4 -3>>*2", "<[6,9,11] [6,9,12]>/2" ]
+
+do
+  piano $ note . stack $ flat 6 . sharp 2 . onkey 0 . (+ 4)
+    <$> voicings "bossa" [ "<0 -3>*2", "[6,9,12]" ]

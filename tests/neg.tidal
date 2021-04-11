@@ -1,0 +1,80 @@
+d1 $ s "tm"
+
+do
+  all $ (# orbit 0)
+
+  setkey
+
+m6
+  $ note
+    ( scale "minor" . scale "minor"
+    -- $ scale "chromatic"
+    $ run 8)
+  # gain 0.3
+
+
+
+
+
+
+once $ n 0 # midichan 5 # s "mc" # sus (-1)
+
+{-| mo and mh: once and hold for model cycles voices
+  - mo channelnumber pat: triggers a pattern once on channelnumber voice
+  - mh channelnumber pat: holds a pattern forever on channelnumber voice
+  -}
+mo channelnumber pat = once $ pat # midichan (channelnumber - 1) # s "mc"
+mh channelnumber pat = mo channelnumber $ pat # sus (-1)
+
+mo 4 $ 0 # sus 0.1
+
+mo 5
+
+p "test" $ note (
+  neg
+  $ scale "major"
+  $ run 7)
+  # s "tm"
+  # sus 0.1
+  # octave 4
+
+p "test"
+  $ note ((someCycles . whenmod 2 1)
+    (sharp 10)
+    $ deny "<f t>"
+    $ "~ 0 0 ~ . 0(3,8)" |+ "<0 -5>" |+ "'maj7")
+    # sus 1
+  # s "superpiano" # octave 4 # velocity 0.3 # gain 1.8
+
+p "test"
+  $ slow 2
+  $ note (deny "f t f t" $ "2'maj 7'dom7 0'6 5'maj" |+ "0 'i 0 'i")
+  -- $ note (deny "f t f t" $ scale "major" $ "0 -2 3 4" |+ "[0,2,4,6]")
+  -- $ note (deny "f t f t" $ (|+ "0 'i 0 'i") $ scale "major" $ "0 -2 3 4" |+ "[0,2,4,6]")
+  -- $ note "[0,4,7]"
+  # s "superpiano" # octave 4 # velocity 0.4 # gain 1.8
+
+toScale [0,1,2,3,4,5,6,7,8,9,11,12]
+
+import Sound.Tidal.Chords
+
+chordList
+
+
+neg = toScale [7,6,5,4,3,2,1,0,11,10,9,8]
+
+p "drums"
+
+p "test"
+  $ slow 2
+  $ note (flat 1 $ scale "minor" $ run 7)
+  # s "superpiano" # octave 4 # velocity 0.4 # gain 1.8 # lpf 800
+
+octave s x = x `div` length s
+noteInScale s x = (s !!! x) + (fromIntegral $ 12 * octave s x)
+
+getScale :: Fractional a => [(String, [a])] -> Pattern String -> Pattern Int -> Pattern a
+getScale table sp p = (\n scaleName
+              -> noteInScale (fromMaybe [0] $ lookup scaleName table) n) <$> p <* sp
+  where octave s x = x `div` length s
+        noteInScale s x = (s !!! x) + fromIntegral (12 * octave s x)

@@ -33,6 +33,10 @@ do
   all id
   bass $ ("0@2 . ~@3 7" |+ "<0 1 1 1>")
 
+mc [t ("7 0@4 ~@3" |+ "<0 1 1 1>") # octave 5]
+
+setkey 0 "phrygian"
+
 xfadeIn "bass" 16 silence
 
 xfadeIn "chords" 16 silence

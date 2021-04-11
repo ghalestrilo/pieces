@@ -1,0 +1,27 @@
+let a = 2
+
+do
+  -- @setup
+  setkey ("[2 0]/8" + 0) "major"
+  setcps (105/120)
+
+do
+  -- @name part 1
+  piano (t "{[3,9,12]@3 11 10 [0,2,6,9]@3 10 11 \
+            \[3,9,12]@1 11 10 [0,2,6,9]@3 10 11 \
+            \[3,9,12]@3 11 10 [0,2,6,9]@1 10 11 }%8")
+  mc $ l
+    (n "0*2" # gain 1.1)
+    (n "{~@3 ~@3 0 ~ 0 ~ ~@3 0@3}%8" # sus 0.1 # open 0.4)
+    (n "{0 0 ~ 0 ~ 0 ~ 0 [0!3]@6}%8" # open 0.1)
+    (fast 8 $ t ("0" |+ irand 6)
+        # open (range 0.1 0.3 rand)
+        # cyclesColor rand
+        # cyclesSweep (60 <~ rand)
+        # cyclesShape (130 <~ rand)
+        )
+    ((t . (|+ 3) . ((2/8) <~) . slow (20/8)) (ring "0 2 9 6" "t@5 t@5 t@3 t@3 t@4") # octave 2)
+
+
+do
+  p "piano" $ s "superpiano"

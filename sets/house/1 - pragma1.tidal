@@ -1,0 +1,31 @@
+
+do
+  -- @initset
+  all $ id (# orbit 0)
+  setcps (112/120)
+
+do
+  m1 $ n "0*2"
+  setkey 0 "minor"
+
+do
+  m5 $ t (arp "up" "[0,2,4,6]") # octave "<6 7>/2"
+
+do
+  m3 $ slow 2 $ n "0(3,8) . 0*2 0!3" # open ("1@5 4 2@3" |/ 10)
+
+do
+  m4 $ slow 16 $ t "0 -3 -4 1" # sus 8
+
+do
+  -- break
+  m2 $ n "~ 0"
+
+
+do
+  -- prepare for next track
+  hush
+  all $ fast 2 . (# orbit 0)
+  m5 $ slow 2 $ t (arp "up" "[0,2,4,6]") # octave "<6 7>/2"
+  m1 $ n "0"
+  m5' 32 silence

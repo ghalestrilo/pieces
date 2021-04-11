@@ -1,0 +1,47 @@
+
+setcps 0.68
+
+
+d1 $ s "bd"
+
+playpart = \(root,mode,chord,arpmode) -> tonal root mode $ arp arpmode chord
+
+mc $ l __ __ __ __
+
+
+do
+  let skippart part = []
+      onkey root mode partdefs = map (\partdef -> (root,mode,partdef,"up")) partdefs
+      the_track =
+        -- (skippart . onkey (-3) "major")
+        onkey (-3) "major"
+          (l
+             "7 4 2 0"  "2 4 7 4"
+             "9 7 4 2"  "4 7 9 7"
+             "10 8 6 4" "9 7 4 2"
+             "8 6 4 3" "1 3 4 6"
+             "8 6 4 3")
+        ++ onkey (-6) "mixolydian"   (l "11 9 7 4")
+        ++ onkey (-1) "minor"        (l "9 7 4 0" "4 7 9 7")
+        ++ onkey (-6) "mixolydian"   (l "13 11 9 7")
+        ++ onkey (-1) "minor"        (l "9 7 4 0")
+        ++ onkey (-6) "mixolydian"   (l "11 9 7 0" "6 9 11 9")
+        ++ onkey (-1) "minor"        (l "9 7 4 0")
+        ++ onkey (4) "mixolydian"    (l "7 4 2 -1")
+        ++ onkey (-3) "major"        (l "14 11 7 2" "7 11 14 11" "13 11 7 2")
+        ++ onkey (-4) "diminished"   (l "15 13 7 3")
+        ++ onkey 1 "minor"           (l "9 7 4 0" "4 7 9 7")
+        ++ onkey (-6) "leadingWhole" (l "11 9 5 0" "5 9 11 9")
+        ++ onkey (-1) "mixolydian"   (l "8 6 2 0" "2 6 8 6")
+        ++ onkey (-8) "mixolydian"   (l "11 9 6 0" "6 9 11 9")
+  mc $ [
+    gtfo $ rp "baiao" 0,
+    -- stack $ withvoices' "ile" [gtfo, (# gain (range 0.4 0.9 rand)), gtfo],
+    gtfo $ n "[~ 0]*2",
+    gtfo $ chop "[1 2 1 1]*2" $ rp "baiao" 3 # open ("[1 1 8 1]*2" |/ 10)
+    , __
+    -- , (# octave "[4 3]*8") $ fast 2 $ chop 2 $ cat $ playpart <$> the_track]
+    , (# octave 4) $ fast 2 $ cat $ playpart <$> the_track]
+  resetCycles
+
+scaleList
