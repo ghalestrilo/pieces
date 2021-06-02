@@ -13,6 +13,7 @@ let bus = bus' 0.1 0.1
 do
   setkey 0 "phrygian"
   hush
+  bank 40
   unmute "bass"
   unmute "bes"
   unmute "chords"

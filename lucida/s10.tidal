@@ -1,0 +1,40 @@
+do
+  -- @setup
+  setkey (-1) "minor"
+  setcps (105/120/2)
+  all (# bus' 0.3 0.3)
+
+let piano = p "piano" ## [s "superpiano" # velocity 0.25 # gain 1.7 # octave 4 # legato 2 # lpf 1700]
+    vibe = p "vibe" ## [s "supervibe" # modamp 0 # sus 4 # velocity 0.3 # sus 4 # gain 0.7]
+    bes = p "bes" ## [s "[tb:0,tb:1]" # octave 3 # gain 0.7 # lpf 350]
+
+mc [ fast 4 0 ]
+
+
+-- eu juro q um dia, gente às ruas já me fez feliz
+-- mas hoje temo que
+do
+  piano $ fast 2 $ (note . ((1/4) <~) . cat) $ l
+    ((1/4) ~> "0'maj7")
+    "-4'maj7"
+    "0'maj7"
+    "3'dom7"
+    "-7'min7"
+    "-2'dom7"
+    "1'maj7"
+    "~"
+
+
+mc $ [__,__,__,__,__,__]
+
+do
+  mc [ fast 4 0
+     ]
+
+
+p "test" $ n (fast 2 $ 20 - run 60) # midichan 0 # s "mc" # gain (1 / run 8) # sus 0.1
+
+
+do
+ -- @setup
+ setkey (-1) "minor"

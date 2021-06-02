@@ -1,0 +1,32 @@
+3. untitled (baiao techno minimal)
+  - hats: 0!3 0*2 (sometimes # open "~@7 0.5")
+  - sn:
+  - kick: <0 ~> . 0(3,5)
+  - perc: <~ 0*8> (machine gun) >> <>
+  - piano baiao dório
+  - lead (minor): "8 6 5 4 . [5 ~@2]!2 8*2"
+
+
+
+do
+  setcps (112/120)
+  setkey 0 "minor"
+
+do
+  hush
+  m1 $ n "<0*2 0(3,8)>" # gain 2
+  -- m1 $ n "0*2"
+  m2 $ n "<[~ 0]!3 0*8>" # open 0.09
+  m3 $ n "0!3 0*2" # open ("0.1@7 [1|0.1|0.1]" * 0.7)
+  -- m4 $ n "<~ 0*8>"
+  m4 $ n "[~ 0 0 ~ . 0@3 0@3 0!2]/2"
+  m5 $ t ("[8 6 5 4 . [2 ~@2]!2 [~ 8]!2]/2" |+ 2)
+
+
+  p "piano" $ n ((0.25 <~) "[-5,2'min] [-5,0'min]@3") # s "superpiano" # octave 4 # velocity 0.4 # gain 2 # lpf 1200
+
+
+do
+  unsolo "cycles5"
+  unsolo "cycles1"
+  unsolo "cycles3"

@@ -15,8 +15,6 @@ do
   d3 $ r "cuba1" ["~", "<shaker:0 shaker:6>*4"] # gain (fast 2 $ run 8 |/ 10 + 0.5)
   d2 $ tom "cuba1" [2] # s "bo" # unit "c" # speed "[8,16]"
 
-
-
 notes = note . stack
 
 do

@@ -1,0 +1,16 @@
+do
+  -- @setup
+  setkey (3) "minor"
+  setkey' 0 (3) "minor"
+  setcps (140/120/2)
+  all $ (# bus' 0.3 0.3) . (# orbit 0)
+
+let piano = p "piano" ## [s "superpiano" # velocity 0.25 # gain 1.7 # octave 4 # legato 2 # lpf 1700]
+    vibe = p "vibe" ## [s "supervibe" # modamp 0 # sus 4 # velocity 0.3 # sus 4 # gain 0.7]
+    bes = p "bes" ## [s "[tb:0,tb:1]" # octave 5 # gain 0.7 # lpf 350 # cut 0]
+
+
+do
+  bes $ (t . fastcat) $ l "0 1 2" "8 4 6" "2 3 4"
+  piano $ note ("[3'min7 1'min7 . -6'maj7]/4" + 7)
+  -- piano $ note ("[3'min7 -6'maj7]/4" + 7)

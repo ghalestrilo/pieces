@@ -9,6 +9,8 @@ do
   setkey' 1 (- 5) "lydian"
 
 do
+  hush
+  mc [n "0*2"]
   -- @name guitar
   anticipateIn "guitar" 2 $ stack
     [ slow 2 $ t ("6@2 6@3 6@2 6@4  6@3 6@2" |+ "[0,5]@7 [-1,5]@9")
@@ -21,9 +23,11 @@ do
     # lpf 550
     # bus
 
-p "bd" $ s "bd"
+p "bd" $ s "biam"
 
-unmte "drums"
+p "bd" $ s ""
+
+unmute "drums"
 
 -- Drums enter
 p "drums" $ fast 2
@@ -47,34 +51,44 @@ p "drums" $ stack
 
 -- Piano phrase enters
 do
-  mc $ [ n (1 <~ "<[0@3 0]!3 [0(3,8)]>"), n "~ 0"] ++ [struct "[0(5,16)]/2" 0, tom "ijexa" [0, -5]]
+  -- mc $ [ n (1 <~ "<[0@3 0]!3 [0(3,8)]>"), n "~ 0"] ++ [struct "[0(5,16)]/2" 0, tom "ijexa" [0, -5]]
+  hush
+  -- mc $ [ n (1 <~ "<[0@3 0]!3 [0(3,8)]>"), n "~ 0"]
+  mc $ [__,n "~ 0"] ++ [struct "[0(5,16)]/2" 0]
   let phrase = "{16 14 11 0 ~     16 14 11 4 6 7 6 7 9 7 9 11 ~   16 14 11 6 ~ }%8"
-    in xfadeIn "piano" 8 $ (note . slow 2 . onkey 0 . stack)
+    in p "piano" $ (note . slow 2 . onkey 0 . stack)
         [ (phrase |+ 12)
         -- , piano "{~@3 0'maj@2   ~@3 0'maj@3 2'maj@3 0'maj@4   ~@3 4'maj@2 }%8" # pan 0.35
         -- , piano "{~@3 <[5,9,17]>@2   ~@3 0'maj@3 <2'maj 3'maj>@3 <0'maj -1'maj>@4   ~@3 <4'maj -3'minor -1'maj>@2 }%8" # pan 0.35
         ] # piano
+        # sus 4
 
--- Snare + Variations enters
-p "drums" $ stack
-    [ fast 2 $ gretsch "13@3 13" # lpf 1200 |* gain 1.05
-    , fast 2
-      $ sometimesBy 0.05 ((# n "16") . (# gain 0.7))
-      $ sometimesBy 0.1 (# n "19")
-      $ sometimesBy 0.2 (# n "5")
-      $ gretsch "10*4"
-      |* gain (range 0.75 1.15 $ rand)
-      # pan 0.3
-    , gretsch (degradeBy 0.9 "20*8") |* gain (range 0.75 0.95 $ rand)
-    ]
-    -- |* gain 0.75
+do
+  -- Snare + Variations enters
+  mc $ [ n (1 <~ "<[0@3 0]!3 [0(3,8)]>"), n "~ 0"] ++ [struct "[0(5,16)]/2" 0, tom "ijexa" [0, -5]]
+  p "drums" $ stack
+      [ fast 2 $ gretsch "13@3 13" # lpf 1200 |* gain 1.05
+      , fast 2
+        $ sometimesBy 0.05 ((# n "16") . (# gain 0.7))
+        $ sometimesBy 0.1 (# n "19")
+        $ sometimesBy 0.2 (# n "5")
+        $ gretsch "10*4"
+        |* gain (range 0.75 1.15 $ rand)
+        # pan 0.3
+      , gretsch (degradeBy 0.9 "20*8") |* gain (range 0.75 0.95 $ rand)
+      ]
+      -- |* gain 0.75
 
 -- Piano chords enter
 let phrase = "{16 14 11 0 ~     16 14 11 4 6 7 6 7 9 7 9 <11 10 11> ~   <16 15 16> 14 <11 10 11> <6 9 6> ~ }%8"
-in p "piano" $ stack
-  [ piano (phrase |+ 12) # pan 0.65
-  , piano "{~@3 0'maj@2   ~@3 0'maj@3 2'maj@3 <0'maj 3'maj -3'min>@4   ~@3 <4'maj 5'maj -1'min>@2 }%8" # pan 0.35
-  ]
+in p "piano" $ (note . slow 2 . onkey 0 . stack)
+  [ (phrase |+ 12)
+  , "{~@3 0'maj@2   ~@3 0'maj@3 2'maj@3 <0'maj 3'maj -3'min>@4   ~@3 <4'maj 5'maj -1'min>@2 }%8"
+  ] # piano # sus 6 # velocity 0.37 # gain 1.6
+
+do
+  mc $ [n (1 <~ "<[0@3 0]!3 [0(3,8)]>"),n "~ 0"] ++ [struct "[0(5,16)]/2" 0]
+  p "drums" $ silence
 
 
 -- Start shimmers (fader F2 set to 0.07)
@@ -82,8 +96,9 @@ in p "piano" $ stack
 xfadeIn "shimmers" 32
   $ off 3 id
   $ fast (4 |+ (range (-1) 1 $ slow 4 sine))
-  $ vibe (run 4 |- 2 |+ ("0/4" |+ irand 4) |+ "<0 2 4 6>")
-  |* sus (cF 0.1 "f2")
+  $ (run 4 |- 2 |+ ("0/4" |+ irand 4) |+ "<0 2 4 6>")
+  |* sus (slotenc 1 "decay")
+  # vibe
   # pan (slow 4 sine)
   # bus
 

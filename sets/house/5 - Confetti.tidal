@@ -4,10 +4,17 @@ let
   gretsch x = n x # s "gretsch" # bus
   ts = t . stack
 
+
+d1 $ s "bd*8" # orbit 0
+
 do
+  -- @setup
   -- intro
   setcps (112/120)
   setkey (-2) "minor"
+  bank 36
+  hush
+  mc [ n "0 0", __, degradeBy (slotenc 1 "chance") $ n "0*6" # open 0.1]
   m4 $ t "[<2 4 6>@2 <0 2 3>]*2"
     # vibe
 

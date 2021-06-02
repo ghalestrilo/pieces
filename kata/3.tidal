@@ -4,6 +4,7 @@ do
   -- @setup
   setcps (210/120)
   setkey 3 "octatonic"
+  bank 39
 
 do
   -- @name kata

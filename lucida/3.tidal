@@ -1,32 +1,53 @@
-3. untitled (baiao techno minimal)
-  - hats: 0!3 0*2 (sometimes # open "~@7 0.5")
-  - sn:
-  - kick: <0 ~> . 0(3,5)
-  - perc: <~ 0*8> (machine gun) >> <>
-  - piano baiao dório
-  - lead (minor): "8 6 5 4 . [5 ~@2]!2 8*2"
-
-
+-- B06 Não vou mentir, eu sinto falta
 
 do
-  setcps (112/120)
-  setkey 0 "minor"
+  -- @setup
+  setkey (-7) "dorian"
+  setcps (105/120/2)
+  all (# bus' 0.3 0.3)
+  bank "mc" 18
+
+let piano = p "piano" ## [s "superpiano" # velocity 0.25 # gain 1.7 # octave 4 # legato 2 # lpf 1700]
+    vibe = p "vibe" ## [s "supervibe" # modamp 0 # sus 4 # velocity 0.3 # sus 4 # gain 0.7]
+    bes = p "bes" ## [s "[tb:0,tb:1]" # octave 3 # gain 0.7 # lpf 350]
+
+
+-- Não vou mentir, eu sinto falta
 
 do
-  hush
-  m1 $ n "<0*2 0(3,8)>" # gain 2
-  -- m1 $ n "0*2"
-  m2 $ n "<[~ 0]!3 0*8>" # open 0.09
-  m3 $ n "0!3 0*2" # open ("0.1@7 [1|0.1|0.1]" * 0.7)
-  -- m4 $ n "<~ 0*8>"
-  m4 $ n "[~ 0 0 ~ . 0@3 0@3 0!2]/2"
-  m5 $ t ("[8 6 5 4 . [2 ~@2]!2 [~ 8]!2]/2" |+ 2)
-
-
-  p "piano" $ n ((0.25 <~) "[-5,2'min] [-5,0'min]@3") # s "superpiano" # octave 4 # velocity 0.4 # gain 2 # lpf 1200
-
+  mc  [ __
+      , n "0(3,8) . <[~ 0!2 ~]!3 0*2>" # velocity 1
+      , __
+      , t . fast 2 . cat
+        $ l "~ ~ 8 8" "8 7 7 5"
+            -- "5"       "~@2 3@3 5@3"
+            -- "5"       "~@2 3@3 5@3"
+            "5"       "~@2 3@3 5@3"
+      ]
 
 do
-  unsolo "cycles5"
-  unsolo "cycles1"
-  unsolo "cycles3"
+  mc  [ t ("0@3 0 . ~ . ~ <0 1> . ~" |- 1)
+      -- , __
+      , n "0(3,8) . <[~ 0!2 ~]!3 0*2>" # velocity 1
+      , fast 4 $ n "0*2" # open ("4 1" / 10)
+      , t . fast 2 . cat
+        $ l "~ ~ [7 6] [~ 5] "
+            " [~ 3] ~ [7 6] [~ 5]"
+            "[~ 3] [~ 3] 1 3"
+            "4 3 1 [3 5]"
+      ]
+
+  p "piano"
+
+{-
+
+É melhor conjugarmo-nos assim
+Pretérito perfeito
+
+Não vou mentir:
+Eu sinto falta, eu sinto falta do
+
+Do seu rosto, do seu gosto, do cheiro do seu cobertor
+
+
+-}

@@ -78,3 +78,15 @@ getScale table sp p = (\n scaleName
               -> noteInScale (fromMaybe [0] $ lookup scaleName table) n) <$> p <* sp
   where octave s x = x `div` length s
         noteInScale s x = (s !!! x) + fromIntegral (12 * octave s x)
+
+
+p "test"
+  $ slow 2.2
+  $ (note . deny "f t f t" . stack)
+    [ (scale "major" $ "0*16" |+ irand 12) |+ "0 'i 0 'i"
+    , (0.05 <~) $ scale "major" $ (fast 4 $ strum 7 $ (cat [0,(-2),3,4] |+ "[0,2,4,6]"))
+    ]
+  -- $ note (deny "f t f t" $ scale "major" $ "0 -2 3 4" |+ "[0,2,4,6]")
+  -- $ note "[0,4,7]"
+  # s "superpiano" # octave 4 # velocity 0.25 # gain 1.8
+  # sus 2

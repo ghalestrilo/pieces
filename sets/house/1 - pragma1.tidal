@@ -1,12 +1,26 @@
 
+asap $ progNum "1" # s "mc" # midichan 0
+
+asap $ progNum "1" # s "mc" # midichan 0
+
+p "midiclock" $ midicmd "midiClock*96" # s "mc"
+
+once $ midicmd "start" # s "mc"
+
+mc [ n "0*8" ]
+
+bank 1
+
+
+let bank num = asap $ progNum num # s "mc" # midichan 0
+
 do
   -- @initset
   all $ id (# orbit 0)
   setcps (112/120)
-
-do
-  m1 $ n "0*2"
   setkey 0 "minor"
+  m1 $ n "0*2"
+  bank "mc" 32
 
 do
   m5 $ t (arp "up" "[0,2,4,6]") # octave "<6 7>/2"
@@ -20,6 +34,8 @@ do
 do
   -- break
   m2 $ n "~ 0"
+
+  m1 silence
 
 
 do

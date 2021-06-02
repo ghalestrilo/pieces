@@ -1,0 +1,25 @@
+do
+  -- @setup
+  setkey 0 "dorian"
+  setcps (115/120/2)
+  all (# bus' 0.3 0.3)
+
+let piano = p "piano" ## [s "superpiano" # velocity 0.2 # gain 1.7 # octave 4 # lpf 1700]
+    vibe = p "vibe" ## [s "supervibe" # modamp 0 # sus 4 # velocity 0.3 # sus 4 # gain 0.7]
+    bes = p "bes" ## [s "[tb:0,tb:1]" # octave 3 # gain 0.7 # lpf 350]
+
+
+do
+  p "perc" $ stack
+    [ (5/8) <~ (n "4 4@2 3 . <[~ 3@3] 3>" # s "bo bc@5")
+    , note "-5 . 0*<2 4>" # s "tk"
+    , fast 2 $ n "0 . 0*2" # s "shaker" # gain ("[7 8]*2" / 10)
+    ] |* gain 0.8
+
+do
+  piano $ ((1/8) ~>) $ note ("0 [0 ~]!3" |+ cat
+    [ "-5'min"
+    , "0'maj"
+    , "-2'maj"
+    , "0'maj"
+    ])

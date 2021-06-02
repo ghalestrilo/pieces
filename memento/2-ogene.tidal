@@ -7,7 +7,10 @@ let bus = bus' 0 0
     bass pat = p "bass" ## [s "pluck", bus, octave 5, gain 1.25, orbit 2]
                 $ (|+ up 2.72)
                 $ t pat
-    base = "[br*3,bbd:1!2 bs:10 ~]/2" # pan 0.65 # gain 1.08 # orbit 0
+    base = stack
+      [ "[br*3,bbd:1!2 bs:10 ~]/2" # pan 0.65 # gain 1.08 # orbit 0
+      , "[~@3 0]/2" # pan 0.65 # gain 1.08 # orbit 0
+      ]
     flairs = fast 2
       $ s (sew "t f f" "<bbd btl br btm bs bth>" "bs*3")
       -- $ s (sew "t f f" "[bbd|btl|br|btm|bth|bsn]" "bs*3")
@@ -23,30 +26,11 @@ p "ogene" $ fast 2 $ stack
   , n "[-3|-8]" # pan 0.2
   ]
   # ogene
-  --  # gain 0.8
-  --  # velocity 0.2 -- faderify
+  -- # gain 0.8
+  -- # velocity 0.2 -- faderify
   --  # bus
 
 bass "<[0 0 -3]!3 [7 6 4]>/2"
-
-do
-  p "drums" $ stack [base] # bus
-  p "perc" $ stack
-    [ s "<bo bc:8>" # gain 1.15 # speed 0.5
-    -- , (n . sometimes (shuffle 2)) "[0!3 . 0 0 ~ 0 ~ 0]/2" # s "shaker" # up "[-0.7 0]*3" # pan 0.4
-    , s "shaker*6"
-      # gain (sometimes (shuffle 6) $ sew "[[t f]!3 . t t f t f t]/2" "1*12" "0.73*12")
-      # up "[-0.7 0]*3" # pan 0.4
-    , rarely (shuffle 6) $ n "[~ 1 1]*2" # s "can" # pan 0.6 # gain "[0.8 1 1.2]*2"
-    -- , n "0*2" # s "can"
-    ]
-    |* gain 0.9
-    # bus
-
-
-unsolo "ogene"
-
-
 
 -- Enter Vocal
 do
@@ -64,6 +48,29 @@ do
       ("[-12,-5,0,10,17]" |-| 5)
       ("[-5,3,15]" |-| 5)
       ("[0,19]" |-| 5)
+
+do
+  p "drums" $ stack [base] # bus
+  p "perc" $ stack
+    [ s "<bo bc:8>" # gain 1.15 # speed 0.5
+    -- , (n . sometimes (shuffle 2)) "[0!3 . 0 0 ~ 0 ~ 0]/2" # s "shaker" # up "[-0.7 0]*3" # pan 0.4
+    , s "shaker*6"
+      # gain (sometimes (shuffle 6) $ sew "[[t f]!3 . t t f t f t]/2" "1*12" "0.73*12")
+      # up "[-0.7 0]*3" # pan 0.4
+    , rarely (shuffle 6) $ n "[~ 1 1]*2" # s "can" # pan 0.6 # gain "[0.8 1 1.2]*2"
+    -- , n "0*2" # s "can"
+    ]
+    |* gain 0.9
+    # bus
+
+
+
+
+unsolo "ogene"
+
+do
+  p "chords" silence
+
 
 -- bridge 1
 do

@@ -1,0 +1,93 @@
+let piano = p "piano" ## [s "superpiano" # velocity 0.05 # gain 2 # octave 4 # legato 2 # sus 4]
+
+do
+  -- @setup
+  setkey 3 "lydian"
+  setkey' 0 3 "lydian"
+  setkey' 1 3 "lydian"
+  setcps (92/120/2)
+  all $( # (bus' 0.6 0.93 # delay 1 # delaytime (10/23) # delayfb 0.85))
+
+
+do
+  setcps (104/120/2)
+  all $( # (bus' 0.6 0.93 # delay 1 # delaytime (10/26) # delayfb 0.85))
+
+
+p "dr" $ s "bss"
+
+p "dr" $ s "bss ~ <br bs:8 btl>" # gain 0.3 # pan "0.5 0.3" # speed 0.9
+
+
+piano $ stack
+  [ t "-7@3 <~!2 [<2 3>,8]>" # pan 0.3
+  , t "12 13 12? [13|10|9] [15|16] 13" # pan 0.7
+  -- , randcat
+  --   [ "12 13 12? 13 15 13"
+  --   , "12 13 12 9 15 13"
+  --   ]
+  ]
+
+once $ s "bd"
+
+
+do
+  piano $ (t . stack)
+    [ "-8"
+    , "12 13 12? [13|10|9] [15|16] 13"
+    -- , randcat
+    --   [ "12 13 12? 13 15 13"
+    --   , "12 13 12 9 15 13"
+    --   ]
+    ]
+
+piano $ (t . stack)
+  [ "<-7!4 -10!4>"
+  , "12 13 12? [13|10|9] [15|16] 13"
+  -- , randcat
+  --   [ "12 13 12? 13 15 13"
+  --   , "12 13 12 9 15 13"
+  --   ]
+  ]
+
+
+  piano $ (t . stack)
+    [ "-7"
+    , "12 13 12? [13|10|9] [15|16] 13"
+    -- , randcat
+    --   [ "12 13 12? 13 15 13"
+    --   , "12 13 12 9 15 13"
+    --   ]
+    ]
+
+do
+  setkey' 1 2 "major"
+  piano $ (t' 1 . stack)
+    [ "-10"
+    , "12 13 12? [13|10|9] [15|16] 13"
+    -- , randcat
+    --   [ "12 13 12? 13 15 13"
+    --   , "12 13 12 9 15 13"
+    --   ]
+    ]
+
+
+
+  do
+    setkey' 2 (-1) "lydian"
+    piano $ (t' 2 . stack)
+      [ "-7@3 <~!2 [<2 3>,8]>"
+      , "12 13 12? [13|10|9] [15|16] 13"
+      -- , randcat
+      --   [ "12 13 12? 13 15 13"
+      --   , "12 13 12 9 15 13"
+      --   ]
+      ]
+
+
+
+do
+  p "besgt" $ t "{ 2 ~ 2@2 6 4 5 6 ~@2 4 4 3 4 ~@2 2 2 1 ~ -2 }%6" # s "tm" # lpf 1500 # gain 0.3 # n 1 |- up "[0,5]"
+  p "dr" $ s "bss ~ <br bs:8 btl>" # gain 0.3 # pan "0.5 0.3" # speed 0.9
+
+  piano silence

@@ -1,10 +1,12 @@
 
 
 do
+  -- @setup
   setkey (-5) "lydian"
   -- setcps (114/120/2)
   all $ (# orbit 0)
   unmute "ch"
+  bank 34
 
 do
   hush
@@ -15,9 +17,13 @@ do
   m4 $ slow 2 $ t "-1@2 ~" # octave 6
 
 do
+  hush
   p "ch" $ slow 2 $ t ("<0!3 -2>@3 <-1!3 1>@3 ~@2" |+ "[-3,0,2,6]") # piano # octave 5 # orbit 0
-  m5 $ slow 2 $ t ("0 6 4 0 6 4 ~@2" |- "<0!3 2>@3 <1!3 -1>@5") # sus 0.2 # octave 6
-  m4 $ slow 2 $ (t.cat) (l "-1@2 ~" "-1@2 ~ [~ -1]" "2 1 -1 -2" "0 -1 -2 -3 -4 -3 -2 -1") # octave 7
+  mc  $  slow 2 <$> [
+  __, __, __
+  , t ("0 6 4 0 6 4 ~@2" |- "<0!3 2>@3 <1!3 -1>@5") # sus 0.2 # octave 6
+  , (t.cat) (l "-1@2 ~" "-1@2 ~ [~ -1]" "2 1 -1 -2" "0 -1 -2 -3 -4 -3 -2 -1") # octave 7
+  ]
 
 
 do
@@ -25,13 +31,18 @@ do
   m2 $ n "~ 0"
   m3 $ n "~ 0 0@2 0 ~ 0 0" # open ("1 6 1 1" / 10)
 
+m1 $ silence
+
 do
-  all $ chunk 4 (rev)
+  all $ chunk "[4|3]*8" (rev)
   all $ iter 2 . shuffle "[1|3|4]" . chunk 8 (hurry 2)
+
   all $ somecyclesBy 0.2 $ within (0, 0.5) $ chop 3 . (# sus 0.01)
   all $ within (0, 0.5) (chop 2)
 
 
 do
+  hush
+  m1 $ n "0*2"
   m5 $ slow 2 $ t "0*4" # sus 0.2 # octave 7
   m4 $ slow 2 $ t "[~ 0]*4"       # octave 7

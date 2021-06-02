@@ -6,10 +6,12 @@ let piano = s "superpiano" # lpf "[1100,300]" # hpf 0 # bus # gain 1.55 # octave
              ]
 
 do
+  -- @setup
   hush
   all id
   setkey (-10) "lydian"
   p "bes" $ t "[0@3 1@5]/2" # piano # sus 4 # orbit 0 # velocity 0.24 # gain 4
+  bank 35
 
 do
   m4 $ fast 2 $ t (melody!!0)

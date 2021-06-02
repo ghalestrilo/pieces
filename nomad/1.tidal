@@ -1,0 +1,56 @@
+setcps (135/120/2)
+
+setkey 0 "phrygian"
+
+setkey ("[-5 -3]/4") "lydian"
+
+setkey-
+
+let se = slotenc
+
+resetCycles
+
+mc $
+  sometimesBy (se 1 "decay") (|+ up 1)
+  -- . (# octave "[5|6|7|8]/4")
+  . (# octave "[8]/4")
+  <$>
+  [ __
+  , n "~@3 0"
+  , __
+  -- , (sometimesBy (slotenc 1 "decay") $
+  , t $ shuffle 4 $ "[0 2 4 6]*2"
+  , t $ ((1/16) <~) $ "[0 2 4 6]*2" |+ 1
+  -- , fast (enc 1) 0
+  ]
+
+
+  mc [ 0 ]
+
+
+  mc
+    [
+    -- slow 2 $ every 4 (degradeBy 1) $ n "0(3,8) . 0@3 0 0@4"
+    __
+    , n "~ 0"
+    , __
+    -- , fast 8 $ (2 <~) $ every 4 (# open 0.4) $ n "0" # velocity 0.3 # open 0.1
+    ]
+
+
+let piano = p "piano" ## [s "superpiano" # velocity 0.35 # gain 2 # orbit 0]
+
+piano silence
+
+piano $ (stack . zipWith (\f p -> p # pan f) [0.35, 0.8] . fmap t)
+  [ strum 8 $ "[-3,1,2,4,8]"
+  , degrade ("0*8" |+ irand 8)
+  ]
+  # sus 8 # lpf 600
+
+
+setkey "0" "major"
+
+setkey "<0 -2-4 1>/4" "lydian"
+
+p "t" $ fast (range 0.5 1 $ slow 4 sine) $ s "mc*64" # midichan (choose [0..6]) # t (fast 2 $ choose [0..9]) # sus 0.1

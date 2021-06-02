@@ -3,6 +3,7 @@ let vibe =  s "supervibe" # lpf 500  # bus |* sus 2 # octave 7 # modamp 0 # velo
 do
   -- @setup
   hush
+  bank 37
   mc [n "0*2"]
 
 

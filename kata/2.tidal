@@ -4,6 +4,7 @@ do
   -- @setup
   setcps (200/120)
   setkey 3 "major"
+  bank 39
 
 do
   -- @name kata

@@ -1,9 +1,9 @@
-let a = 2
-
 do
   -- @setup
   setkey ("[2 0]/8" + 0) "major"
   setcps (105/120)
+
+bank 4
 
 do
   -- @name part 1

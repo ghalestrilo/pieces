@@ -27,11 +27,13 @@ let bus = bus' 0 0
       \ }%2"
 
 do
+  -- @setup
   setcps (112/120)
   setkey "-8" "lydian"
   unmute "drums"
   unmute "mel"
   all $ fast 2 . (# orbit 0)
+  bank 33
 
 
 -- intro

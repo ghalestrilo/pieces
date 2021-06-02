@@ -5,6 +5,10 @@ do
   setkey 0 "chromatic"
   all (# orbit 0)
 
+  let piano = p "piano" ## [s "superpiano" # velocity 0.15 # gain 1.7 # octave 4 # legato 2 # lpf 1700]
+      vibe = p "vibe" ## [s "supervibe" # modamp 0 # sus 4 # velocity 0.3 # sus 4 # gain 0.7]
+      bes = p "bes" ## [s "[tb:0,tb:1]" # octave 3 # gain 0.7 # lpf 350]
+
 do
   hush
   m1 $ n "0*4"

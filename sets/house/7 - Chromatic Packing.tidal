@@ -1,16 +1,22 @@
+-- Esa la dedico a torotumbo
+-- Gracias por todo Pedro!
+
+
 -- Chromatic Packing
 setcps (112/120)
 
 let
-  vibe = s "supervibe" # fader (vx 1) # lpf 500 # bus # sus (fx 1 |* 2 ) # octave 5
+  bus = bus' 0.1 0.1
+  vibe = s "supervibe" # gain 0.8 # lpf 500 # bus # sus 0.1 # octave 5
   piano = s "superpiano" # lpf 5000 # hpf 0 # bus # gain 1.7 # octave 4 # velocity 0.3 # orbit 0
   gretsch x = n x # s "gretsch" # fader (vx 3) # bus
   root = (|- 2)
 
 do
   -- @name intro
-  all $ (# orbit 0) . (# bus)
   hush
+  all $ (# orbit 0) . (# bus)
+  bank 38
   setkey (-14) "chromatic"
   mc [n "0@3 0" # open 0.3]
   xfadeIn "perc" 16
@@ -77,13 +83,16 @@ do
     # n 1
     |* sus ("{1.5@9 9@20 2.5@3}%4")
     # velocity 0.38
-    # gain 1.83
+    # gain 1.7
 
 do
   p "shaker" silence
   p "hats" silence
   mc [n "0@3 0", n "~ <0!7 0*4>", n "[0*4 0*2 . [0(3,8), ~@7 0?]]/2" # open ("1 2 4 1" / 10)]
 
+mc [n "0@3 0", __, n "[0*4 0*2 . [0(3,8), ~@7 0?]]/2" # open ("1 2 4 1" / 10)]
+
+d1 $ s "bd"
 
 do
   xfadeIn "piano" 8 silence

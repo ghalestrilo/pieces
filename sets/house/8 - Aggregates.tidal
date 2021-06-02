@@ -11,7 +11,9 @@ let
   -- let tonal scalename pat = (note . root . scale scalename) pat
 
 do
+  -- @setup
   setkey (-2) "chromatic"
+  bank 38 -- Same as prev
 
 -- Enter First Line
 p "vibe"
