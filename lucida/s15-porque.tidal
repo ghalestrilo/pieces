@@ -1,0 +1,19 @@
+
+let mm pat = d1 $ pat # s "mm" # midichan 0 # orbit 0
+
+
+
+do
+    setkey "a" "lydian"
+    bank "mc" 30
+    bank "mm" 7 
+
+mm $ t "[<-3!10 -4!6>,0,2,6]*8" # octave 5 # sus (every 2 rev $ rev $ sew "tfftfft<tf>" 0.08 0.01)
+
+mc [ fast 2 $ t "0" # octave 4 # open "<0.1 1>" # sus 0.1
+   , t "[0~~0.-3 0 . ~ 3 ~ 3 . ~ 3 2 1]/2"
+   , slow 2 $ n "~~0~0~0~0~0~~0~0" # velocity 0.1
+   , slow 2 $ note (select "~~0~0~0~0~0~~0~0" [0, 6]) # sus 1
+   ]
+
+

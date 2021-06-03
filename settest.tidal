@@ -1,0 +1,11 @@
+setkey "c" "major"
+
+d1 $ t ("0*12" |+ irand 9) # s "mm" # midichan 0 # orbit 0
+
+d2 $ s "bd"
+
+mm 0
+
+d1 $ s "superpiano"
+
+d2 $ n (run 4) # s "amencutup" # orbit 0

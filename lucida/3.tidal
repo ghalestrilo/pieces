@@ -3,9 +3,9 @@
 do
   -- @setup
   setkey (-7) "dorian"
-  setcps (105/120/2)
+  setcps (108/120/2)
   all (# bus' 0.3 0.3)
-  bank "mc" 18
+  bank "mc" 21
 
 let piano = p "piano" ## [s "superpiano" # velocity 0.25 # gain 1.7 # octave 4 # legato 2 # lpf 1700]
     vibe = p "vibe" ## [s "supervibe" # modamp 0 # sus 4 # velocity 0.3 # sus 4 # gain 0.7]
