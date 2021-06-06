@@ -15,17 +15,14 @@ let piano = p "piano" ## [s "superpiano" # velocity 0.25 # gain 1.7 # octave 4 #
 -- Não vou mentir, eu sinto falta
 
 do
+  -- @section intro
   mc  [ __
       , n "0(3,8) . <[~ 0!2 ~]!3 0*2>" # velocity 1
       , __
-      , t . fast 2 . cat
-        $ l "~ ~ 8 8" "8 7 7 5"
-            -- "5"       "~@2 3@3 5@3"
-            -- "5"       "~@2 3@3 5@3"
-            "5"       "~@2 3@3 5@3"
       ]
 
 do
+  -- @section full
   mc  [ t ("0@3 0 . ~ . ~ <0 1> . ~" |- 1)
       -- , __
       , n "0(3,8) . <[~ 0!2 ~]!3 0*2>" # velocity 1
@@ -37,7 +34,21 @@ do
             "4 3 1 [3 5]"
       ]
 
-  p "piano"
+do
+  -- @section chords
+  setkey' 0 ("3 2") "lydian mixolydian"
+  setkey' 1 (-2) "mixolydian"
+  piano $ cat 
+    [ t' 0 "[-7,-3,0,2,6]"
+    , t' 0 ("0 0" |+  "[-3,0,2,6]")
+    , t' 0 "[-3,0,2,6]"
+    -- , t' 1 ("-3 0"  |+ "[0,2,6,13] [0,2,6,9,11]")
+    , fastcat [ t' 0 ("2" + "[-7,-3,0,2,6]"), t' 1 "[0,2,6,8]" ]
+    ] # gain 4
+  mc  [ t ("0@3 0 . ~ . ~ <0 1> . ~" |- 1)
+      , n "0(3,8) . <[~ 0!2 ~]!3 0*2>" # velocity 1
+      ]
+
 
 {-
 

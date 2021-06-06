@@ -7,12 +7,8 @@ do
   setcps (111/120)
   bank "mc" 16
 
-
-
-
-
 do
   -- @test 
-  p "piano" $ s "superhammond"
+  p "piano" $ s "superhammond" # octave 6 # note "c"
 
 

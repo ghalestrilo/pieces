@@ -5,8 +5,10 @@ do
   setcps (93/120/2)
   all (# bus' 0.3 0.3)
   bank "mc" 18
+  bank "mm" 17
 
 do
+  -- @section intro
   m4 $ (t . cat)
     [ "2@3 0 . 2 3 [2 . [[3 2]|~]] 0"
     , cat
@@ -16,9 +18,18 @@ do
     ]
 
 do
+  -- @section press
   m1 $ t ("[0@3 7 . <[0 ~ 0 ~@2 7@3] [0@2 0@3 7@3]>]" |+ "[0!3 1]/2" |- 7)
 
-
+do
+  -- @section 
+  hush 
+  p "piano" ## [s "superpiano" # velocity 0.3 # gain 2 # octave 4 # sus 5]
+    $ (t . cat)
+      [ "0" |+ "[-7,-3,-1,2,6]"
+      , cat ["~@5 4@3" |+ "[-7,1]", __]
+      ]
+  m3 $ n "0*<1 2> . 0@3 0 . 0 0 . ~ 0" # open ("1!2 [1 5] 2" / 10)
 
 
 
@@ -27,74 +38,27 @@ do
 
 
 do
-  -- @enter drums
+  -- @section enter drums
+  m1 $ t ("[0@3 7 . <[0 ~ 0 ~@2 7@3] [0@2 0@3 7@3]>]" |+ "[0!3 1]/2" |- 7)
   setF "drumfilter" 1200
   setI "drumpat" "[0*<1 2> . [2 <~!7 0>] <~!3 0 ~!4>]*2"
-  p "piano" ## [s "superpiano" # velocity 0.4 # gain 1.7 # octave 4 # sus 5]
-    $ (t . cat)
-      [ "0" |+ "[-7,-3,-1,2,6]"
-      , cat ["~@5 4@3" |+ "[-7,1]", __]
-      ]
   p "drums" $ n (cN_ "drumpat") # s "amencutup" # lpf (cF_ "drumfilter") # rel 0.3 # gain 1.6 # resonance 0.14 # hpf 20
 
 
 
 do
-  -- @hide
+  -- @section hide
   setF "drumfilter" 1400 
   setI "drumpat" "[0*<1 2> . 2@2 <~ 3> 4]*2"
 
 
 
-
-
-
 do
+  -- @section shuffle
   setI "drumpat" $ shuffle 4 $ "[0@3 0 . 2 4 5 0 . 5 4 0@2 . 2 4 3 0]"
   setI "drumpat" $ "<[0 . 2 4 5 0] [5 4 0@2 . [2|6] 4 3 0]!2  [5 4 0@2 . 2 4 0 0]>*2"
 
 do
-    mm $ slow 4 $ (t . (|- 7) . (|+ "[0,3]")) $ ring "6 5 3 1 2 -1 0" $ "x ~ ~ ~ x ~ ~ x ~ ~ ~ x ~ ~ x x ~ ~ x x ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ "
+  -- @section ciclo
+  mm $ slow 4 $ (t . (|- 7) . (|+ "[0,3]")) $ ring "6 5 3 1 2 -1 0" $ "x ~ ~ ~ x ~ ~ x ~ ~ ~ x ~ ~ x x ~ ~ x x ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ "
 
-
-
--- Futuro: Violino
-p "mel"
-  $ (t . cat)
-    [ "2@3 0 . 2 3 [2 . [[3 2]|~]] 0"
-    , cat
-      [ "2@3 0 . 2 3 5 [[3 5 . 3]|3]"
-      , "-1 . ~"
-      ]
-    ]
-  # s "supervibe"
-  # cut 1
-  # modamp 2
-  # modfreq 40
-  # lpf 1200
-
-
-
-p "bes"
-  $ t ("[0@3 7 . 0@2 0@3 7@3]" |+ "[0!3 1]/2")
-  # s "[tb:2,tb:0]"
-  # octave 4
-  # lpf 400
-
-p "piano" ## [s "superpiano" # velocity 0.4 # gain 1.3 # octave 4 # sus 5]
-  $ (t . cat)
-    [ "0" |+ "[-7,-3,-1,2,6]"
-    , cat ["~@5 4@3" |+ "[-7,1]", __]
-    ]
-
-p "drums" $ n "[0 . <[2 1 3 4] 2>]*2" # s "amencutup" # lpf 2000 # rel 0.3
-
-p "drums"
-  $ fast 2
-  $ stack
-    [ n "0 2!3" # s "bhh" # gain ("6 [0|4] 7 4" |/ 10)
-    -- , s "~ bsr"
-    , s "~ bs:11"
-    , n "0*<1 2> . [[~ 0]|[~ 0@3]]?" # s "[bbd,bd]"
-    ]
-  # speed 0.65

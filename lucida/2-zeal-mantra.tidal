@@ -6,26 +6,38 @@ do
   setkey' 0 "c" "phrygian minor"
   all (# bus' 0.6 0.6)
   bank "mc" 17
+  bank "mm" 17 
 
 let piano = p "piano" ## [s "superpiano" # velocity 0.25 # gain 2 # octave 4 # legato 2]
     vibe = p "vibe" ## [s "supervibe" # modamp 0 # sus 4 # velocity 0.3 # sus 4 # gain 0.65 # lpf 2000]
     voice = p "voice" ## [s "supervibe" # modamp 0 # cut 1 # sus 0.3 # velocity 0.5 # gain 0.8 # lpf 2000]
     bes = p "bes" ## [s "[tb:0,tb:1]" # octave 3 # gain 0.7 # lpf 350]
 
-
-
 do
+  -- @section intro
+  hush
   m3 $ n "0 ~ 0 ~ 0 0 ~ 0 ~" # open "0.08@2 0.35 0.08"
   m4 $ n "[~@4 0!2]/2" # gain 0.7 # sus 0.1
 
 do
+  -- @section intro ii
   m1 $ n "0*3"
 
 do
+  -- @section intro iii
   m2 $ n "[[~ 0]*3]/2"
 
 do
-  piano $ t' 0 "[1,5,7,9,11]@5 [4,6,8,10,11]@4"
+  -- @section reveal
+  hush
+  m1 $ n "0*3"
+  m2 $ n "[~ ~ 0]*3"
+  m4 $ n "[~@4 0!2]/2" # gain 0.7 # sus 0.1
+  m5 $ t' 0 "[<3!5 2> 7 4]*3" # sus "[0.1 0.02@2]*3"
+
+do
+  -- @section chords
+  piano $ t' 0 (cat $ l "[1,5,7,9,11]@5 [4,6,8,10,11]@4" "[1,5,7,9,11]@6 [4,6,8,10,14]@3")
 
 
 setkey' 0 0 "phrygian minor"
@@ -35,6 +47,7 @@ setkey' 1 (-5) "minor major"
 setkey' 2 "g" "lydian mixolydian"
 
 do
+  -- @section body
   hush
   m1 $ n "0*3"
   m2 $ n "[[~ 0]*3]/2"
@@ -45,15 +58,23 @@ do
 
 
 do
-  -- voice
-  voice $ t "[~@2 7 ~ 4 9@2 10@2 9 10 7 11 ~@5 . ~@3 11 11!3 10!3 9!3 7!3 6!2]/4"
-
-
-do
-  solo "cycles6"
-  solo "cycles3"
-
-mc [n 0]
+  -- @section voice
+  -- voice $ t "[~@2 7 ~ 4 9@2 10@2 9 10 7 11 ~@5 . ~@3 11 11!3 10!3 9!3 7!3 6!2]/4"
+  mm $ t "[~@2 7 ~ 4 9@2 10@2 9 10 7 11 ~@5 . ~@3 11 11!3 10!3 9!3 7!3 6!2]/4"
 
 do
-  m6 $ t (sew "[t|f|f]*9" ("6*9" |+ irand 8) "[<3!5 2> 7 4]*3") # sus "[0.1 0.02@2]*3"
+  -- @section tension
+  setkey' 0 (-4) "lydian locrian"
+  setkey 1 "lydian"
+
+do
+  -- @section leave
+  hush
+  m1 $ n "0*3"
+  m2 $ n "[[~ 0]*3]/2"
+  m2 $ n "[~ ~ 0]*3"
+  m3 $ n "0 ~ 0 ~ 0 0 ~ 0 ~" # open "0.08@2 0.35 0.08"
+  m4 $ n "[~@4 0!2]/2" # gain 0.7 # sus 0.1
+
+
+

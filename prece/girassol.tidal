@@ -1,9 +1,6 @@
 
-
-
-
 do
-  --
+  -- @setup
   setkey 0 "lydian"
   all (# bus' 0.6 0.93)
   all $ (# (bus' 0.6 0.93 # delay 0 # delayfb 0 # delaytime 0))
@@ -23,9 +20,12 @@ in piano $ stack
 
 
 do
+  -- @section intro
   vibe $ t "0 4 [2,9]"
 
 do
+  -- TODO: Fade
+  -- @section piano
   piano $ stack
       [ -- (0.02 <~) $ t (strum 16 "[-3,0,2,8]") # pan 0.3
         t "[-3,0,2,8]" # pan 0.3
