@@ -36,7 +36,6 @@ do
 
 
 
-
 do
   -- @section enter drums
   m1 $ t ("[0@3 7 . <[0 ~ 0 ~@2 7@3] [0@2 0@3 7@3]>]" |+ "[0!3 1]/2" |- 7)
@@ -52,13 +51,24 @@ do
   setI "drumpat" "[0*<1 2> . 2@2 <~ 3> 4]*2"
 
 
-
-do
-  -- @section shuffle
-  setI "drumpat" $ shuffle 4 $ "[0@3 0 . 2 4 5 0 . 5 4 0@2 . 2 4 3 0]"
-  setI "drumpat" $ "<[0 . 2 4 5 0] [5 4 0@2 . [2|6] 4 3 0]!2  [5 4 0@2 . 2 4 0 0]>*2"
-
 do
   -- @section ciclo
+  p "piano" $ silence
   mm $ slow 4 $ (t . (|- 7) . (|+ "[0,3]")) $ ring "6 5 3 1 2 -1 0" $ "x ~ ~ ~ x ~ ~ x ~ ~ ~ x ~ ~ x x ~ ~ x x ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ "
 
+
+do
+  -- @section shuffle  
+  setI "drumpat"
+    $ rarely (chop 2)
+    $ sometimes (shuffle 2)
+    $ fast 2
+    $ cat $ l 
+    "[0 4? . 2 4 5 0]"
+    "[5 4 0@2 . [2|6] 4 3 0]"
+    "[5 4 0@2 . [6|2] 4 3 0]"
+    "[5 4 0@2 . 2 4 0 0]"
+
+
+
+all id

@@ -1,21 +1,7 @@
 
-asap $ progNum "1" # s "mc" # midichan 0
-
-asap $ progNum "1" # s "mc" # midichan 0
-
-p "midiclock" $ midicmd "midiClock*96" # s "mc"
-
-once $ midicmd "start" # s "mc"
-
-mc [ n "0*8" ]
-
-bank 1
-
-
-let bank num = asap $ progNum num # s "mc" # midichan 0
-
 do
   -- @initset
+  -- @setup
   all $ id (# orbit 0)
   setcps (112/120)
   setkey 0 "minor"

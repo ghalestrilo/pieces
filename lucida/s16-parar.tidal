@@ -1,0 +1,119 @@
+-- TODO
+-- Sections
+-- ciclo de quintas + harmonia (251)
+-- ritmo piano
+
+do
+  -- @setup
+  setkey 0 "major"
+  setcps (105/120/2)
+  all (# bus' 0.3 0.3)
+  bank "mc" 27
+  bank "mm" 12 
+
+let piano = p "piano" ## [s "superpiano" # velocity 0.22 # gain 1.8 # octave 4 # legato 2 # lpf 1700]
+    voice = p "vibe" ## [s "supervibe" # modamp 0 # sus 4 # velocity 0.3 # sus 2 # gain 0.6 # lpf 2000]
+    bes = p "bes" ## [s "[tb:0,tb:1]" # octave 3 # gain 0.7 # lpf 350]
+
+all (# bus' 0.3 0.3)
+
+
+do
+  -- @section intro
+  mc [ __ -- fast 4 $ n 0
+     , fast 2 $ t "0 ~ 0 -3"
+     , n "0(3,8) . ~ 0!2 ~" # velocity 1
+     ]
+
+
+do
+  -- @section intro
+  mc [ fast 4 $ n 0
+     , fast 2 $ t "0 ~ 0 -3"
+     , n "0(3,8) . ~ 0!2 ~" # velocity 1
+     ]
+
+-- Vou Pro Mar 
+do
+  piano $ t . fast 2 . cat
+    $ l ("0@3 0 . ~" |+ "[-5,0,4,7]")
+        ("~ 1 ~@2"   |+ "[-5,0,4,7]")
+        ("0@3 0 . ~" |+ "[-5,0,4,7]")
+        ("~ 3 ~@2"   |+ "[-5,0,4,7]")
+        ("2@3 2 . ~" |+ "[-5,0,4,7]")
+        ("~ 5 ~@2"   |+ "[-5,0,4,7]")
+        ("1@3 1 . ~" |+ "[-5,0,4,7]")
+        ("~ 1 ~@2"   |+ "[-4,2,4,6]")
+  mm $ (# octave 4) $ t . fast 2 . cat
+    $ l "~" "7 . 5 4"
+        "~ 0 2 4" "7@3 6@3 5@2"
+        "4@3 2@3 2@2" "0 1"
+        "2" "4 . -3 0"
+  
+
+
+
+do
+  piano $ t . fast 2 . cat
+    $ l ("0@3 0 . ~" |+ "[-5,0,4,7]")
+        ("~ 1 ~@2"   |+ "[-5,0,4,7]")
+        ("0@3 0 . ~" |+ "[-5,0,4,7]")
+        ("~ 3 ~@2"   |+ "[-5,0,4,7]")
+        ("2@3 2 . ~" |+ "[-5,0,4,7]")
+        ("~ 5 ~@2"   |+ "[-5,0,4,7]")
+        ("1@3 1 . ~" |+ "[-5,0,4,7]")
+        ("~ 1 ~@2"   |+ "[-4,2,4,6]")
+  mc [ fast 4 $ n 0
+     , fast 2 $ t "0 ~ 0 -3"
+     , n "0(3,8) . ~ 0!2 ~" # velocity 1
+     ]
+
+
+scaleList
+
+
+do
+  -- @section chorus 
+  setkey' 1 "e" "mixolydian"
+  setkey' 2 "c" "mixolydian"
+  mm $ fast 2 $ cat
+    (
+    [ t $ "[0,4,5,9]" + 0 -- t "[-5,0,4,7]"
+    , t $ "[0,4,5,9]" + 1
+    , t $ "[0,4,5,9]" + 2
+    , t' 1 $ "[0,4,6,9]"
+    , t $ "[0,4,6,9]" |+ 3
+    , t $ "[0,4,6,9]" |+ 5
+    , t' 2 $ "[0,4,6,9]" |+ 4
+    , t' 2 $ "[0,3,5,7]" |+ 4
+    ] ++
+    [ t $ "[0,4,6,9]" |+ 3
+    , t $ "[0,4,6,9]" |+ 3
+    , t $ "[0,4,6,9]" + 2
+    , t $ "[0,4,6,9]" + 5
+    , t $ "[0,4,6,9]" + 1
+    , t $ "[0,4,6,9]" + 4
+    , t $ "[0,4,6,9]" |+ 1
+    , t $ "[0,4,6,9]" + 4
+    ]
+    ) +| "<[0@3 0 . ~] [~ 0 ~@2]>"
+    # octave 4
+
+
+
+do
+  hush
+  -- @section verse ii
+  -- TODO: Adicionar Ciclos
+  mc [ fast 4 $ n 0
+     , fast 4 $ t "0*2" # open "0.1 0.3"
+     , n "0(3,8) . ~ 0!2 ~" # velocity 1
+     ]
+
+do
+  hush
+  -- @section ontro
+  mc [ __ -- fast 4 $ n 0
+     , fast 2 $ t "0 ~ 0 -3"
+     , n "0(3,8) . ~ 0!2 ~" # velocity 1
+     ]

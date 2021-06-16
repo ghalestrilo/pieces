@@ -1,52 +1,145 @@
 
-let mm pat = p "mm" $ pat # s "mm" # midichan 0 # orbit 0
+-- let mm pat = p "mm" $ pat # s "mm" # midichan 15 # orbit 0
 
-mm $ t "0'maj"
+-- mm $ t "0'maj"
 
 do
+  -- @setup
     setkey "a" "lydian"
     setcps (135/120/2)
     bank "mc" 30
     bank "mm" 7 
 
 do
-    -- @intro
-    mm $ t "[<-3!10 -4!6>,0,2,6]*8" # octave 5 # sus (every 2 rev $ rev $ sew "tfftfft<tf>" 0.08 0.01)
-    
-    mc [ t "0*2" # octave 4 # open "0.1 1" # sus 0.1]
+  -- @intro
+  setI "chords" "[<-3!10 -4!6>,0,2,6]" 
+  mm $ t (fast 8 $ strum 3 $ cI_ "chords") # octave 4 # sus (every 2 rev $ rev $ sew "tfftfft<tf>" 0.08 0.01)
+ 
+  mc [ t "0*2" # octave 4 # open "0.1 1" # sus 0.1]
 
 
 do
-    -- @section verse 1/4
-    mm $ t "[<-3!10 -4!6>,0,2,6]*8" # octave 5 # sus (every 2 rev $ rev $ sew "tfftfft<tf>" 0.08 0.01)
-    mc [ t "0*2" # octave 4 # open "0.1 1" # sus 0.1
-     , t "[0~~0.-3 0 . ~ 3 ~ 3 . ~ 3 2 1]/2"
+  -- @section verse 1/4
+  setI "chords"  "[<-3!10 -4!6>,0,2,6]" 
+  mc [ t "0*2" # octave 4 # open "0.1 1" # sus 0.1
+     -- , __ -- , t "[0~~0.-3 0 . ~ 3 ~ 3 . ~ 3 2 1]/2"
+     , t "<0 1>@3 <0 1> . 4@3 4"
      , slow 2 $ n "~~0~0~0~0~0~~0~0" # velocity 0.1
-     , slow 2 $ note (select "~~0~0~0~0~0~~0~0" [0, 6]) # sus 1
+     , slow 2 $ n (sew "~~t~t~t~t~t~~t~t" 0  6) # sus 1
+     , __
+     , fast 2 $ ((1/4) <~) $ n "0*4" # open ("0 0 2 5" |/ 10 + 0.2)
      ]
+
 
 do
     -- @section verse 2/4
-    setkey ("b" + "[0 5 . -2 ]/4") "[minor mixolydian . lydian]/4"
+  setI "chords"
+    "<[-3,0,2,6]!8 [-3,0,-5,-1]!8 \
+    \ [-3,0,2,6]!8 [-1,2,4,8]!8>"
+  setkey ("b" |+ "[0 5 . -2]/4") "[minor mixolydian . lydian]/4"
 
 do
-    -- @section verse 3/4
-    setkey "ff" "mixolydian"
+  -- @section verse 3/4
+  setI "chords"  "[<4!10 5!6>,0,2,6]"
+  setkey "g" "lydian"
+
+
 
 do
-    -- @section verse 4/4
-    setkey "g" "lydian"
+  -- @section verse 4/4
+  setkey "[b e]/2" "[minor mixolydian]/2"
+
 
 do
-    -- @section enter cycles
-    setkey "a" "lydian"
-    -- works well with z1 patch
-    mm $ stack
-        [ t $ slow 7 $ fast 4 $ ring "1 5 2 -2 -3 -5"    $ "x ~ ~ x ~ ~ x ~ ~ x ~ ~ ~ ~"
-        , t $ slow 9 $ fast 4 $ ring "9 8 6 6 8 9 11 13" $ "x x ~ x ~ ~ x x x x ~ ~ x ~ ~ x ~ ~"
-        ]
-        # octave 3
+  -- @section "posso" 
+  setkey "g" "lydian"
+
+-- TODO: Transition
+
+do
+  -- @section brass
+  setI "chords"  "[<4!10 5!6>,0,2,6]"
+  setkey "a" "lydian"
+  p "brass"
+    $ (t . slow 2 . cat)
+      [(-5) ,"~@2 2 ~ -1 ~ -2@5 -3 -2 -1 ~@2"]
+    # s "superpiano" # velocity 0.5 # orbit 0 # gain 1.8
+
+
+
+do
+    -- @section verse 2/4
+  setI "chords"
+    "<[-3,0,2,6]!8 [-3,0,-5,-1]!8 \
+    \ [-3,0,2,6]!8 [-1,2,4,8]!8>"
+  setkey ("b" |+ "[0 5 . -2]/4") "[minor mixolydian . lydian]/4"
+  p "brass" silence
+
+
+do
+  -- @section verse 3/4
+  setI "chords"  "[<4!10 5!6>,0,2,6]"
+  setkey "g" "lydian"
+
+do
+  -- @section verse 4/4
+  setkey "[b e]/2" "[minor mixolydian]/2"
+
+
+-- do 
+--    -- test
+--    mm $ stack [ t "{8 4 5 6@2 2 9@2 8 6 5@2}%8" ] # octave 4
+
+
+do
+  -- @section outro-begin
+  hush
+  setkey "a" "lydian"
+  mm $ fast 8 $ slow 9 $ t "[[-3!9 -4!9]/2,0*9,2*9,6*9]" # octave 4 # sus (sew "[t f f]*3" 0.08 0.01)
+  mc [ t "0*2" # octave 4 # open "0.1 1" # sus 0.1
+     , __ 
+     , slow 2 $ n "~~0~0~0~0~0~~0~0" # velocity 0.1
+     , __
+     , __
+     , fast 2 $ ((1/4) <~) $ n "0*4" # open ("0 0 2 5" |/ 10 + 0.2)
+     ]
+
+
+do
+  -- @section voz 
+  p "piano"
+    $ t "{ 2@3 9@3 6 5@4 4 5 7 9 11@2 12 9 11@2 9 8 7 5@2 6@2 }%8"
+        # octave 4
+        # s "superpiano"
+        # velocity 0.5
+        # sus 4
+        # gain 1.3
+
+do
+  -- @section outro
+  setkey' 1 "a" "minor"
+  setkey' 2 "g" "dorian"
+  mm $ silence
+  p "chords"
+    $ (fast 2 . cat)
+      [ t $ 2 |+ "[-3,0,2,6]"
+      , __
+      , t  $1 |+ "[4,2,0,6]"
+      , __
+      , t $ 0 |+ "[0,2,4,6]"
+      , t' 1 $ (-2) |+ "[0,3,5,8]"
+      , t' 2 $ 3 |+ "[0,4,-5,6]"
+      ]
+        # octave 4
+        # s "superpiano"
+        # velocity 0.4
+        # sus 4
+        # gain 1.3
 
 do 
-    -- test
-   mm $ stack [ t "{8 4 5 6@2 2 9@2 8 6 5@2}%8" ] # octave 4
+  -- @section outro 2
+  mc []
+
+clutchIn "chords" 16 silence
+
+
