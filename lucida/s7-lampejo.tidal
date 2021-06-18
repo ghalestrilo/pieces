@@ -2,6 +2,7 @@
 do
   -- @setup
   setkey 5 "lydian"
+  setkey' 0 10 "mixolydian"
   setcps (93/120/2)
   all (# bus' 0.3 0.3)
   bank "mc" 18
@@ -22,12 +23,12 @@ do
   m1 $ t ("[0@3 7 . <[0 ~ 0 ~@2 7@3] [0@2 0@3 7@3]>]" |+ "[0!3 1]/2" |- 7)
 
 do
-  -- @section 
+  -- @section gentle 
   hush 
   p "piano" ## [s "superpiano" # velocity 0.3 # gain 2 # octave 4 # sus 5]
-    $ (t . cat)
-      [ "0" |+ "[-7,-3,-1,2,6]"
-      , cat ["~@5 4@3" |+ "[-7,1]", __]
+    $ cat 
+      [ t $ "0" |+ "[-7,-3,-1,2,6]"
+      , t' 0 $ cat ["~@5 0@3" |+ "<[-6,2] [-6,0,2,4]>", __]
       ]
   m3 $ n "0*<1 2> . 0@3 0 . 0 0 . ~ 0" # open ("1!2 [1 5] 2" / 10)
 
@@ -41,7 +42,7 @@ do
   m1 $ t ("[0@3 7 . <[0 ~ 0 ~@2 7@3] [0@2 0@3 7@3]>]" |+ "[0!3 1]/2" |- 7)
   setF "drumfilter" 1200
   setI "drumpat" "[0*<1 2> . [2 <~!7 0>] <~!3 0 ~!4>]*2"
-  p "drums" $ n (cN_ "drumpat") # s "amencutup" # lpf (cF_ "drumfilter") # rel 0.3 # gain 1.6 # resonance 0.14 # hpf 20
+  p "drums" $ n (cN_ "drumpat") # s "amencutup" # lpf (cF_ "drumfilter") # rel 0.3 # gain 1.6 # resonance 0.14 # hpf 20 # speed 0.9
 
 
 
@@ -60,15 +61,13 @@ do
 do
   -- @section shuffle  
   setI "drumpat"
-    $ rarely (chop 2)
-    $ sometimes (shuffle 2)
+    -- $ rarely (chop 2)
+    -- $ sometimes (shuffle 2)
     $ fast 2
     $ cat $ l 
-    "[0 4? . 2 4 5 0]"
-    "[5 4 0@2 . [2|6] 4 3 0]"
-    "[5 4 0@2 . [6|2] 4 3 0]"
-    "[5 4 0@2 . 2 4 0 0]"
+      "[0 4?. 2 4 5 0]"
+      "[5 4 0@2 . [2|6] 4 3 0]"
+      "[5 4 0@2 . [6|2] 4 3 0]"
+      "[5 4 0@2 . 2 4 0 0]"
 
 
-
-all id
