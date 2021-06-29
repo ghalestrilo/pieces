@@ -11,6 +11,6 @@ let piano = p "piano" ## [s "superpiano" # velocity 0.25 # gain 1.7 # octave 4 #
 
 
 do
-  bes $ (t . fastcat) $ l "0 1 2" "8 4 6" "2 3 4"
-  piano $ note ("[3'min7 1'min7 . -6'maj7]/4" + 7)
+  m1 $ (t . fastcat) $ l "0 1 2" "8 4 6" "2 3 4"
+  mm $ note ("[3'min7 1'min7 . -6'maj7]/4" + 7)
   -- piano $ note ("[3'min7 -6'maj7]/4" + 7)

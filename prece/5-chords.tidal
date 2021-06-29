@@ -24,3 +24,12 @@ do
   p "drums"
     $ (whenmod 2 1 . sometimes) (# n (irand 3))
     $ s "[[nfx,<~ nbd>] nhh ns nbd]*2" # n 2
+
+
+mc $ (# amp (rand))
+  <$> [ n "0*4"
+      , n  "~ 0"
+      , n "0*16"
+      ]
+
+
