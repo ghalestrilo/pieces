@@ -1,3 +1,4 @@
+-- done (1a)
 
 do
   -- @setup
@@ -16,25 +17,33 @@ let phrase = cat
       , ""
       ] :: Pattern Int
 
-
-
 do
   -- @section cords
-  p "chord"
-    $ fast 4
-    $ (every 4 . someCyclesBy 0.3) (const $ t (strum 1 "[-5,0,4,8,11,14]") # sus 16)
-      (t "0*2" # sus 1)
-    # s "supermandolin"
-    # velocity 0.1
-    # gain 0.9
-    # detune 0.1
-    # lpf 2000
-    # orbit 0
+    $ (every 4 . someCyclesBy 0.3) (const $ t (fastcat
+       [ strum 2 "[-5,0,4,8,11,14]" 
+       , "-7"
+       ]))
+    $ (t "0*2" # sus 1)
+    # sus 16
+    # amp 0.3
     # octave 4
 
 do
   -- @section pulse
   mc [t phrase # octave 3]
+
+
+do
+  -- @section intro drums
+  xfadeIn "drums" 8 $ slow 2 $ stack
+    [ n "0*8" # s "br" # gain 0.4
+    , n "[5 1 2 1]*8" # s "bs"
+    , fast 8
+      $ sometimesBy 0.15 (density "[1 2]*2")
+      $ n "5 1 2 1"
+      # s "bs"
+    , fast 8 $ s "bhh:2*2" # gain "0.6 0.4"
+    ]
 
 do
   -- @section more chords
@@ -43,11 +52,19 @@ do
     $ t (strum 8 "[2,4,8]")
     # pan 0.3
     # sus 3
-    # lpf 2000
+    # lpf 400
     # s "supermandolin"
-    # gain 0.85
+    # gain 0.9
     # orbit 0
     # octave 4
+  clutchIn "drums" 16 $ slow 2 $ stack
+    [ n "0*8" # s "br" # gain 0.4
+    , fast 8
+      $ sometimesBy 0.15 (density "[1 2]*2")
+      $ n "5 1 2 1"
+      # s "bs"
+    , fast 8 $ s "bhh:2*2" # gain "0.6 0.4"
+    ]
 
 
 
@@ -57,7 +74,11 @@ do
     [ n "0@3 [~ 0] . 0*<2 1> <~ [~ 0@3]>" # s "bbd" # gain 1.1
     , n "[~ 11]*2" # s "bs" # gain 0.8
     , n "0*8" # s "br" # gain 0.7
-    , n "[5 1 2 1]*8" # s "bs"
+    , fast 8
+      $ sometimesBy 0.15 (density "[1 2]*2")
+      $ n "5 1 2 1"
+      # s "bs"
+    , fast 8 $ s "bhh:2*2" # gain "0.5 0.38"
     ]
     # speed 0.9
     # bus' 0.4 0.4
@@ -66,11 +87,15 @@ do
 
 do
   -- @section leave
-  p "chords" $ silence
-  p "drums" $ stack
-    [ n "0" # s "bbd"
-    , n "[5 1 2 1]*4" # s "bs"
-    ] # orbit 0
+  mm silence
+  xfadeIn "drums" 8 $ slow 2 $ stack
+    [ n "0*8" # s "br" # gain 0.4
+    , fast 8
+      $ sometimesBy 0.15 (density "[1 2]*2")
+      $ n "5 1 2 1"
+      # s "bs"
+    , fast 8 $ s "bhh:2*2" # gain "0.5 0.3"
+    ]
 
 do
   -- @section end

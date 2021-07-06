@@ -1,5 +1,4 @@
-resetCycles
-
+-- done
 
 do
   -- @setup
@@ -7,20 +6,12 @@ do
   all (# bus' 0.6 0.93)
   all $ (# (bus' 0.6 0.93 # delay 0 # delayfb 0 # delaytime 0))
   bank "mc" 81
+  setcps (100/120/2)
 
 let piano' num = xfadeIn "piano" num ## [s "superpiano" # velocity 0.15 # gain 2 # octave 4 # legato 2 # lpf 12000 # sus 4]
     vibe = p "vibe" ## [s "supervibe" # modamp 0 # sus 4 # velocity 0.3 # sus 4 # gain 0.7 # octave 3 # lpf 1200]
     piano = piano' 0.1
 
-in piano $ stack
-    [ -- (0.02 <~) $ t (strum 16 "[-3,0,2,8]") # pan 0.3
-      t "[-3,0,2,8]" # pan 0.3
-    , ((# pan 0.6) . t . (|+ 7) . cat) $ l
-      "0 1 2 5 4 -1"
-      "-2 [-3 2] -5"
-      "<[-2,1,3,5] [-1,4]>"
-      __
-    ]
 
 
 do
@@ -30,7 +21,7 @@ do
 do
   -- TODO: Fade
   -- @section piano
-  piano $ stack
+  piano' 8 $ stack
       [ -- (0.02 <~) $ t (strum 16 "[-3,0,2,8]") # pan 0.3
         t "[-3,0,2,8]" # pan 0.3
       , ((# pan 0.6) . t . (|+ 7) . cat) $ l
@@ -56,15 +47,20 @@ do
   setkey (-4) "lydian"
   setkey' 1 (-7) "lydian"
   piano $ (t . (|+ 7) . stack)
-    [ "6 <4 3> ~"
+    [ "6 <[0,4] [1,2,3]> ~"
     , "<-2 -1 0 1>" |+ "[0,4]" |- 7
+    ] 
+  piano' 16 $ (t . (|+ 7) . stack)
+    [ "6 <[0,4] [1,2,3]> ~"
+    , "<-2 -1 0 1>" |+ "[0,4]" |- 7
+    , "{2@2 4@2 5@2 6@2 2 5@2 9 6@2 3@2 2@2 6@2 3 1@2 6@10}%12"
     ] 
 
 do
   -- @section comeback
   setkey 0 "lydian"
   piano $  stack
-    [ (t' 1 . (|+ 7)) "{2@2 4@2 5@2 6@2 2 5@2 9 6@2 3@2 2@2 6@2 3 1@2 6@10}%12"
+    [ (t' 1 . (|+ 7)) "{2@2 4@2 5@2 6@2 2 5@2 9 6@2 3@2 2@2 6@2 3 1@2 6@10}%12" # pan 0.8
     , t "[-3,0,2,8]" # pan 0.3
     , ((# pan 0.6) . t . (|+ 7) . cat) $ l
         "0 1 2 5 4 -1"
@@ -75,7 +71,7 @@ do
 
 do
   -- @section fadeout
-  xfadeIn "sh" 32 silence
+  xfadeIn "sh" 16 silence
 
 do
   -- @section vanish perc
