@@ -1,0 +1,29 @@
+
+do
+  -- @setup
+  setcps (100/120)
+
+p "drums" $ n "13 5" #  s "gretsch"
+
+do
+  -- @section
+  mc [ 0 ]
+
+
+once $ s "gretsch:13" 
+
+do
+  -- @section drums
+  setI "drumpat" $ "[[ \
+    \ 13 . 13@3 13@5 . 13!3 ~ . 13@3 13@5 ]/4, \
+    \ ~ 20,\
+    \ [5 4?]*2, \
+    \ ~@3 [21 21 21]]"
+  p "drums" $ n (cN_ "drumpat")
+    # s "gretsch"
+    # lpf 800
+    # gain 1.2
+
+
+
+

@@ -19,6 +19,7 @@ do
 
 do
   -- @section drums
+  setF "drumfilter" 0
   mc [ t "[0|[0@3 5]]*2" # amp 0.17
      ]
   p "drums" $ stack 

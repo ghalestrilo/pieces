@@ -7,7 +7,7 @@ do
   setkey' 0 "c" "dorian"
   setkey' 1 "c" "minor"
   setkey' 2 "ds" "major"
-  setcps (140/120/2)
+  setcps (152/120/2)
   all $ (# bus' 0.7 0.7)
   bank "mc" 85
 
@@ -34,7 +34,6 @@ do
      # amp 0.2
   mc [ n "<0 ~>@3 0" # amp (cF0 "kickamp")
      , n "~ 0"
-     , 
      ]
 
 
@@ -68,14 +67,24 @@ do
     --
     ] # octave 4 # amp 0.6
 
+
 do
   -- @section drums
   mc [ n "<0 ~>@3 0"
      , fast 2 $ n "<~ 0>"
      , n "0*2 . 0" # open "0.2 0.6"
-     , (# amp "0.8@3 0.5") $ n . fastcat $ l
-       (run 14) __ __             __
-       (run 14) __ (rev $ run 14) __
-       __       __ __             __
-       (run 14) __ (rev $ run 14) __
+     , slow 2 $ n "~@3 0 . 0 ~ 9 9"
      ]
+
+do
+  -- @section leave
+  mc [ __ 
+     , __ 
+     , n "0*2 . 0" # open "0.2 0.6"
+     , slow 2 $ n "~@3 0 . 0 ~ 9 9"
+     ]
+
+
+do
+  -- @section hush
+  mc []

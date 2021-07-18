@@ -3,20 +3,21 @@ do
   -- @setup
   setkey 5 "lydian"
   setkey' 0 10 "mixolydian"
-  setcps (93/120/2)
+  setcps (90/120/2)
   all (# bus' 0.3 0.3)
   bank "mc" 18
   bank "mm" 17
 
 do
   -- @section intro
-  m4 $ (t . cat)
+  setI "phrase" (cat
     [ "2@3 0 . 2 3 [2 . [[3 2]|~]] 0"
     , cat
       [ "2@3 0 . 2 3 5 [[3 5 . 3]|3]"
       , "-1 . ~"
       ]
-    ]
+    ]) 
+  m4 $ t (cI_ "phrase") 
 
 do
   -- @section press
@@ -31,47 +32,62 @@ do
       , t' 0 $ cat ["~@5 0@3" |+ "<[-6,2] [-6,0,2,4]>", __]
       ]
   m3 $ n "0*<1 2> . 0@3 0 . 0 0 . ~ 0" # open ("1!2 [1 5] 2" / 10)
-
-
-
+  setI "drumpat"  "[[4 10?]*4, 13 2 13*2 [2|[2 13@3]|2 [13 21 20]]]"
+  setF "dhpf" 1300
+  xfadeIn "drums" 12 
+    $ n (cN_ "drumpat") 
+    # s "gretsch" # speed 1 # gain 1.6
+    # lpf (cF_ "dlpf") 
+    # hpf (cF0 "dhpf") 
 
 
 
 do
-  -- @section enter drums
+  -- @section return 
   m1 $ t ("[0@3 7 . <[0 ~ 0 ~@2 7@3] [0@2 0@3 7@3]>]" |+ "[0!3 1]/2" |- 7)
-  setF "drumfilter" 1200
-  setI "drumpat" "[0*<1 2> . [2 <~!7 0>] <~!3 0 ~!4>]*2"
-  p "drums" $ n (cN_ "drumpat") # s "amencutup" # lpf (cF_ "drumfilter") # rel 0.3 # gain 1.6 # resonance 0.14 # hpf 20 # speed 0.9
+  m4 $ t (cI_ "phrase") 
+  setF "dlpf" 3200
+  setF "dhpf" 0
 
 
 
 do
   -- @section hide
-  setF "drumfilter" 1400 
-  setI "drumpat" "[0*<1 2> . 2@2 <~ 3> 4]*2"
+  setF "dlpf" 1400 
 
 
 do
-  -- @section ciclo
+  -- @section 
   p "piano" $ silence
-  mm $ slow 4 $ (t . (|- 7) . (|+ "[0,3]")) $ ring "6 5 3 1 2 -1 0" $ "x ~ ~ ~ x ~ ~ x ~ ~ ~ x ~ ~ x x ~ ~ x x ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ "
-
-
-do
-  -- @section shuffle  
+  setF "dlpf" 3000 
+  mm $ fast 8 . slow 18 $ (t . (|- 7) . (|+ "[0,3]"))
+     -- $ ring "6 5 3 1 2 -1 0"
+     $ ring "6 5 3 1 -1"
+     $ "x ~ ~ x ~ ~ x ~ ~ x ~ ~ x ~ x ~ x ~"
   setI "drumpat"
-    -- $ rarely (chop 2)
-    -- $ sometimes (shuffle 2)
-    $ fast 2
-    $ cat $ l 
-      "[0 4?. 2 4 5 0]"
-      "[5 4 0@2 . [2|6] 4 3 0]"
-      "[5 4 0@2 . [6|2] 4 3 0]"
-      "[5 4 0@2 . 2 4 0 0]"
-
+    $ shuffle "1@3 [1|2|4|8]" 
+    "[[4 10?]*4, \
+    \ [ [13@2 2 [[4 21 20]|~]] \
+    \   [ [13? | 13!2 | ~ [20|21] 13 ~ | 13 21 13@2 ] \
+    \     [2 [4 21 [21,21]|~]]]!3 \
+    \ ]/2 ]"
 
 do
   -- @section ciclo
   hush 
-  mm $ slow 4 $ (t . (|- 7) . (|+ "[0,3]")) $ ring "6 5 3 1 2 -1 0" $ "x ~ ~ ~ x ~ ~ x ~ ~ ~ x ~ ~ x x ~ ~ x x ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ "
+  mm $ fast 8 . slow 18 $ (t . (|- 7) . (|+ "[0,3]"))
+     -- $ ring "6 5 3 1 2 -1 0"
+     $ ring "6 5 3 1 -1"
+     $ "x ~ ~ x ~ ~ x ~ ~ x ~ ~ x ~ x ~ x ~"
+
+
+do
+  -- @section leave
+  p "piano" silence
+  p "drums" silence
+  m3 silence
+  m4 silence
+
+do
+  -- @section hush
+  hush

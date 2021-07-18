@@ -4,6 +4,7 @@ do
   -- @setup
   setcps 0.5
   setkey 0 "major"
+  setkey' 1 3 "lydian"
   all $ (# orbit 0) . (# bus' 0.6 0.6)
   bank "mc" 82
 
@@ -17,14 +18,25 @@ let phrase = cat
       , ""
       ] :: Pattern Int
 
+
+
 do
-  -- @section cords
-    $ (every 4 . someCyclesBy 0.3) (const $ t (fastcat
+  -- @section intro 
+  mm $ fast 4
+    $ t "[0 ~]*2" 
+    # amp 0.3
+    # octave 4
+
+do
+  -- @section chords
+  mm $ fast 4
+    $ (every 4 . someCyclesBy 0.15) (const $ t (fastcat
        [ strum 2 "[-5,0,4,8,11,14]" 
        , "-7"
-       ]))
-    $ (t "0*2" # sus 1)
-    # sus 16
+       ])
+       # sus 16
+    )
+     (t "0*2" # sus 1)
     # amp 0.3
     # octave 4
 
@@ -57,7 +69,7 @@ do
     # gain 0.9
     # orbit 0
     # octave 4
-  clutchIn "drums" 16 $ slow 2 $ stack
+  clutchIn "drums" 8 $ slow 2 $ stack
     [ n "0*8" # s "br" # gain 0.4
     , fast 8
       $ sometimesBy 0.15 (density "[1 2]*2")
@@ -73,20 +85,25 @@ do
   p "drums" $ slow 2 $ stack
     [ n "0@3 [~ 0] . 0*<2 1> <~ [~ 0@3]>" # s "bbd" # gain 1.1
     , n "[~ 11]*2" # s "bs" # gain 0.8
-    , n "0*8" # s "br" # gain 0.7
     , fast 8
       $ sometimesBy 0.15 (density "[1 2]*2")
       $ n "5 1 2 1"
       # s "bs"
-    , fast 8 $ s "bhh:2*2" # gain "0.5 0.38"
+    , fast 8 $ s "bhh:2*2" # gain "0.6 0.38"
     ]
-    # speed 0.9
+    -- # speed 0.9
     # bus' 0.4 0.4
     # orbit 0
     |* gain 1.1
 
 do
-  -- @section leave
+  -- @section change
+  setkey 3 "lydian"
+  piano $ t $ "<0 1 2 3 1 0 2>" |+ "[-3,0,2,4]"
+
+do
+  -- @section return
+  setkey 0 "major"
   mm silence
   xfadeIn "drums" 8 $ slow 2 $ stack
     [ n "0*8" # s "br" # gain 0.4

@@ -11,11 +11,11 @@ do
 
 do
   -- @section intro 1
-  p "dr" $ s "bss" # gain 0.6
+  p "dr" $ s "bss" # gain 0.6 # speed 0.9
 
 do
   -- @section intro 2
-  p "dr" $ s "bss ~ <br bs:8 btl>" # gain 0.6 # pan "0.5 0.3" # speed 0.9
+  p "dr" $ s "bss ~ <br bs:8 btl>" # gain 0.7 # pan "0.5 0.3" # speed 0.9
 
 
 do
@@ -53,8 +53,6 @@ do
     , s "bhh:2*3" # pan 0.7 # gain 0.8
     ] |* gain 0.7
 
-
-
 do
   -- @section full
   mm $ t "{ 2 ~ 2@2 6 4 5 6 ~@2 4 4 3 4 ~@2 2 2 1 ~ -2 }%6" # gain 0.5 |- up "[0,5]"
@@ -70,7 +68,7 @@ do
   mm silence
 
 do
-  mm $ t "[0,5,6,7,9,11]" # octave 4
+  mm $ t "[0,5,6,7,9,11]" # octave 3 # amp 0.3
   p "fx"
     $ sometimes (fast "[2|3]")
     $ s "nfx*2"
@@ -81,6 +79,15 @@ do
 do
   -- @section ending
   reface $ n "0"
+
+do
+  -- @section piano2
+  xfadeIn "fx" 32 silence
+  xfadeIn "perc" 40 silence
+  piano $ (t . stack)
+    [ "-7@3 <~!2 [<2 3>,[8|9]]>" 
+    , "12 13 12? [13|10|9] [15|16] 13"
+    ]
 
 do
   -- @section hush
