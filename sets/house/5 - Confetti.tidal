@@ -12,15 +12,17 @@ do
   -- intro
   setcps (112/120)
   setkey (-2) "minor"
-  bank 36
+  bank "mc" 36
   hush
   mc [ n "0 0", __, degradeBy (slotenc 1 "chance") $ n "0*6" # open 0.1]
   m4 $ t "[<2 4 6>@2 <0 2 3>]*2"
+
     # vibe
 
 do
   -- @name second voice
   m5 $ t "[[~ 7@3 6@2 2@2 3]/3]*2"
+
     # vibe
 
 do
@@ -33,6 +35,7 @@ do
       , randcat ["13", "5", "11", "2", "6"]
       ]
     # lpf 8000
+    # gain 1.2
     # bus
 
 do
@@ -43,7 +46,7 @@ do
     # octave 5
     # pan 0.4
     # velocity 0.3
-    # gain 1.7
+    # gain 1.8
 
 -- Enter top phrase
 -- xfadeIn 5 64

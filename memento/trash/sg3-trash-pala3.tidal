@@ -43,7 +43,7 @@ do
     -- # mel
     # harm
     # gain ("{0@2 [0@5 0.12@3] 0@4}%1" |+ 0.9)
-    # orbit 1
+    # orbit 0
 
   p "bass"
     $ (|+ up 4)
@@ -55,7 +55,7 @@ do
     # octave 3
     # sus 4 # rel 0.8
     # gain 1.19
-    # orbit 2
+    # orbit 0
 
 
   p "melody"

@@ -10,8 +10,10 @@ do
   hush
   all id
   setkey (-10) "lydian"
+  setcps (112/120)
+  -- mc [ n "0*2" ]
   p "bes" $ t "[0@3 1@5]/2" # piano # sus 4 # orbit 0 # velocity 0.24 # gain 4
-  bank 35
+  bank "mc" 35
 
 do
   m4 $ fast 2 $ t (melody!!0)

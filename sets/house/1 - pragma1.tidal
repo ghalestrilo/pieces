@@ -20,14 +20,14 @@ do
 do
   -- break
   m2 $ n "~ 0"
-
   m1 silence
 
 
 do
   -- prepare for next track
   hush
-  all $ fast 2 . (# orbit 0)
-  m5 $ slow 2 $ t (arp "up" "[0,2,4,6]") # octave "<6 7>/2"
-  m1 $ n "0"
+  all id 
+  setcps (112/120*2)
+  m5 $ t (arp "up" "[0,2,4,6]") # octave "<6 7>/2"
+  m1 $ n "0*2"
   m5' 32 silence

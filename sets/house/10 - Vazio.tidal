@@ -13,7 +13,7 @@ let bus = bus' 0.1 0.1
 do
   setkey 0 "phrygian"
   hush
-  bank 40
+  bank "mc" 40
   unmute "bass"
   unmute "bes"
   unmute "chords"
@@ -76,8 +76,6 @@ do
 
 do
   setkey "[8 0]/64" "[lydian phrygian]/64"
-
-
 
 do
   hush

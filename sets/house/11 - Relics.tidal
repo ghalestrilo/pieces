@@ -2,6 +2,10 @@ let gretsch x = n x # s "gretsch" # bus
     piano = s "superpiano"  # lpf 450 # bus |* sus 1.1 # octave 4
     vibe = s "supervibe"  # lpf 500 # bus |* sus 2 # octave 7
 
+all $ (# lpf 300)
+
+all id
+
 do
   setcps (112/120)
   setkey (- 5) "major"
@@ -9,6 +13,7 @@ do
   setkey' 1 (- 5) "lydian"
 
 do
+  -- @section intro
   hush
   mc [n "0*2"]
   -- @name guitar
@@ -22,6 +27,8 @@ do
     # gain 0.87
     # lpf 550
     # bus
+
+unmute "drums"
 
 p "bd" $ s "biam"
 
@@ -140,6 +147,7 @@ p "drone" $ silence
 
 d1 $ s "bd"
 
+hush
 
 {-| TODO: Test if this in fact implements the behavior
   This means, I can tag a pattern and later manipulate what I tagged

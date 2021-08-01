@@ -13,7 +13,7 @@ let
 do
   -- @setup
   setkey (-2) "chromatic"
-  bank 38 -- Same as prev
+  bank "mc" 38 -- Same as prev
 
 -- Enter First Line
 p "vibe"

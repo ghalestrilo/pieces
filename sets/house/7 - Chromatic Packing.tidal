@@ -12,11 +12,13 @@ let
   gretsch x = n x # s "gretsch" # fader (vx 3) # bus
   root = (|- 2)
 
+unmute "perc"
+
 do
   -- @name intro
   hush
   all $ (# orbit 0) . (# bus)
-  bank 38
+  bank "mc" 38
   setkey (-14) "chromatic"
   mc [n "0@3 0" # open 0.3]
   xfadeIn "perc" 16
@@ -27,7 +29,7 @@ do
     # cut 1
     -- # fader (vx 2)
     # pan (0.3 |+ "0.7 0 0 0.7 0 0 0 0")
-    # bus
+    # bus # orbit 0
     # lpf 4200
 
 do
@@ -58,8 +60,10 @@ do
     $ t "{~ 12@3 7@3 10@2 5@3 5 5@3 5@4 5 5@3 5@4 5 7 9 16}%4"
     # n 0
     # s "pluck"
-    # gain 1.38
-    |+ up 2.62
+    |* rel 0.9
+    # gain 1.68
+    |+ up 1.55
+    # octave 4
     # bus
 
 do

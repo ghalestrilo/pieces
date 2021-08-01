@@ -1,48 +1,77 @@
+do
+    -- @setup
+    setkey (-2) "lydian"
+    setcps (112/120/2)
+    -- bank "mm" 0
+    mc [ n "0*4" ]
+    bank "mc" 80
+
+do
+    -- @setup
+    all id
+    hush
+    setkey (-2) "lydian"
+    setcps (112/120/2)
+    -- bank "mm" 0
+    bank "mc" 80
+    -- @section intro
+    mm $ t "0 6 4 -1 5 3 ~@2" # octave 5 # amp 0.1
+
+do
+    -- @section verse
+    mm $ stack
+      [ t ("0 6 4 0 6 4 ~@2" |- "<0!3 2>@3 <1!3 -1>@5") # octave 3
+      , (t.cat) (l "-1@2 ~" "-1@2 ~ [~ -1]" "2 1 -1 -2" "0 -1 -2 -3 -4 -3 -2 -1") # octave 5
+      ]
+      # sus 0.4 
+
+do
+    -- @section break
+    all id
+    mm $ stack
+        [ t "[2@0.5 4 3 5 4 7 5 [8 7] 6 [5 4] [2 3] [4 6] 9@0.5]/3" # octave 5
+        , n ("[0@3 2@4 3@4 8 ~@4 0@3 -1@5 ]/3" |- 5 |- 5) # octave 4
+        , n ("[0@3 2@4 3@4 8 ~@4 0@3 -1@5 ]/3" |- 1 |- 5) # octave 4
+        , n ("[0@3 2@4 3@4 8 ~@4 0@3  0@5 ]/3" |+ 4 |- 5) # octave 4
+        , n ("[0@3 2@4 3@4 7 ~@4 0@3 -1@5 ]/3" |+ 7 |- 5) # octave 4
+        ]
+
+do
+    -- @section drums
+    mc [ n ("0@3 0??@4 <~ 0 ~!2>" |- "<0!3 2>@3 <1!3 -1>@5") , n "~ 0"]
+    mm $ t ("0 6 4 0 6 4 ~@2" |- "<0!3 2>@3 <1!3 -1>@5") # octave 4
+
+do
+    -- @section verse ii
+    mc
+      [ n ("0@3 0??@4 <~ 0 ~!2>" |- "<0!3 2>@3 <1!3 -1>@5") 
+      , n "~ 0"
+      , n "{ 0 ~ ~ 0 ~ 0 0@2 0 ~@3 0 ~@3 0 ~@2 }%8" # open (rarely (|* 5) "0.1*16")
+      ]
+    mm $ stack [ t ("<[0 3 2 -1 3 1 ~@2]!3 [-2 4 2 1 7 5 ~@2]>") # sus 0.2 # octave 4
+               , (t.cat) (l "-1@2 ~" "-1@2 ~ [~ -1]" "[2 ~] [1 ~] [-1 ~] [-2 ~]" "0 -1 -2 -3 -4 -5 -6 -8") # octave 6
+               , t ("0@3 0@3 ~@2" |- "<0!3 2>@3 <1!3 -1>@5") # sus 0.2 # octave 3
+               ]
+
+
 
 
 do
-  -- @setup
-  setkey (-5) "lydian"
-  -- setcps (114/120/2)
-  all $ (# orbit 0)
-  unmute "ch"
-  bank 34
+  -- @section 
+    mc
+      [ n ("0@3 0??@4 <~ 0 ~!2>" |- "<0!3 2>@3 <1!3 -1>@5") 
+      , n "~ 0"
+      , n "{ 0 ~ ~ 0 ~ 0 0@2 0 ~@3 0 ~@3 0 ~@2 }%8" # open (rarely (|* 5) "0.1*16")
+      ]
+
 
 do
+  -- @outro
+  all id
   hush
-  m5 $ slow 2 $ t ("0 6 4 0 6 4 ~@2" |- "0@3 1@5") # sus 0.2 # octave 6
-
-do
-  m5 $ slow 2 $ t "0 6 4 -1 5 3 ~@2" # sus 0.2
-  m4 $ slow 2 $ t "-1@2 ~" # octave 6
-
-do
-  hush
-  p "ch" $ slow 2 $ t ("<0!3 -2>@3 <-1!3 1>@3 ~@2" |+ "[-3,0,2,6]") # piano # octave 5 # orbit 0
-  mc  $  slow 2 <$> [
-  __, __, __
-  , t ("0 6 4 0 6 4 ~@2" |- "<0!3 2>@3 <1!3 -1>@5") # sus 0.2 # octave 6
-  , (t.cat) (l "-1@2 ~" "-1@2 ~ [~ -1]" "2 1 -1 -2" "0 -1 -2 -3 -4 -3 -2 -1") # octave 7
-  ]
-
-
-do
-  m1 $ n "0*2"
-  m2 $ n "~ 0"
-  m3 $ n "~ 0 0@2 0 ~ 0 0" # open ("1 6 1 1" / 10)
-
-m1 $ silence
-
-do
-  all $ chunk "[4|3]*8" (rev)
-  all $ iter 2 . shuffle "[1|3|4]" . chunk 8 (hurry 2)
-
-  all $ somecyclesBy 0.2 $ within (0, 0.5) $ chop 3 . (# sus 0.01)
-  all $ within (0, 0.5) (chop 2)
-
-
-do
-  hush
-  m1 $ n "0*2"
-  m5 $ slow 2 $ t "0*4" # sus 0.2 # octave 7
-  m4 $ slow 2 $ t "[~ 0]*4"       # octave 7
+  mm $ stack
+      [ t ("[0 6 4 0 6 4@2 <5 2 2>]" |- "<0!2 3>@3 <1!2 2>@5") # octave 3
+      , t "{2 4@2 3@2 5@2 4@2 6@2 5@2 8 7 6@2 5 4 2 3 4 6 9}%8"
+      , t ("[0@3 -1@5 . 2@3 3@5 . 1@3 4@5]/3" |+ "[0,2]") # octave 4
+      ]
+      # sus 0.4 

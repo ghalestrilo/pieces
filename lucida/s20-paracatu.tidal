@@ -1,7 +1,7 @@
 
 do
   -- @setup
-  setcps (100/120)
+  setcps (95/120)
 
 p "drums" $ n "13 5" #  s "gretsch"
 
@@ -25,5 +25,26 @@ do
     # gain 1.2
 
 
+p "drums" $ stack
+  [ n (cN_ "kick") # s "bbd"
+  , s "bhh:2 . bhh:2 [bsr:2!2 bho:1@1.5]" # cut 1 # gain "[0.5 0.5]*2"
+  -- , s "bhh:2 . bhh:2 [bhh:0 bhh:1 bho@1.5]" # cut 1 # gain "[0.5 0.4]*2"
+  , n "[~ [10|12|~]?@2 ~ . [11|10], [~ [3|4|5|6|7|8]?]*4]" # s "bs" # gain 0.65
+  ] |* gain (range 0.95 1.05 rand)
+  # lpf 3800
+
+setI "kick" "[<0 [0!3 ~]> . 0@3 0@5]/2"
+
+
+setkey' 0 "g" "dorian"
+
+setkey' 1 "f" "phrygian"
+
+p "reface"
+  $ t' 0 (cI_"kick" |+ "[0,4,<6 5>,9]")
+  # reface
+  # sus 0.17
+  # amp 0.07
+  # octave 3
 
 

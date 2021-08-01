@@ -1,0 +1,95 @@
+
+once $ s "bhh"
+
+all
+  $ id
+  -- . shuffle "4 . 1 4"
+  . (# bus' 0.6 0.6)
+
+
+-- @prece 1
+p "drums" $ stack
+  [ s "bss*2"
+  , n "[~ 10,~ 9@7]" # s "bs"
+  , n "[0@7 0?|0@3 0@5]"
+    # s "bbd"
+    # gain 1.5
+    # rel 0.8
+  , s "[~ bhh:2]*2" # gain 0.6
+  ]
+  # lpf 4600
+
+
+setcps (126/120)
+
+mc [ n "0*2"
+   , n "~ 0"
+   , n "<[~ 0 ~@2 . 0 0] [0*2]>" # open ("0.1 0.3")
+   , n "[0@3 0@5 . ~]/4"
+   , n "[~ . ~ 0 . ~ . ~]/4"
+   , __# cyclesColor ("1*8" |* irand 127)
+   ]
+
+
+   ]
+
+
+setcps (190/120)
+
+
+do
+  m4 silence
+  mc [ __
+     , __
+     , fast 2 $ n "0*4" # open ("[1 1.5 4 1]" |/ 10)
+     , n ( 1 <~ "[0 7 ~ 7 . 0 ~ 7 0 . 0 7*2 . 0!2 ~ 0]/2")
+     , __
+     ]
+
+p "drums" $ stack
+  [ swingBy 0.1 3 $ n "<[0*2 . ~@3 0?]!3 [0(3,5)]>" # s "bbd"
+  , s "~ bsr" # gain 1.1
+  , fast 2 $ s "bhh:2*2" # gain "0.7 0.4"
+  ]
+  # lpf 3600
+
+
+
+once $ n "14" # s "gretsch"
+
+p "drums"
+
+
+all
+  $ always (chop 8)
+  -- . rarely (slow 4)
+  -- . sometimesBy 0.3 ((# speed 0.5) . slow 8)
+  -- . always ((# speed 0.3) . slow 2)
+  . (# gain (range 0.8 1.3 rand))
+  . rarely (slow 8)
+
+all $ fast 2
+
+do
+  hush
+
+all $ fast "[8|4|16]"
+
+mc [ 32 ~> (degrade $  n "0")
+   , 0  <~(degrade $  n "0")
+   , 12 <~ (degrade $ n "0")
+   , 190 <~ (degrade $ n "0")
+   , __
+   , n $ (slow 8 $ "1" |* (irand 8))
+      +| (scale "major" $ "[0 2 4 6]/2")
+   ]
+
+
+setcps (190/120)
+
+p "amen"
+  $ n ("1*8" |* irand 8)
+  # s "amencutup"
+  # cut 1
+  # speed 0.9
+
