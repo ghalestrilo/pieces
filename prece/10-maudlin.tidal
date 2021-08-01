@@ -1,8 +1,22 @@
 do
   -- @setup
-  setcps (114/120)
+  setcps (107.5/120)
   all $ (# bus' 0.2 0.2) 
   setkey (-9) "lydian"
+
+
+do
+  -- @guitar
+  d1
+    $ slow 4
+    $ stack 
+      [ "0" # pan 0.1 # n (irand 30)
+      , "0" # pan 0.0 # n (fast 2.1 $ irand 30)
+      , "0" # pan 0.9 # n (rev $ irand 30)
+      ]
+    # s (every 4 (const "prece102") "prece101")
+    # gain 0.85
+
 
 do
   -- @section drums
@@ -21,7 +35,7 @@ do
     , s "~ bs:11" # gain 0.8 # rel 0.6 # lpf 14000
       # hpf 400
       # resonance 0.1
-    ]
+    ] |* gain 1.08
 
 do
   -- @section drum variation
@@ -37,3 +51,13 @@ do
     $ every 4 (const "[[1@3 1] . 1 ~@3 1@2 -1 -2 . ~ -2 ~ [-2 -1] . 1 -1 [1 2@7]@2]")
     $  "[[0@3 0] . 0 ~@3 0@3 0 . ~ 0 ~ 0 . 1 2 6 [4|3|9]]"
   
+
+
+do
+  -- @section mc
+  mc [ __
+      , n "[~ . ~@2 0@3 7@3]/4"
+      , degradeBy 0.3 $ t ("0*4" |+ irand 9)
+     , t "[~ 4 ~ 2 5 ~ 6 7 \
+         \ 6 4 ~ 2 ~ 1 ~ 2 ]/4"
+     ]
