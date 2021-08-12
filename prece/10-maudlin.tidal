@@ -1,7 +1,8 @@
 do
   -- @setup
   setcps (107.5/120)
-  all $ (# bus' 0.2 0.2) 
+  all $ (# bus' 0.2 0.2)
+      . swingBy (range 0.1 0.15 $ slow 32 sine) 4
   setkey (-9) "lydian"
 
 
@@ -22,16 +23,19 @@ do
   -- @section drums
   setS "hatsound" "bhh"
   setF "hatrel" "0.1"
-  p "drums" $ stack
+  setF "volkick" 1
+  p "drums"
+    $ stack
     [__
     , n "[[0@3 0] [[~ 0] ~@2 0]!2 [0*2]]/4" # s "bbd"
+      # gain (cF0 "volkick")
     , n "[[0 0*2 ~ 0*2]!3 [0*2]]/4" 
       # s (cS "" "hatsound")
       # cut 1
-      # gain ("[4 3]*2" |/ 10)
+      # gain ("[4 3]*2" |/ 12)
       # rel 0.1
       # pan 0.7
-    , ((1/2) <~) $ s "[[br:1 bcr@3] ~]/4" # gain "<0.8 0>/4" # pan "0.2 0.8"
+    , ((1/2) <~) $ s "[[br:1 bcr@3] ~]/4" # gain "<0.65 0>/4" # pan "0.2 0.8"
     , s "~ bs:11" # gain 0.8 # rel 0.6 # lpf 14000
       # hpf 400
       # resonance 0.1
@@ -55,9 +59,23 @@ do
 
 do
   -- @section mc
-  mc [ __
+  mc [ n "{ ~ 7 ~ 13 13 ~@2 7!2 ~@5}%4"
       , n "[~ . ~@2 0@3 7@3]/4"
       , degradeBy 0.3 $ t ("0*4" |+ irand 9)
-     , t "[~ 4 ~ 2 5 ~ 6 7 \
-         \ 6 4 ~ 2 ~ 1 ~ 2 ]/4"
+     , t "[~ 4@1.5 2@1.5 5 ~ 6 7 \
+         \ 6 ~ 4 2 ~ 1 ~ 2 ]/4"
      ]
+
+
+do
+  -- @section hide (suspend)
+  mute "mm"
+  setF "volkick" 0
+
+
+
+do
+  -- @section invert
+  unmute "mm"
+  setF "volkick" 1
+  mc []

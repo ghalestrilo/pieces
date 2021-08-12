@@ -4,7 +4,8 @@ do
   setkey 5 "lydian"
   setkey' 0 10 "mixolydian"
   setcps (90/120/2)
-  all (# bus' 0.3 0.3)
+  all $ (# bus' 0.3 0.3)
+      . swingBy 0.1 8
   bank "mc" 18
   bank "mm" 17
 
