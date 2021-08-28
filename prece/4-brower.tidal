@@ -8,7 +8,7 @@ do
     -- @setup
     setkey (-2) "lydian"
     setcps (111/120/2)
-    bank "mm" 0
+    bank "mm" 23
     bank "mc" 80
     all (#bus' 0.3 0.3)
 

@@ -3,10 +3,13 @@
 do
   -- @setup
   setcps 0.5
-  setkey 0 "lydian"
+  setkey 0 "major"
+  setkey' 0 0 "lydian"
   setkey' 1 3 "lydian"
   all $ (# orbit 0) . (# bus' 0.6 0.6)
   bank "mc" 82
+  bank "mm" 20
+  -- let reface = piano
 
 
 once $ s "bd"
@@ -80,14 +83,16 @@ do
 
 
 
+let reface pat = p "reface" $ pat # s "reface" # orbit 0 # midichan 0
+
 do
   -- @section pre-drop
-  piano $ stack
+  reface $ stack
     [ fast (8/26)
-       $ t
+       $ t' 0
        $  ring "0 4 9 6 3 2 4 -3"
        $ "x@3 x@3 x@4 x@4 x@6 x x@2 x!3"
-    ] 
+    ] # octave 4
   xfadeIn "drums" 8 $ slow 2 $ stack
     [ n "0*8" # s "br" # gain 0.4
     , fast 8 $ s "bhh:2*2" # gain "0.6 0.4"
@@ -97,7 +102,7 @@ do
 do
   -- @section drums
   once $ s "br:1" # gain 0.7 
-  piano $ stack
+  reface $ stack
     [ fast (8/26)
        $ t
        $  ring "0 4 9 6 3 2 4 -3"
@@ -107,7 +112,7 @@ do
       $ (|+ "[0,3]")
       $ ring "11"
       $ "x@6 x ~ x ~ ~@12 x@6 x@10"
-    ] 
+    ] # octave 4 
   p "drums" $ slow 2 $ stack
     [ n "0@3 [~ 0] . 0*<2 1> <~ [~ 0@3]>" # s "bbd" # gain 1.1
     , n "[~ 11]*2" # s "bs" # gain 0.8
@@ -124,7 +129,7 @@ do
 do
   -- @section change
   setkey 3 "lydian"
-  piano $ t $ "<0 1 2 3 1 0 2>" |+ "[-3,0,2,4]"
+  reface$ t $ "<0 1 2 3 1 0 2>" |+ "[-3,0,2,4]"
 
 do
   -- @section return

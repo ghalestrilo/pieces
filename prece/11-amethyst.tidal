@@ -11,6 +11,8 @@ do
  all $ (# bus' 0.1 0.1)
      . swingBy 0.1 4
 
+let piano pat = reface $  pat |- up 12
+
 do
   -- @section theme
  piano 
