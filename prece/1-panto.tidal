@@ -7,12 +7,10 @@ do
   setkey' 0 0 "lydian"
   setkey' 1 3 "lydian"
   all $ (# orbit 0) . (# bus' 0.6 0.6)
-  bank "mc" 82
+  bank "mc" 80
   bank "mm" 20
   -- let reface = piano
 
-
-once $ s "bd"
 
 let phrase = cat
       [ "~@2 9@3 7@3"
@@ -63,14 +61,12 @@ do
 
 do
   -- @section more chords
-  -- xfadeIn "chordsex" 8
   -- set prog 80
-  fs 1
+  reface
     $ fast 8
-    $ t (strum 8 "[2,4,8]")
+    $ t (strum 5 "[2,4,8]")
     # sus 3
-    # amp 0.1
-    # sus 0.2
+    # amp 0.05
     # octave 4
   xfadeIn "drums" 8 $ slow 2 $ stack
     [ n "0*8" # s "br" # gain 0.4
@@ -81,18 +77,15 @@ do
     , fast 8 $ s "bhh:2*2" # gain "0.6 0.4"
     ]
 
-
-
-let reface pat = p "reface" $ pat # s "reface" # orbit 0 # midichan 0
-
 do
   -- @section pre-drop
-  reface $ stack
-    [ fast (8/26)
+  mc [ t phrase # octave 3
+     , fast (8/26)
+       $ (# octave 4)
        $ t' 0
        $  ring "0 4 9 6 3 2 4 -3"
        $ "x@3 x@3 x@4 x@4 x@6 x x@2 x!3"
-    ] # octave 4
+     ]
   xfadeIn "drums" 8 $ slow 2 $ stack
     [ n "0*8" # s "br" # gain 0.4
     , fast 8 $ s "bhh:2*2" # gain "0.6 0.4"
@@ -103,11 +96,13 @@ do
   -- @section drums
   once $ s "br:1" # gain 0.7 
   reface $ stack
-    [ fast (8/26)
-       $ t
-       $  ring "0 4 9 6 3 2 4 -3"
-       $ "x@3 x@3 x@4 x@4 x@6 x x@2 x!3"
+    [ fast 8
+    $ t (strum 5 "[2,4,8]")
+    # sus 3
+    # amp 0.05
+    # octave 4
     , fast (16/38)
+      $ (# amp 0.1)
       $ t
       $ (|+ "[0,3]")
       $ ring "11"
@@ -128,8 +123,8 @@ do
 
 do
   -- @section change
-  setkey 3 "lydian"
-  reface$ t $ "<0 1 2 3 1 0 2>" |+ "[-3,0,2,4]"
+  -- setkey 3 "lydian"
+  reface $ t $ "<0 1 2 3 1 0 2>" |+ "[-3,0,2,4, <~!5 6!2>]"
 
 do
   -- @section return
@@ -150,24 +145,3 @@ do
 
 
 
--- Fun little phrase with FS
-
-fs 1 $ t ("0*7" |+ irand 8) # sus 4 # release 4 # sustainpedal 1
-  # amp (range 0.1 0.2 rand)
-
-
-
-
-
-
-
--- CT FS
--- 48, 47: violin chords
--- 52: voice
--- Parece bom pro Lucida theme!
-
-piano
-  $ fast (8/26)
-  $ t
-  $  ring "0 4 9 6 3 2 4 -3"
-  $ "x@3 x@3 x@4 x@4 x@6 x x@2 x!3"

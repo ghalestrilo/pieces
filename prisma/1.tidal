@@ -1,0 +1,49 @@
+do
+  setcps (120/120)
+  setkey' 0 "e" "dorian"
+  setkey' 1 "c" "octatonic"
+  setI "prisma_1" $ slow (15/8) $ ring "0 1 2 4 6 8 3 4" "x@3 x@3 x x x x@3 x@3"
+  setI "prisma_4" $ "{6@4 7 6 4 2 1 ~@2 0 ~@2}%8" |- "[0 7]/3.5"
+  setI "prisma_5" $ "{0 ~@6 0@1.5 0@0.5 ~@4 0 ~@7 0@1.5 0@0.5 ~@4 0@2 0@2}%4" |+ "[0,4,8,9,11,13]" |- 14
+
+reface $ t' 0 (cI_ "prisma_4")
+
+
+do
+  -- @intro
+  mc $ [__,__,__]
+   ++ [t' 0 (cI_ "prisma_4") # octave 6 # amp 0.15]
+
+
+do
+  -- @section prepare
+  mc $ [__,__,fast 2 0 # open 0.1]
+   ++ [ t' 0 (cI_ "prisma_4") # octave 6 # amp 0.15
+      , t' 0 $ cI_ "prisma_1"
+      , t' 0 $ cI_ "prisma_1" |+ 2]
+
+
+reface $ t' 0 (cI_ "prisma_4")
+
+do
+  -- @section contrast
+  mc $ [n "[0(3,8)@4 ~2 [0(3,8), ~ 0@3]@4 ~@2 0 0]/3.5" # amp 1, n "[~ -7]/2" # open 0.15, n "0*2" # open 0.6] --,
+  reface $ t' 1 (cI_ "prisma_1" |+ "[-4,0]") # octave 3 # amp 0.7
+
+do
+  -- @section return
+  setkey' 0 (slow 7 $ "{e@3 fs@3 g@1}%4") "dorian"
+  mc $ [n "[~@3 0 . 0 ~ <[0@3 0] [~ 0*2]>@2]/2" # amp 0.4,n "[~@2 0 ~0 ~0 0 ~@3 0 ~@ 0 0]/2" # amp 0.1, fast 2 0 # open 0.1]
+   ++ fmap (# octave 4) [__, t' 0 $ cI_ "prisma_1",t' 0 $ cI_ "prisma_1" |+ 2]
+  reface $ t' 0 (cI_ "prisma_5") # amp 0.3
+
+
+
+do
+  --
+  setkey' 0 (slow 7 $ "{e fs}%1") "dorian"
+
+
+
+
+mm $ t' 0 (slow 7 "{0 1 2 3 4@2 ~@2}%2" |+ "[0,4]")

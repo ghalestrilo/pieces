@@ -3,26 +3,29 @@ do
   hush
   setkey "c" "major"
   setkey' 0 "c" "major"
-  setkey' 1 "ds" "major"
-  setkey' 2 "d" "minor"
+  setkey' 1 "ds" "lydian"
+  setkey' 2 "d" "phrygian"
   bank "mm" 24
   setcps (60/120/2)
   all $ (# bus' 0.7 0.7)
 
+
 do
   -- @section groove
   setF "volkick" 0.0
-  setF "volsnare" 0.6
   setF "volhats" 0
+  setF "volsnare" 0.6
+  setF "volsnare2" 0.0
   p "drums" $ stack
     [ fast 4 $ s "br*2" 
       # gain ("6 5" / 10
       |+ range (-0.1) 0.1 rand)
     , "0@3 0 . 0@3 0@3 0@2?"
-      # n 0
+      # n "0"
       # s "bbd" # gain (cF0 "volkick") 
     , "~ 0 . ~ 0" # n "[11|10]" # s "bs" # gain (cF0 "volsnare")
     , n "[~ 0]*4" # s "bhh:2" # gain (cF0 "volhats")
+    , "[[~ <~ 0>] ~@2 [~@3.5 0*2]]*2" # n "[17|15|16]*8" # s "bs" # gain (cF0 "volsnare2")
     ]
 
 
@@ -36,14 +39,12 @@ do
 do
   -- @section reface 
   setF "volkick" 0 
-  --  piano
   reface
     $ (# amp 0.2)
     $ t . ((1/8) <~)
     $ cat (("~ 0@7"):[6, 5, 4]) |* (-1) 
     |+| "0@12 0@4"
     |+ "<[-3,0,1,6] [0,6,8,11] [0,4,6,9] [0,2,4,6 5]>"
-    -- |+ 7
 
 -- piano silence
 
@@ -53,11 +54,10 @@ do
 
 do
   -- @section full
-  setF "volhats" 0.45
+  setF "volhats" 0.4
   setF "volkick" 0.8
 
 do
-  -- pgm 4
   -- @section vibe
   reface
    $ jux (shuffle 8 . (|+ up 12))
@@ -71,16 +71,17 @@ do
    # octave 4
 
 do
-  -- @section outro
-  p "drums" silence
+  -- @section lift
+  setF "volkick" 0.0
+  mm $ silence 
 
 do
-  -- @section hush
-  hush
-
-
-do
-  -- @section chords (mm)
+  -- @section flip 
+  setF "volkick" 0.0
+  setF "volsnare2" 0.8
+  setI "shufamt" 8
+  setN "bassnotes" $ "[0 | [0 ~]!2 ~ [0 ~] | [0 ~]!2]@4 6 7 4 2 . <[0 ~ 0@2 7 0 ~@2] [0@2 3@3 7@3] [0 ~ 0@3 1@3]>"
+  mc [ cat $ [t' 1 (cI_ "bassnotes"), t' 2 (1 ~> cI_ "bassnotes"), t (2 ~> cI_ "bassnotes")] ]
   mm 
     $ ((1/8) <~)
     $ cat [ t' 1 $ ("~ 0@7") |+ "[-3,0,2,6]"
@@ -88,10 +89,20 @@ do
       , t $ 0 |+ "[ -3,0,2,6]"
       ]
   reface
-   $ jux (shuffle 16 . (|+ up 12))
+   $ jux (shuffle (cI0 "shufamt") . (|+ up 12))
    $ cat
-     [ t' 1 $ "0*8" |+ irand 8
-     , t' 2 $ "0*8" |+ irand 8
-     , t $ "0*8" |+ irand 8
+     [ t' 1 $ "-3*8" |+ irand 12
+     , t' 2 $ "-3*8" |+ irand 12
+     , t $ "-3*8" |+ irand 12
      ] # amp 0.1
-     # octave 4
+     # octave 5
+     # sus "2"
+
+
+
+do
+  -- @section outro
+  p "drums" silence
+  mc []
+  setI "shufamt" 16
+  clutchIn "reface" 16 silence

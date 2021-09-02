@@ -7,28 +7,29 @@ do
   setkey' 0 "c" "dorian"
   setkey' 1 "c" "minor"
   setkey' 2 "ds" "major"
-  setcps (152/120/2)
+  setcps (148/120/2)
   all $ (# bus' 0.7 0.7)
   bank "mc" 85
   bank "mm" 25
 
-
-
 do
   -- @section intro
-  mm $ t' 2 "{9@2 5 4}%4" # amp 0.2
+  mm $ t' 2 "{9@2 5 4}%4" # amp 0.2 # octave 6
 
 do
   -- @section intro
   mm $ t' 2 "[ [-7@3 -5 . -10 ~@3]/2 \
              \, 9@2 5 4]"
      # amp 0.2
+     # octave 6
 
 
 do
   -- @section intro
   setF "kickamp" 0.4 
-  mm $ slow 4 $ cat
+  mm $ slow 4
+    $ (# octave 6)
+    $ cat
     [ t' 0 $ "[ [-7@3 -5 . -10 ~@3]/2 , 9@2 5 4]*4"
     , t' 0 $ "[ [-7@3 -5 . -10 ~@3]/2 , 9@2 5 4]*4" |- 2
     ]
@@ -36,6 +37,10 @@ do
   mc [ n "<0 ~>@3 0" # amp (cF0 "kickamp")
      , n "~ 0"
      ]
+
+
+
+
 
 
 do 
@@ -53,8 +58,44 @@ do
     , t' 0 "[~ 6 11 7 5 3 9 11]/2" # octave 4
     ]
 
+
+do 
+  -- @section reveal 
+  hush
+  setF "kickamp" 0.4
+  reface
+    $ (t' 2 . stack) ["[0@3 [0|-3]]",  slow 4 $ "0@2 0@3 0@2 0@2 0@2 0@2 0@3" |+ "[4,6@7 5@9,9]"]
+    # octave 3
+    # amp 0.2
+  mc [ n "<0 ~>@3 0" # amp (cF0 "kickamp")
+     , __ -- , n "~ 0"
+     , __ -- , n "0*2" # open "0.2 0.6"
+     , n "<5 ~>@3 0 . 0 ~ 5 <5 ~>"
+     , fast 4 $ every 16 (const $ n (fastcat [run 12 |- 12, __]))
+       $ n "0*<1 [1|1|2]>"
+     ]
+
+
+do
+  -- @section intro
+  setF "kickamp" 0.4 
+  mm $ slow 4 $ cat
+    [ t' 0 $ "[ [-7@3 -5 . -10 ~@3]/2 , 9@2 5 4]*4"
+    , t' 0 $ "[ [-7@3 -5 . -10 ~@3]/2 , 9@2 5 4]*4" |- 2
+    ]
+    # octave 6
+    # amp 0.2
+
+do
+  mc []
+  -- reface silence
+  -- mm silence
+
+
+
 do
   -- @section theme
+  reface silence
   mm $ cat
     [ t "[~ 6 11 7,0@3 2]"
     , t "[-4@3 -3, 5 3 9 11]"
@@ -66,24 +107,29 @@ do
     , t' 1 "[-3, 8 4 7 6]"
     , t' 1 "[0 1 0 -3, 4]"
     --
-    ] # octave 4 # amp 0.6
-
-
-do
-  -- @section drums
-  mc [ n "<0 ~>@3 0"
-     , fast 2 $ n "<~ 0>"
-     , n "0*2 . 0" # open "0.2 0.6"
-     , slow 2 $ n "~@3 0 . 0 ~ 9 9"
+    ] # octave 6 # amp 0.6
+  mc [ n "<0 ~>@3 0" # amp (cF0 "kickamp")
+     , __ -- , n "~ 0"
+     , __ -- , n "0*2" # open "0.2 0.6"
+     , n "<5 ~>@3 0 . 0 ~ 5 <5 ~>"
+     , fast 4 $ every 16 (const $ n (fastcat [run 12 |- 12, __]))
+       $ n "0"
      ]
 
-do
-  -- @section leave
-  mc [ __ 
-     , __ 
-     , n "0*2 . 0" # open "0.2 0.6"
-     , slow 2 $ n "~@3 0 . 0 ~ 9 9"
-     ]
+
+reface $ cat
+    [ t "[~ 6 11 7,0@3 2]"
+    , t "[-4@3 -3, 5 3 9 11]"
+    , t "[~ 6 11 7,0@3 2]"
+    , t "[-4 . -1, 7 8 9 10, 5 6 7 8]"
+    --
+    , t' 1 "[-2, [9,11] 5 10 9]"
+    , t' 1 "[-4, 7 2 9 3]"
+    , t' 1 "[-3, 8 4 7 6]"
+    , t' 1 "[0 1 0 -3, 4]"
+    --
+    ] # octave 4  # amp 0.2 
+
 
 
 do
@@ -94,16 +140,5 @@ setkey' 3 "af" "major"
 
 
 
-reface
-  $ (t' 2 . stack) ["[0@3 [0|-3]]",  slow 4 $ "0@2 0@3 0@2 0@2 0@2 0@2 0@3" |+ "[4,6@7 5@9,9]"]
-  # octave 3
-  # amp 0.2
 
 
-  mm $ stack
-    [ slow 4 $ cat
-      [ t' 0 $ "[ [-7@3 -5 . -10 ~@3]/2 , 9@2 5 4]*4"
-      , t' 0 $ "[ [-7@3 -5 . -10 ~@3]/2 , 9@2 5 4]*4" |- 2
-      ] # amp 0.2
-    , t' 0 "[~ 6 11 7 5 3 9 11]/2" # octave 4
-    ]

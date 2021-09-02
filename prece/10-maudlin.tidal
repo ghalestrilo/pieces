@@ -4,6 +4,8 @@ do
   all $ (# bus' 0.2 0.2)
       . swingBy (range 0.1 0.15 $ slow 32 sine) 4
   setkey (-9) "lydian"
+  bank "mm" 29
+  bank "mc" 89
 
 
 do

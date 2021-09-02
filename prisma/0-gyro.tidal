@@ -1,0 +1,47 @@
+
+do
+  -- @setup
+  setcps (118/120)
+  setkey "f" "major"
+  setkey' 0 "f" "major"
+  setI "prisma_1" $ slow (15/8) $ ring "0 1 2 4 6 8 3 4" "x@3 x@3 x x x x@3 x@3"
+  setI "prisma_2" $ ring "3 2 4 5 1" "x@3 x@5"
+  setI "prisma_3" $ "[0, ~ [2 ~]]@3 [0, ~ 2@4, ~@2 6@3, ~@7 [4|7|8|~]@3?]@5"
+
+do
+  -- @section intro
+  hush
+  mc $ [__,__,__] ++ [ t "[0@3 5 ~ 2 4 ~ 6 ~ 9 ~@5]/2" # octave 3 ]
+
+
+do 
+  -- @section swing
+  reface
+    $ slow 2
+    $ t (cI_ "prisma_3" |+ cI_ "prisma_2" ) # octave 3
+
+
+mc [ t "{2 3 5 7 9 8@3 6@3 4@3 1@3}%8" # octave 4 ]
+
+
+mc $ [n "[[0@3 0*[1|1|2]]!3 [0!3 ~]]/4", n "[~0]/2", n "[~ 0*2]*2"]
+  ++ [ t "{2 3 5 7 9 8@3 6@3 4@3 1@3}%8" # octave 4 ]
+  ++ map (\i -> t (cI_ "prisma_1" |+ i) # octave 5) [3, 5]
+
+
+
+
+
+do
+  -- @section drums
+  mc $ [n "[[0@3 0*[1|1|2]]!3 [0!3 ~]]/4", n "[~0]/2", fast 2 $ n  $ sometimesBy 1 (const "0 0*2 0 0") "[~ 0*2]"]
+   ++ [ t "[0@3 5 ~ 2 4 ~ 6 ~ 9 ~@5]/2" # octave 3 ]
+
+
+
+
+-- Part 2
+
+do
+  -- @setup
+

@@ -1,9 +1,5 @@
 
 
-unmute "drums"
-
-once $ s "gretsch:10"
-
 do
   -- @setup
   setkey 5 "lydian"
@@ -11,8 +7,8 @@ do
   setcps (90/120/2)
   all $ (# bus' 0.3 0.3)
       . swingBy 0.1 8
-  bank "mc" 18
-  bank "mm" 17
+  bank "mc" 82
+  bank "mm" 22
 
 do
   -- @section intro
@@ -32,15 +28,15 @@ do
 do
   -- @section gentle 
   hush 
-  -- p "piano" ## [s "superpiano" # velocity 0.3 # gain 2 # octave 4 # sus 5]
   reface $ (|- up 12)
     $ cat 
-      [ t $ "0" |+ "[-7,-3,-1,2,6]"
-      , t' 0 $ cat ["~@5 0@3" |+ "<[-6,2] [-6,0,2,4]>", __]
+      [ t (strum 50 $ "0" |+ "[-7,-3,-1,2,6]") # sus "<5 6>"
+      , t' 0 (cat ["~@5 0@3" |+ "<[-6,2] [-6,0,2,4]>", __]) # sus 1
       ]
   m3 $ n "0*<1 2> . 0@3 0 . 0 0 . ~ 0" # open ("1!2 [1 5] 2" / 10)
-  setI "drumpat"  "[[4 10?]*4, 13 [2@3 13?] 13*2 [2 | [2 13@3] | 2 [13@2 21 20] | 2 11 ~ 13 | 10!2 6 ~ ]]"
+  setI "drumpat"  "[[4 10?]*4, 13 [2@3 13?] 13*2 [2 | 20 | [2 13@3] | 2 [13@2 21 20] | 2 11 ~ 13 | 10!2 6 ~ ]]"
   setF "dhpf" 1300
+  setF "dlpf" 3200
   xfadeIn "drums" 12 
     $ n (cN_ "drumpat") 
     # s "gretsch" # speed 1 # gain 1.6
@@ -53,7 +49,6 @@ do
   -- @section return 
   m1 $ t ("[0@3 7 . <[0 ~ 0 ~@2 7@3] [0@2 0@3 7@3]>]" |+ "[0!3 1]/2" |- 7)
   m4 $ t (cI_ "phrase") 
-  setF "dlpf" 3200
   setF "dhpf" 0
 
 
