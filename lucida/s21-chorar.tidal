@@ -1,0 +1,41 @@
+
+do
+  -- @setupsetcps (100/120)
+  setkey' 0 "d" "lydian"
+  setcps (91/120)
+
+-- prece 3
+mm $ t' 0 (slow (27/8) $ ring "0 6 5 9" "x@3 x@3 x x@3 x@3 x@5 x@2 x@4 x@3") # octave 2 # amp 0.3
+
+do
+  -- @
+  reface
+    $ stack
+    $ fmap (|* amp 0.1)
+    [ t' 0 (slow (27/8) $ ring "0 6 5 9" "x@3 x@3 x x@3 x@3 x@5 x@2 x@4 x@3") # octave 2 # amp 3
+    , (# octave 4) $ t' 0 $ "{ 0@3 2@3 4 5 8 9@4 0@3 4 5 8 6@4 1@3 3@3 6@7 4 5 6 4 2 1 }%8" 
+    -- , (# octave 3) $ t' 0 "[0,2,5,8]"
+    , (# octave 4)
+        $ t' 0
+        $ "{ 0@2 ~@11 0@3 0 ~@6 0@15 0@4 }%8" 
+        |+ "{ [0,2,5,8]@13 \
+            \ [0,2,5,7]@10  \ 
+            \ [0,1,3,7]@19 }%8" 
+    ]
+ 
+
+
+p "drums"
+  $ stack
+  [ s "[br,bhh:2]*2" # gain 0.4
+  , slow 2 $ note "0(5,16,3)" # s "bsr" # gain 0.6
+  , s "{ bbd:2@3 bbd:2@3 bs:10@1.5 bbd:2@1.5 bbd:2@7 }%4" # gain 0.8 # lpf 300
+  ]
+
+do
+  -- @section verse 1
+  reface $ t' 0 (slow (27/8) $ ring "0" "x@3 x@3 x x@3 x@3 x@5 x@2 x@4 x@3") # octave 2 # amp 0.08 # sus 0.1
+
+
+do
+  --

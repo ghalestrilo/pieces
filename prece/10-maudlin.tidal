@@ -38,7 +38,7 @@ do
       # rel 0.1
       # pan 0.7
     , ((1/2) <~) $ s "[[br:1 bcr@3] ~]/4" # gain "<0.65 0>/4" # pan "0.2 0.8"
-    , s "~ bs:11" # gain 0.8 # rel 0.6 # lpf 14000
+    , s "~ bs:10" # gain 0.8 # rel 0.6 # lpf 14000
       # hpf 400
       # resonance 0.1
     ] |* gain 1.08
