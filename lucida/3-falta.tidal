@@ -8,7 +8,7 @@ do
   setcps (108/120/2)
   all (# bus' 0.3 0.3)
   bank "mc" 21
-  bank "mm" 3 
+  bank "mm" 3
 
 let piano = p "piano" ## [s "superpiano" # velocity 0.25 # gain 2 # octave 4 # legato 2 # lpf 1700]
     vibe = p "vibe" ## [s "supervibe" # modamp 0 # sus 4 # velocity 0.3 # sus 4 # gain 0.7]
@@ -28,7 +28,7 @@ do
   -- @section chords
   setkey' 0 ("3 2") "lydian mixolydian"
   setkey' 1 (-2) "mixolydian"
-  piano $ cat 
+  piano $ cat
     [ t' 0 "[-7,-3,0,2,6]"
     , t' 0 ("0 0" |+  "[-3,0,2,6]")
     , t' 0 "[-3,0,2,6]"
@@ -41,7 +41,7 @@ do
 
 
 do
-  -- @section verse 
+  -- @section verse
   mc  [ t ("0@3 0 . ~ . ~ <0 1> . ~" |- 1)
       , n "0(3,8) . <[~ 0!2 ~]!3 0*2>" # velocity 1
       , __
@@ -75,7 +75,7 @@ do
       , n "[~ 0]*2"
       , fast 4 $ n "0*4" # open ("1 3 4 1" |/ 10)
       ]
-  mm $ stack 
+  mm $ stack
     [ t . fast 2 . cat
       $ l "~ ~ [7 6] [~ 5] "
           " [~ 3] ~ [7 6] [~ 5]"
@@ -99,7 +99,7 @@ do
 
 do
   hush
-  -- @section verse 
+  -- @section verse
   mc  [ t ("0@3 0 . ~ . ~ <0 1> . ~" |- 1)
       -- , __
       , n "0(3,8) . <[~ 0!2 ~]!3 0*2>" # velocity 1
@@ -125,5 +125,5 @@ do
   all $ (# amp (range 0.2 0.3 rand))
 
 do
-  hush 
+  hush
   all id

@@ -1,19 +1,28 @@
-let piano' tt = xfadeIn "piano" tt ## [s "superpiano" # velocity 0.2 # gain 2 # octave 4 # legato 2 # sus 4]
+let piano' tt = xfadeIn "piano" tt ## [s "superpiano" # velocity 0.2 # gain 2 # octave 4 # legato 2]
     piano = piano' 0.1
+    keyboard = piano
+    -- keyboard = reface
 
 do
   -- @setup
+  let index = "0 ~@3 [0 ~ 1 ~]@3 [0@3 0 ~@5]@4.5 2@7.5 3@2" :: Pattern Int
+      -- indexed = slow (42/12) . squeeze (cI_ "idx")
+      indexed = slow (42/12) . squeeze index
+  setI "idx" "0 ~@3 [0 ~ 1 ~]@3 [0@3 0 ~@5]@4.5 2@7.5 3@2"
   setkey 3 "lydian"
-  setkey' 0 "ds" "{ lydian@13 lydian@10 lydian@12 major@7 }%12" 
+  setkey' 0 "ds" "{ lydian@20 <major lydian>@22 }%12"
   setkey' 1 3 "lydian"
-  setcps (104/120/2) 
-  all $( # (bus' 0.6 0.93 # delay 1 # delaytime (10/26) # delayfb 0.85))
-  setN "mel1" "{ 0@3 2 5 2 3 4 8 9@4 0@4 4 5 8 6@3 1@3 3@3 6@7 4 5 6 4 2 1 }%12" 
-  setN "chr1" 
-        $ "{ 0@2 ~@11 0@3 0 ~@6 1@15 1@4 }%12" 
-        |+ "[-3,0,2,{4@23 3@19}%12]"
-        |+ 2
-
+  setN "chr1"
+    $ indexed ["[-3,0,2,5]", "[-4,-1,1,5]", "[-3,0,2,5]", "[-3,0,2,5]", "[-3,0,2,5]" |- 2, "[-3,0,2,5]" |- 1]
+  setkey' 2
+    (indexed ["ds", "e", "es", "es", "ds", "ds"])
+    (indexed ["lydian", "minor", "mixolydian", "dorian", "lydian", "lydian"])
+  all $ swingBy (0.04) 6
+      . ( # (bus' 0.6 0.93 # delay 1 # delaytime (10/26) # delayfb 0.85))
+  -- all $ swingBy (0.04) 6
+  setcps (104/120/2)
+  setN "mel1" "{ 0@3 2 5 2 3 4 8 9@4 0@4 4 5 8 6@3 1@3 3@3 6@7 4 5 6 4 2 1 }%12"
+  bank "mc" 87
 
 do
   -- @section intro 1
@@ -22,7 +31,6 @@ do
 do
   -- @section intro 2
   p "dr" $ s "bss ~ <br bs:8 btl>" # gain 0.7 # pan "0.5 0.3" # speed 0.9
-
 
 do
   -- @section piano
@@ -35,61 +43,111 @@ do
   piano $ (t . stack)
     [ "-7@3 <~!2 [<2 3>,7]>" - 1 ]
   piano' 16 $ (t . stack)
-    [ "-7@3 <~!2 [<2 3>,7]>" - 1 
+    [ "-7@3 <~!2 [<2 3>,7]>" - 1
     , "12 13 12? [13|10|9] [15|16] 13"
     ]
   xfadeIn "dr" 16 silence
 
 
+
 do
   -- @section theme 2
-  setI "meloct" 4
-  setI "chroct" 3
-  setF "melgain" 1
+  setI "meloct" 5
+  setI "chroct" 4
+  setF "melgain" $ 0.8 |+ range 0.05 0.2 rand
+  setF "melsus" 4
   setF "chrgain" 0
+  setF "refaceamp" 0.4
+  piano
+    $ (stack)
+    [ t "<-7!2 -6!2>@3 <~!2 [<2 3>,7]>"
+    , t "12 13 12? [13|10|9] [15|16] 13"
+    ]
+  setkey' 0 "ds" "lydian"
   reface
     $ stack
-    $ fmap (|* amp 0.3)
-    [ (# (octave (cI0 "meloct") # amp (cF0 "melgain"))) $ t' 0 $ cI_ "mel1"
-    , (# (octave (cI0 "chroct") # amp (cF0 "chrgain")))
-      $ t' 0 $ cI_ "chr1" 
+    $ fmap (|* amp "^refaceamp")
+    [ (# (octave "^meloct" # amp "^melgain")) $ t' 0 "^mel1"
+    , (# (octave "^chroct" # amp "^chrgain"))
+      $ t' 2
+      $ cI_ "chr1"
     ]
 
+do
+  -- intro drums
+  mamps $ repeat 0.6
+  ma 1 0
+  mc [ note "{ 0 0(3,8) [~@7 0] [0@7 0] 0*2}%1.5"
+     , fast (3/4) $ note "~ 0"
+     , fast (3/4) $ note "0*4" # open 0.3
+     ]
 
 do
   -- @section refocus
   piano' 16 silence
-  setF "chrgain" 1
-  mc $ fast (3/4) <$>
-     [ n "0(3,8) . ~ "
-     , n "~ 0"
-     , n "0*4" # open 0.8
-     ]
-
-do
-  -- @section djent
+  setF "chrgain" $ 0.8 |+ range 0.05 0.2 rand
+  ma 1 1
   setI "meloct" 3
-  setI "chroct" 5
-  setF "melgain" 1.7
-  setF "chrgain" 0.5
-  mc [ note (cN_ "mel1") # note 0 # amp 0.7
-     , fast (3/4) $ note "~ 0"
-     , fast (3/4) $ note "0*4" # open 0.4
-     ]
-
+  setI "chroct" 4
+  setF "melgain" 1.2
+  setF "chrgain" 0.7
 
 do
-  -- @section
-  piano $ (t . stack)
-    [ "-7@3 <~!2 [<2 3>,[8|9]]>" 
+  setI "meloct" 5
+  setI "chroct" 4
+  piano' 16 $ (t . stack)
+    [ "-7@3 <~!2 [<2 3>,[8|9]]>"
     , "12 13 12? [13|10|9] [15|16] 13"
-    ] # amp 1.2
+    ] # amp 0.3
+
 
 do
-  -- @section
+  setF "chrgain" 0.35
+  setF "melgain" 0.35
+  setF "hatopen" 0.2
+  setN "mel1" "{ 0@3 2 5 2 3 4 8 9@4 0@4 4 5 8 6@3 1@3 3@3 6@6 2 4 5 [6 7 6|6]@3 4 2 1 }%12"
+  reface silence
+  reface
+    $ stack
+    [ (# (octave (cI0 "meloct") # pan 0.3 # cut 2 # amp (cF0 "melgain"))) $ t' 0 $ cI_ "mel1"
+    , (# (octave (cI0 "chroct") # pan 0.7 # amp (cF0 "chrgain"))) $ t' 2 $ cI_ "chr1"
+    ]
+  mamps [0.5,0.5,0.5,0,0,0]
+  mc [ note "{ 0 0(3,8) [~@7 0] [0@7 0] 0*2}%1.5" # amp 0.7
+    , n $ fast (3/2) $ "<[~ 0] [~@6 0 ~]>"
+    , fast (3/4) $ note "0*4" # open "^hatopen"
+    , t' 0 "^mel1"
+    , t' 1 "^2nds"
+    , t' 1 $ (|+ 1) "^2nds"
+    ]
+
+do
+  -- @section closing harmonics
+  piano silence
+  mamps [0.6,0.6,0.6,0,0.6,0.6]
+  setF "melgain" 0
+  setF "bassgain" 0
+  setF "hatopen" 0.5
+  setI "2nds"
+    $ fast (6/(3+3+2+3+3+5+3+2+2))
+    $ ring "1 -2 -3" "x@3 x@3 x@2 x@3 x@3 x@5 x@3 x@2 x@2"
+
+do
   setF "chrgain" 0
-  
+  setF "melgain" 0
+  ma 3 1
+  setF "bassgain" 0.4
+  setF "hatopen" 0.2
 
+do
+  -- setF "chrgain" 0.17
+  setF "chrgain" (range 0.2 0.3 rand)
 
+do
+  -- @section leave 1
+  ma 0 0
+  ma 1 0
 
-
+do
+  -- @section leave 2
+  ma 2 0

@@ -1,7 +1,11 @@
+let
+  reface = vibe . (# hpf 300) . (# lpf 600)
+  mm = piano . (# amp 0.7)
+
 do
   -- @setup
   setcps (107.5/120)
-  all $ (# bus' 0.2 0.2)
+  all $ (# bus' 0.4 0.4)
       . swingBy (range 0.1 0.15 $ slow 32 sine) 4
   setkey (-9) "lydian"
   bank "mm" 29
@@ -10,16 +14,27 @@ do
 
 do
   -- @guitar
-  d1
+  setF "gtgain" 0.95
+  p "guitars"
+    -- $ ((1/128) ~>)
     $ slow 4
-    $ stack 
+    $ stack
       [ "0" # pan 0.1 # n (irand 30)
-      , "0" # pan 0.0 # n (fast 2.1 $ irand 30)
+      , "0" # pan 0.5 # n (fast 2.1 $ irand 30)
       , "0" # pan 0.9 # n (rev $ irand 30)
       ]
     # s (every 4 (const "prece102") "prece101")
-    # gain 0.85
+    # gain (cF_ "gtgain")
 
+do
+  -- @section bassline
+  mm
+    $ (# octave "4")
+    $ (# cut 9)
+    $ t
+    $ slow 4
+    $ every 4 (const "[[1@3 1] . 1 ~@3 1@2 -1 -2 . ~ -2 ~ [-2 -1] . 1 -1 [1 2@7]@2]")
+    $  "[[0@3 0] . 0 ~@3 0@3 0 . ~ 0 ~ 0 . 1 2 6 [4|9]]"
 
 do
   -- @section drums
@@ -31,53 +46,58 @@ do
     [__
     , n "[[0@3 0] [[~ 0] ~@2 0]!2 [0*2]]/4" # s "bbd"
       # gain (cF0 "volkick")
-    , n "[[0 0*2 ~ 0*2]!3 [0*2]]/4" 
-      # s (cS "" "hatsound")
+    , n "[[0 0*2 ~ 0*2]!3 [0*2]]/4"
+      # s (cS_ "hatsound")
       # cut 1
       # gain ("[4 3]*2" |/ 12)
       # rel 0.1
       # pan 0.7
     , ((1/2) <~) $ s "[[br:1 bcr@3] ~]/4" # gain "<0.65 0>/4" # pan "0.2 0.8"
-    , s "~ bs:10" # gain 0.8 # rel 0.6 # lpf 14000
+    -- , s "~ bs:10" # gain 0.8 # rel 0.6 # lpf 14000
+    , s "~ gretsch" # n "[20,2]" # gain 0.75 # rel 0.6 # lpf 14000
       # hpf 400
       # resonance 0.1
-    ] |* gain 1.08
+    ] |* gain 1.38
 
 do
   -- @section drum variation
   setS "hatsound" "[bho:1 bhh]*2"
   setF "hatrel" "[<0.1 1> 0.1@3]"
 
-do
-  -- @section bassline
-  mm
-    $ (# octave "4")
-    $ t
-    $ slow 4
-    $ every 4 (const "[[1@3 1] . 1 ~@3 1@2 -1 -2 . ~ -2 ~ [-2 -1] . 1 -1 [1 2@7]@2]")
-    $  "[[0@3 0] . 0 ~@3 0@3 0 . ~ 0 ~ 0 . 1 2 6 [4|9]]"
-  
 
 
 do
   -- @section mc
+  setF "mmamp" 0
+  setF "gtgain" 0
+  mamps $ repeat 0.3
   mc [ n "{ ~ 7 ~ 13 13 ~@2 7!2 ~@5}%4"
       , n "[~ . ~@2 0@3 7@3]/4"
       , degradeBy 0.3 $ t ("0*4" |+ irand 9)
-     , t "[~ 4@1.5 2@1.5 5 ~ 6 7 \
+      , t "[~ 4@1.5 2@1.5 5 ~ 6 7 \
          \ 6 ~ 4 2 ~ 1 ~ 2 ]/4"
+      , n "[~@3 0 . 0@3 . ~ .~]/4"
      ]
 
 
 do
-  -- @section hide (suspend)
+  -- @section suspend
   mute "mm"
+  setF "gtgain" 0
   setF "volkick" 0
-
-
 
 do
   -- @section invert
-  unmute "mm"
+  setF "gtgain" 1
   setF "volkick" 1
-  mc []
+  unmute "mm"
+  mamps []
+
+do
+  mm silence
+  setF "volkick" 0
+  xfadeIn "drums" 16 silence
+
+do
+  -- @section end
+  hush

@@ -5,16 +5,14 @@ do
   setcps (112/120/2)
   all (# bus' 0.6 0.6)
 
-let piano = p "piano" ## [s "superpiano" # velocity 0.25 # gain 1.7 # octave 3 # legato 2]
-    vibe = p "vibe" ## [s "supervibe" # modamp 0 # sus 4 # velocity 0.3 # sus 4 # gain 0.65 # lpf 2000]
+let piano = p "piano" ## [s "superpiano" # velocity 0.25 # gain 1.8 # octave 3 # legato 2]
+    vibe = p "vibe" ## [s "supervibe" # modamp 0 # sus 4 # velocity 0.3 # sus 4 # gain 0.7 # lpf 2000]
     bes = p "bes" ## [s "[tb:0,tb:1]" # octave 3 # gain 0.7 # lpf 350]
 
-p "drums" $ stack
-  [ n "2 ~ 2 ~ 2 1@2 2 ~ 2 ~ 2" # s "bhh" # gain 0.6
-  , s "[bbd:0,bd:0]*4" # gain 0.8
-  ]
+
 
 do
+  hush
   piano
     $ fast 2
     $ cat
@@ -24,15 +22,22 @@ do
       -- , t "16 13 15 11 12 15"
       ]
 
-  bes $ t "12*4"
-
-p "hh" $ fast 4 $ s "th*3" # gain (range 1 0.6 saw)
-
 do
   p "drums" $ stack
-    [ n "2 ~ 2 ~ 2 1@2 2 ~ 2 ~ 2" # s "bhh" # gain 0.6
+    [ n "[2 ~ 2 ~ 2 1@2 2 ~ 2 ~ 2 2 ~ 1 ~ 2 2]/1.5" # s "bhh" # gain 0.5
     , s "[bbd:0,bd:0]*4" # gain 0.8
+    , n "[3 ~ 5 ~ 5 3 . 3 ~ 5 5 ~ 3 . 3 ~ 5 ~ 5 3]/1.5" # s "vs" # gain 0.75
     ]
+
+  bes $ t "12*4"
+
+  p "hh" $ fast 4 $ s "th*3" # gain (range 0.84 0.5 saw)
+
+do
+  -- p "drums" $ stack
+    -- [ n "2 ~ 2 ~ 2 1@2 2 ~ 2 ~ 2" # s "bhh" # gain 0.5
+    -- , s "[bbd:0,bd:0]*4" # gain 0.8
+    -- ]
   -- drama
   vibe
     $ cat
@@ -52,7 +57,7 @@ do
     , t ("[~ -5 ~ -5@2 ~]" |+ "[0,4,6,9,13]")
     , t ("[~ -5 ~ -5@2 ~]" |+ "[0,4,6,9,13]")
     -- , t $ sharp 3 $ ("[~ 3 ~ 3@2 ~]" |+ "[-2,0,3,6,9]")
-    , note $ flat 1 $ onkey 0 $ ("[~ 3 ~ 3@2 ~]" |+ "[0,1,3,6,9]")
+    , note $ onkey 0 $ ("[~ 3 ~ 3@2 ~]" |+ "[0,1,3,6,9]")
     ]
   p "bes" ## [s "[tb:0,tb:1]" # octave 3 # gain 0.7 # lpf 350]
     $ (|+ up 0.13)
@@ -62,11 +67,23 @@ do
       , t "[16 13 15 12 13 15,]"
       ]
 
+
+do
+  p "drums" $ stack
+    [ n "[2 ~ 2 ~ 2 1@2 2 ~ 2 ~ 2 2 ~ 1 ~ 2 2]/1.5" # s "bhh" # gain 0.5
+    , s "[bbd:0,bd:0]*4" # gain 0.8
+    , n "[3 ~ 5 ~ 5 3 . 3 ~ 5 5 ~ 3 . 3 ~ 5 ~ 5 3]/1.5" # s "vs" # gain 0.75
+    ]
+  bes $ t "12*4"
+  p "hh" $ fast 4 $ s "th*3" # gain (range 0.84 0.5 saw)
+
+do
+
 vibe silence
 
 p "drums" $ silence
 
-p "bes" ## [s "[tb:0,tb:1]" # octave 3 # lpf 300 # gain 0.7]
+p "bes" ## [s "[tb:0,tb:1]" # octave 4 # lpf 300 # gain 0.9]
   $ (|+ up 0.13)
   $ fast 2
   $ cat
@@ -76,6 +93,25 @@ p "bes" ## [s "[tb:0,tb:1]" # octave 3 # lpf 300 # gain 0.7]
     ]
 
 
+do
+  piano silence
+  p "bes" silence
+  vibe
+    $ cat
+      [ t "11 9 7 . 6 5 4"
+      , t "3 2 1 . 0 -1 -2"
+      , t "-5"
+      , __
+      ]
+
+do
+  p "bes" ## [s "[tb:0,tb:1]" # octave 3 # gain 0.7 # lpf 350]
+    $ (|+ up 0.13)
+    $ fast 2
+    $ cat
+      [ t "11 9 <7!2 6!2>"
+      , t "[16 13 15 12 13 15,]"
+      ]
 
 -- ALT: M:C
 

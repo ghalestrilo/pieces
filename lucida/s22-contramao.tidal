@@ -1,0 +1,18 @@
+
+do
+  setkey 2 "lydian"
+  setcps (100/120/2)
+  bank "mc" 27
+
+
+do
+  -- @section base
+  mc [__,__,__,__,t "<0 2>@3 <0 2> . <0 2> ~ 5 ~" |- up 24]
+
+do
+  -- @section mel
+  -- eu to cansado de andar na contramão
+  piano
+    $ ((1/2) <~)
+    $ whenmod 4 2 (const silence)
+    $ (t . fast 2 . cat) [ "~ -3 -2 -1", "0 -1 0 -1", "-2 -3", "-3 . -5 -1"]

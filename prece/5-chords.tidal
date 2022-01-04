@@ -1,52 +1,58 @@
+let
+  -- @mocks
+  -- @mode test
+  mm = vibe . (|+ up 12) . (# gain 0.7) . (# modamp 0) . (# hpf 300) . (# lpf 600)
+  reface = piano . (# gain 1.2)
+
 do
   -- @section setup
   hush
   setkey "c" "major"
-  setkey' 0 "c" "major"
+  setkey' 0 "c" "lydian"
   setkey' 1 "ds" "lydian"
   setkey' 2 "d" "phrygian"
+  setkey' 3 "c" "major"
   bank "mm" 24
+  bank "mc" 24
   setcps (60/120/2)
   all $ (# bus' 0.7 0.7)
 
-
 do
   -- @section groove
-  setF "volkick" 0.0
+  setF "volkick" 0
   setF "volhats" 0
   setF "volsnare" 0.6
   setF "volsnare2" 0.0
+  setF "volride" 1
+  setI "kickpat" $ (0.5 ~>) "0@3 0@3 [~ 0@3|0]@8 0@2"
   p "drums" $ stack
-    [ fast 4 $ s "br*2" 
-      # gain ("6 5" / 10
-      |+ range (-0.1) 0.1 rand)
-    , "0@3 0 . 0@3 0@3 0@2?"
-      # n "0"
-      # s "bbd" # gain (cF0 "volkick") 
+    [ fast 4 $ s "br*2"
+      # gain (("6 5" / 10 |+ range (-0.1) 0.1 rand) |* cF 0 "volride")
+    , n (cN_ "kickpat")
+      -- # n "0"
+      # s "bbd" # gain (cF_ "volkick")
     , "~ 0 . ~ 0" # n "[11|10]" # s "bs" # gain (cF0 "volsnare")
     , n "[~ 0]*4" # s "bhh:2" # gain (cF0 "volhats")
     , "[[~ <~ 0>] ~@2 [~@3.5 0*2]]*2" # n "[17|15|16]*8" # s "bs" # gain (cF0 "volsnare2")
     ]
-
+    |* gain 1.2
 
 do
   -- @section chords (mm)
-  mm 
+  setI "base" "0"
+  mm
     $ t . ((1/8) <~)
-    $ cat (("~ 0@7"):[6, 5, 4]) |* (-1) |+ "[-3,0,2,6]"
+    $ cat (("~ 0@7" |- cI0 "base"):[6, 5, 4]) |* (-1) |+ "[-3,0,2,6]"
 
 
 do
-  -- @section reface 
-  setF "volkick" 0 
+  -- @section reface
   reface
-    $ (# amp 0.2)
+    $ (# amp 0.3)
     $ t . ((1/8) <~)
-    $ cat (("~ 0@7"):[6, 5, 4]) |* (-1) 
-    |+| "0@12 0@4"
-    |+ "<[-3,0,1,6] [0,6,8,11] [0,4,6,9] [0,2,4,6 5]>"
-
--- piano silence
+    $ cat (("~ 0@7" |- cI0 "base"):[6, 5, 4]) |* (-1)
+      |+| "0@12 0@4"
+      |+ "<[-3,0,1,6] [0,6,8,11] [0,4,6,9] [0,2,4,6 5]>"
 
 do
   -- @section drums
@@ -54,55 +60,81 @@ do
 
 do
   -- @section full
-  setF "volhats" 0.4
-  setF "volkick" 0.8
+  mamp 0 0.45
+  mc [ t "2 -2 ~ 1 . ~@2 0 1 . [1 2@7]@2 0 -2  . 1 [0 ~ 1 ~]" ]
 
 do
-  -- @section vibe
-  reface
-   $ jux (shuffle 8 . (|+ up 12))
-   $ t (
-    "[   -3 0 [2,6] 0 [2,5] 6 2 -6 \
-     \ . -4 -2 [0,2] -4 [-2,[0|4]] [1|2] -4 -5 \
-     \ . -1 1 4 -3 -1 [1,2]@2 [0,2]\
-     \ . -4 -2 [0,2] -1@5      ]/4" |+ 7)
-   # amp 0.2
-   # sus 4
-   # octave 4
+  -- @section full
+  setF "volhats" 0.35
+  setF "volkick" 0.8
+  setI "base" "<0 -2>"
 
 do
   -- @section lift
   setF "volkick" 0.0
-  mm $ silence 
+  mm $ silence
+  mamp 0 0.18
 
 do
-  -- @section flip 
-  setF "volkick" 0.0
-  setF "volsnare2" 0.8
+  -- @section flip
+  setF "volkick" 0.6
+  setF "volsnare" 0.6
+  setF "volsnare2" 0
   setI "shufamt" 8
-  setN "bassnotes" $ "[0 | [0 ~]!2 ~ [0 ~] | [0 ~]!2]@4 6 7 4 2 . <[0 ~ 0@2 7 0 ~@2] [0@2 3@3 7@3] [0 ~ 0@3 1@3]>"
-  mc [ cat $ [t' 1 (cI_ "bassnotes"), t' 2 (1 ~> cI_ "bassnotes"), t (2 ~> cI_ "bassnotes")] ]
-  mm 
+  setF "volride" 0
+  setN "bassnotes" $ "[0 | [0 ~]!2 ~ [0 ~] | [0 ~]!2 | 0@3 0]@4 6 7 4 2 . <[0 ~ 0@2 7 0 ~@2] [0@2 3@3 7@3] [0 ~ 0@3 1@3]>"
+  mc [ cat $ [t' 1 (0 ~> cI_ "bassnotes"), t' 2 (1 ~> cI_ "bassnotes"), t' 3 (2 ~> cI_ "bassnotes")] ]
+  mamp 0 0.2
+  reface silence
+
+do
+  -- @section flipchords
+  mm
     $ ((1/8) <~)
     $ cat [ t' 1 $ ("~ 0@7") |+ "[-3,0,2,6]"
       , t' 2 $ 0  |+ "[ -3,0,2,6]"
       , t $ 0 |+ "[ -3,0,2,6]"
       ]
+
+rr i j = range i j rand
+
+do
+  setF "volhats" 0.4
+  setI "kickpat" "<[0@3 0]  [0@3 0@3 0@2] [0 0 . ~] [~ 0!2 ~ . ~ 0 ~@2]>*2"
+  setI "arps" $ "-3*8"
+    |+ "-3 0 2 6"
+    |+ irand 4
+    |- 2
   reface
-   $ jux (shuffle (cI0 "shufamt") . (|+ up 12))
+   $ jux (((1/16) <~) . shuffle (cI0 "shufamt") . (|+ up 12))
    $ cat
-     [ t' 1 $ "-3*8" |+ irand 12
-     , t' 2 $ "-3*8" |+ irand 12
-     , t $ "-3*8" |+ irand 12
-     ] # amp 0.1
+     [ t' 1 "^arps"
+     , t' 2 "^arps"
+     , t "^arps"
+     ] # amp (rr 0.3 0.55)
      # octave 5
      # sus "2"
 
+do
+  mamp 0 0.1
+  setF "volsnare2" 0.85
+  setF "volsnare" 0.75
+  setF "volkick" 1.1
 
+do
+  -- @section hold
+  mamp 0 0.3
+  mc [ fast 4 $ n "0?*4" # sus (rarely (const 4) 0.01) ]
 
 do
   -- @section outro
   p "drums" silence
-  mc []
+  mamp 0 0
   setI "shufamt" 16
   clutchIn "reface" 16 silence
+  clutchIn "piano" 16 silence
+
+do
+  hush
+
+rr i j = range i j rand

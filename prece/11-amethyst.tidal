@@ -1,86 +1,173 @@
-do
-  once $ t "0" # reface
+let
 
+let
+  -- @mocks
+  -- @mode test
+  -- reface = vibe . (|+ up 12) . (# gain 0.7) . (# modamp 0) . (# hpf 300) . (# lpf 600) . (# sus 0.1)
+  piano' tt = xfadeIn "piano" tt ## [s "superpiano" # velocity "^pianogain" # gain 2 # octave 4 # legato 2]
+  piano = piano' 0.1
+  reface = piano' (sus $ cF 1 "pianosus")
+  mm = m5
 
 do
   -- @setup
- setkey "e" "phrygian"
- setkey' 1 "e" "phrygian"
- setkey' 0 "e" "minor"
- setcps (110/120/2)
- all $ (# bus' 0.1 0.1)
+  setkey "e" "phrygian"
+  setkey' 1 "e" "phrygian"
+  setkey' 0 "e" "minor"
+  setcps (110/120/2)
+  all $ (# bus' 0.1 0.1)
      . swingBy 0.1 4
+  bank "mc" 90
+  bank "mm" 30
 
-let piano pat = reface $  pat |- up 12
+do
+  -- drums
+  hush
+  setF "pianosus" 0.15
+  setI "tinknotes" $ randcat [-5,-3,0,2,3,4,6,7,10]
+  setI "tinkchord" "[0,2,3,4,6]"
+  setF "tinkdensity" 1
+  setF "tinkdegrade" 1
+  setF "tinkopen" 0.35
+  setI "tinkfreq" 16
+  setI "snare" "~0"
+  mc [ n "0@2 0?@3 0?@2 0"
+     , n (cN_ "snare")
+     , n "[0*[1|2]? 0!3]*2" # open (fast 2 $ 0.5 <~ "0.5 0.1@7")
+     , fast 4
+        $ (# open (cF 0.35 "tinkopen"))
+        $ t . (|- 7)
+        $ every (cI 16 "tinkfreq") (const $ strum 3 $ cI_ "tinkchord")
+        $ density (cT 1 "tinkdensity")
+        $ degradeBy (cF 0 "tinkdegrade")
+        $ fast "[1|2]"
+        $ cI0 "tinknotes"
+     ]
+  mamps $ repeat 0.6
+
+
 
 do
   -- @section theme
- piano 
+  setI "ostinato" "11@4 11@3 11@3 <11 [11 . 4 6 7 10]>@6"
+  setI "chordshape" "-12'min"
+  setI "chordbase" "0@3 2@3 1@3 0@7"
+  setF "pianogain" $ range 0.3 0.4 rand
+  reface
    $ slow 2
-   $ stack 
-   [ t' 0 "11@4 11@3 11@3 11@6"
-   , (t' 0 "0@3 2@3 1@3 0@7") |+ note "-12'min"
-   ]
+   $ stack
+   [ t' 0 $ cI_ "ostinato"
+   , (t' 0 $ cI_ "chordbase") |+ note (cN_ "chordshape")
+   ] # octave 4
 
 do
-  -- @section up4
-  piano
+  -- @section theme
+  mamp 0 0
+  reface
    $ slow 2
-   $ stack 
-   [ t $ "0@4 0@3 0@3 0@6" |+ 13
-   , (t "0@3 2@3 1@3 0@7") |+ note "-7'min"
-   ]
-
-
-do
-  -- @section bass
-  mm $ t
-    "{ ~@2 7 4 \
-     \ ~@2 6 3 \
-     \ ~@3 2 3 4 2 0 \
-     \ ~@3 -3 -1 0 1 -1@2 \
-     \ }%8"
+   $ stack
+     [ t' 0 "11@4 11@3 11@3 11@6"
+     , (t' 0 "0@3 2@3 1@3 0@7") |+ note "-12'min"
+     ]
      # octave 4
 
 do
-  -- @section resolve
-  piano
+  --
+  mamp 0 0.45
+
+do
+  -- @section theme
+  mamp 3 0.2
+  setI "tinkfreq" 8
+  setI "tinkchord" "[3,4,6,7,9]"
+  setF "tinkdegrade" 0.4
+  reface
    $ slow 2
-   $ stack 
-   [ t' 0 $ "0@4 0@3 0@3 0@3 2@3" |+ 8
+   $ cat [ note "8'maj7 . 5'min7 7'min7" |+ t "-7"
+   , stack
+       [ t' 0 "11@4 11@3 11@3 11@6"
+       , (t' 0 "0@3 2@3 1@3 0@7") |+ note "-12'min"
+       ]
+    ]
+    # octave 4
+
+do
+  -- @section resolve
+  setF "tinkdegrade" 0.1
+  reface
+   $ slow 2
+   $ stack
+   [ t' 0 $ "0@4 0@3 0@3 0@3 [[2|3]@3  [~ | ~ | -2 -1 | 2 1]]@3" |+ 8
    , (t' 0 "0@3 2@3 1@3 0@7") |+ note "-9'maj"
    ]
+   # octave 4
+
+ma 0 0.8
 
 do
-  -- @section deepen
-  piano
-   $ slow 2
-   $ stack 
-   [ t' 1 $ "0@4 0@3 0@3 0@3 -2@3" |+ 11
-   , t' 1 $ ("0@3 -2@3 -1@3 0@7" |+ "[0,4,6]" |+ 1 |- 7)
-   ]
-  mm
-    -- $ swingBy 0.1 4
-    $ t' 1
-    "{ ~@2 [2 3@6] 2 \ 
-     \ ~@2 [-1 0@6] -1 \
-     \ ~@2 -2 -1 0 -5@4 -4@4 [-6 | -7]@4 \
-     \ ~@3 -7 [-9 ~@2]!3 ~}%8" 
-     # octave 3
-
-do
-  -- @section drums
-  p "drums"
-    -- $ swingBy 0.1 4
+   -- @section deepen
+   mamps [0,0,0,0.6]
+   setI "tinkchord" "[0,2,3,4]"
+   setF "tinkdensity" 1
+   setF "tinkdegrade" 0
+   reface
+    $ slow 2
     $ stack
-    [ "~ gretsch:1"
-    , "[~ 0!3]*2" # s "gretsch:4" # gain ("[9 5]*4" / 10)
-    , "0@2 0?@3 0?@2 0" # s "bbd"
+    [ t' 1 $ "0@4 0@3 0@3 0@3 -2@3" |+ 11
+    , t' 1 $ ("2@3 -2@3 0@3 -1@7" |+ "[0,4,6]" |+ 1 |- 7)
     ]
+    # octave 4
+
+do
+  -- @section slow return
+  mamps [0,0.2,0.3,0.4,0.4]
 
 do
   -- @section bass
-  mm $ t "[~ | -7]@3 -1 . [0 ~ 0@2 | [0 ~]!2 0 -3]"
+  mamps $ [0] ++ repeat 0.6
+  mm
+    $ t' 1
+    "{ ~@2 [2 3@6] 2 \
+     \ ~@2 [-1 0@6] -1 \
+     \ ~@2 -2 -1 0 -5@4 -4@4 -6@4 \
+     \ ~@3 -7 [-9 ~@2]!3 ~}%8"
+     # octave 3
+
+do
+  -- @section deepen
+  mamp 0 0.6
+  mamp 1 "0.3 0.5"
+  reface
+   $ slow 2
+   $ stack
+   [ t' 1 $ "0@4 0@3 0@3 0@3 -2@3" |+ 11
+   , t' 1 $ ("0@3 -2@3 -1@3 0@7" |+ "[0,4,6]" |+ 1 |- 7)
+   ]
+   # octave 4
+
+do
+ -- @section mess
+ setF "tinkdensity" 2
+ setF "tinkdegrade" 0.2
+
+do
+  -- @section mess
+  setF "tinkdensity" 4
+  setF "tinkdegrade" 0.3
+  setF "tinkopen" (range 0.18 0.3 $ slow 16 sine)
+
+do
+  -- @section mess
+  mamps [0,0,0,0.6,0.6]
+  setF "tinkopen" (range 0.18 0.25 $ slow 16 sine)
+  setI "tinknotes" $ randcat [-7,-6,-5,-3,0,2,3,4,6,7,10,11]
+  setF "tinkdensity" 8
+  setF "tinkdegrade" 0.4
+  setI "snare" "<~ [~ 0? ~@2]> 0"
+
+do
+  -- @hold
+  mm silence
 
 do
   hush

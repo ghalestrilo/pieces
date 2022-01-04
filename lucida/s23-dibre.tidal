@@ -1,0 +1,45 @@
+-- good closing track
+
+do
+  -- @section setup
+  hush
+  setkey "f" "lydian"
+  setkey' 0 "f" "mixolydian"
+  setkey' 1 "d" "major"
+  -- setkey' 2 "d@3 <d!3 ds>@5" "major@3 <lydian mixolydian lydian minor>@5"
+  setkey' 2 "d" "major@3 <lydian mixolydian>@5"
+  all $ (# bus' 0.7 0.7)
+  all $ (# bus' 0.8 0.8)
+  setcps (70/120/2)
+  bank "mc" 86
+
+  setcps (92/120/2)
+
+  setcps (100/120/2)
+
+
+p "test" $ s "bd*4"
+
+
+scaleList
+
+  setkey "f" "lydian"
+
+
+
+p "drums" $ fast 2 $ rs "axe" ["vk", "vh:12"]
+
+do
+  -- @
+  setkey' 1 "[f e]/4" "[lydian neapolitanMinor minor mixolydian]/4"
+  mm
+    $ stack
+    [ t $ "[6@3 4 4@4 . ~ 4 3 4 3 [4 3] [~ 4] [~ 3] . ~@3 6 6@4 . ~ 7 6 7 9 [7 6] [~ 7] [~ 6]]/4" |+ "[0,2]" |+ 7
+    , t' 1 $ "[-3,-0,2,6]"
+    ]
+    # octave 4
+
+  mc [ n "[~ 0*2] [~ 0*2 | ~ . 0!2 ~ 0]"
+     , fast 2 $ t "0 ~ 0 -3"
+     , n "0(3,8) . ~ 0!2 ~" # velocity 1
+     ]

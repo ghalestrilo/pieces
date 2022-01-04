@@ -1,41 +1,211 @@
 -- done (last)
+do
+  -- @setup
+  -- @mode test
+  -- @env sketch
+  let mm = vibe
+  let reface = vibe
+  resetCycles
 
 do
-  -- @section setup
+  -- @setup
   hush
   setkey "e" "mixolydian"
-  all $ (# bus' 0.7 0.7)
-  all $ (# bus' 0.8 0.8)
+  setkey' 0 "e" "mixolydian"
+  setkey' 1 "d" "major"
+  -- setkey' 2 "d@3 <d!3 ds>@5" "major@3 <lydian mixolydian lydian minor>@5"
+  setkey' 2 "d" "major@3 <lydian mixolydian>@5"
+  all $ (# bus' 0.3 0.3)
+  -- all $ (# bus' 0.8 0.8)
   setcps (70/120/2)
   bank "mc" 86
+  bank "mm" 27
+  mamps $ repeat 0.2
 
+all $ (# bus' 0 0)
+
+do
+  -- @setup
+  -- @mode rec
+  all id
 
 do
   -- @section intro
   mm $ t "7@3 6@5"
-  
+
 do
-  -- @section intro 2 
+  -- @section intro 2
   mm $ t "[2,7]@3 [<3 1>,6]@5"
 
 do
-  -- @section drums
-  setF "drumfilter" 0
-  mc [ t "[0|[0@3 5]]*2" # amp 0.17
-     ]
-  p "drums" $ stack 
-    [ s "gretsch:17*2" # gain 0.6 
-    , n "13 2" # s "gretsch" # gain "[1.15 1]*2"
-    ] # hpf (cF0 "drumfilter") # speed 0.9 |* gain 0.9
+  let withparams param values pat = zipWith (\src pat -> pat |* param src) values pat
+  setF "gbd" 0
+  setF "gclick" 1
+  setF "gconga" 0
+  setF "gsn" 0
+  setF "ghh" 0
+  -- @section intro 3
+  -- xfadeIn "drums" 4
+  p "drums"
+    $ (stack . withparams gain ["^gbd", "^gclick", "^gconga", "^gsn", "^ghh"])
+    [ "[~ <0*2 [0!2 ~ 0]>]*2" # s "bd" # gain 1.1
+    , 0.018 <~ "0(3,8) . ~ 0 0 ~" # s "perc:7" # rel 0.8
+    , n "4 12 4 12 . 4 12 ~ 12 4 ~ 12 ~" # s "perc"
+    , sometimesBy "0 ^snshuf" (jux $ shuffle 4)
+      $ n "11 21!2 10 21 21*2 11!2 . [0 0*2 11! 0 0*2 11!2 | 0*2 [11 0]!2 [9 0]]"
+      # s "bs"
+      -- # gain "[1.1 0.9]*8"
+      # gain "[1.1 0.9]*8"
+      |* pan 0.5
+      |+ pan 0.25
+    , s "[~ bhh:2]*4"
+    ]
+    |* amp "^drumamp"
+    # hpf "^dhpf"
+    # speed 0.9
+    # lpf "^dlpf"
 
 do
-  -- @section chords
-  mm $ t "{ [0,4,6,14]@3 \
-       \ [3,6,11,13]@5 \
-       \ [0,4,6,12]@3 [-1,3,5,10]@5 \
-       \ [0,4,6,9]@3 [-2,2,4,7]@5 \
-       \ [1,5,7,10]@4 }%8" 
-       # octave 4
+  -- @section
+  setF "gconga" 1
+
+do
+  -- @section flip
+  piano silence
+  mamps [0.9, 0, 0.6, 0.6, 0.6]
+  mc $ t' 1 <$> ["3@3 2@5" |- 7, "[3 2 3 2 . 1 ~ 0 ~ . 0@3 -2 . 2 . ~ . ~ . ~ . ~ -2 1 2]/4" |- 7,"2@3 1@5" |+ 5,"2@3 1@5" |- 4,"2@3 1@5"]
+  -- setF "gbd" 1.3
+  -- setF "gclick" 0
+  -- setF "gsn" 1
+  setF "ghh" 0.8
+
+
+  mc $ t' 1 <$> ["3@3 2@5" |- 7, "[3 2 3 2 . 1 ~ 0 ~ . 0@3 -2 . 2 . ~ . ~ . ~ . ~ -2 1 2]/4" |- 7, ("[-3 0 4 6]!12 [-3 0 4 5]!20") |+ "5@3 4@5","2@3 1@5" |- 4,"2@3 1@5"]
+
+do
+  -- @section melancholy
+  mamps [0.7, 0.9, 0.2, 0, 0]
+
+
+
+do
+  --
+  -- phrase 1
+  -- fs 0
+  piano
+    $ fast 2
+    $ (t . (|+ 4) . cat)
+      [ "2 0"
+      , "2 [7 5]"
+      , "2 0"
+      ,  "[-2 0] [2 -5]"
+      , __, __
+      , __, __
+      , "2 0"
+      , "2 [7 5]"
+      , "2 0"
+      , "-2 0"
+      , "1 3"
+      ]
+    # gain 1.06
+    -- # mel
+    # sus 4
+    # orbit 3
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------
+
+do
+  -- @section drums
+  setF "dhpf" 0
+  setF "dlpf" 8000
+  mc [ t "[0|[0@3 5]]*2" # amp 0.17
+     ]
+
+do
+  -- @section levada principal
+  setF "snshuf" 1
+  setF "drumamp" 0.3
+  p "drums" $ stack
+    [ "[~ <0*2 [0!2 ~ 0]>]*2" # s "bd" # gain 1.1
+    , "0(3,8) . ~ 0 0 ~" # s "can"
+    , sometimesBy "0 ^snshuf" (jux $ shuffle 4)
+      $ n "11 21!2 10 21 21*2 11!2 . [0 0*2 11! 0 0*2 11!2 | 0*2 [11 0]!2 [9 0]]"
+      # s "bs"
+      # gain 1
+    ]
+    |* amp "^drumamp"
+    # hpf "^dhpf"
+    # speed 0.9
+    # lpf "^dlpf"
+  mc [ t "{0 ~@2 0 . -3 7 . [~ 0]*2 . -3 6 . -4 5? ~ 5 . -3 4 ~ 4 . 1 3 ~ 3}%4"
+     ]
+
+do
+  -- @section post-suspense
+  setkey "g" "lydian"
+  setI "truss" "[0,6]"
+  setF "chrfast" 4
+  setF "chramp" (range 0.2 0.4 rand)
+  setF "chrsus" $ range 0.03 0.1 $ slow 64 sine
+  reface
+    $ t ((fast "^chrfast" . stack) [(1/8) ~> "[0|0|-2]*4", "[-3|1|2|4]*4"] |+ ring "0 -1 1 0 -2 -4 -3" "x x x x" |+ "^truss" |- 0)
+    # amp "^chramp"
+    # sus "^chrsus"
+  mm
+    $ t "{[-3,0,4,7]@2 ~ [-3,0,4,6]@3 ~ [-2,1,5,6]@4 ~@2 [-5,-2,0,4]@3}%8"
+
+do
+  -- @section dance
+  solo "drums"
+  solo "reface"
+  setF "chramp" 0.1
+  setF "chrfast" 4
+  setF "chrsus" $ range 0.1 0.3 $ slow 64 sine
+
+
+do
+  -- @section transition
+  setkey "es" "lydian"
+
+
+do
+  -- @section prumo
+  unsolo "mm"
+  unsolo "reface"
+  unsolo "drums"
+  setkey "e" "mixolydian"
+  setF "drumfilter" 0
+  setF "drumamp" 0.3
+  setI "phrase" "{ ~ [0 2] 4 [5|4 5@19]@2 3@2 2 [3 2] 1 [2 1] 0 -1@4 \
+                 \ ~ [0 2] 4 [5|4 5@19]@2 3@2 2 1 0 [-2|-2@4 0 -2] -3 }%8"
+  setI "cadence" "{ [0,4,6,14]@3 \
+                 \ [3,6,11,13]@5 \
+                 \ [0,4,6,12]@3 [-1,3,5,10]@5 \
+                 \ [0,4,6,9]@3 [-2,2,4,7]@5 \
+                 \ [1,5,7,10]@4 }%8"
+  mm $ t "^cadence" # octave 4
+  let index = slow (7/2) $ run 7
+  setF "snshuf" 1
+  p "drums" $ stack
+    [ squeeze index ["~ 0*2", "~ [0!2 ~ 0]"] # s "bd" # gain 1.1
+    , squeeze index ["0(3,8) ", "~ 0 0 ~"] # s "can"
+    , sometimesBy (squeeze index $ l 0 "^snshuf") (jux $ shuffle 4)
+      $ n (squeeze index ["11 21!2 10 21 21*2 11!2", "[0 0*2 11! 0 0*2 11!2 | 0*2 [11 0]!2 [9 0]]"])
+      # s "bs"
+      # gain 0.9
+    ]
+
+
+setF "snshuf" 1
 
 do
   -- @section hold
@@ -43,44 +213,33 @@ do
   setF "drumfilter" 1200
   mc $ fmap (# amp 0.2)
      [ t "0*2"
-       # octave 4 
+       # octave 4
      , t "{~ [0 2] 4 5@2 3@2 2 [3 2] 1 [2 1] 0 -1@4 }%8"
      , __
      , __
      , t "{~ [0 2] 4 5@2 3@2 2 [3 2] 1 [2 1] 0 -1@4 }%8"
      ]
-  
+
+do
+  unsolo "mm"
+  unsolo "reface"
+  unsolo "drums"
+
 do
   -- @section drop
-  setF "drumfilter" 0
+
   mc [ t "{7@3 11@5 7@3 6@5 7@3 3@3 4@2 8@4}%8"
        # octave 4 # amp 0.3
-     , t "{ ~ [0 2] 4 5@2 3@2 2 [3 2] 1 [2 1] 0 -1@4 \
-          \ ~ [0 2] 4 5@2 3@2 2 1 0 -2 -3 }%8"
+     , t "^phrase"
      , __
      , __
-     , t "{ ~ [0 2] 4 5@2 3@2 2 [3 2] 1 [2 1] 0 -1@4 \
-          \ ~ [0 2] 4 5@2 3@2 2 1 0 -2 -3 }%8"
+     , t $ "^phrase" |+ 2
      ]
-  p "drums" $ stack 
-    [ s "gretsch:17*2" # gain 0.6 
-    , n "{ \
-     \ [13 2]@2 \
-     \ [13 2]@2 \
-     \ [13 2]@2 \
-     \ [13 9]   \
-     \ }%2" # s "gretsch" # gain "[1.15 1]*2"
-    ] # hpf (cF0 "drumfilter") # speed 0.9
-  mm $ t "{ [0,4,6,14]@3 \
-       \ [3,6,11,13]@5 \
-       \ [0,4,6,12]@3 [-1,3,5,10]@5 \
-       \ [0,4,6,9]@3 [-2,2,4,7]@5 \
-       \ [1,5,7,10]@4 }%8" 
-       # octave 4
+
 
 do
   -- @section voices
-  setF "drumfilter" 800
+  setF "drumhpf" 800
   mm $ silence
   mc $ fmap (# (amp 0.2 # octave 4))
      [ t "{7@3 11@5 7@3 6@5 7@3 3@3 4@2 8@4}%8"
@@ -91,16 +250,13 @@ do
      ]
 
 
+
 do
   -- @section outro
-  hush
-  mc $ fmap (# (amp 0.2 # octave 4))
-     [ t "{  7@3 11@5  7@3  6@5  7@3 3@3 4@2 8@4 }%8"
-     , t "{  4@3  3@5  4@3  3@5  4@3 0@5     5@4 }%8"
-     , t "{  7@3  6@5  7@3  6@5  4@3 2@5     8@4 }%8"
-     , t "{  9@3  0@5  9@3  8@5  9@3 6@5    10@4 }%8"
-     , t "{ 14@3 13@5 12@3 10@5 12@3 9@5    12@4 }%8"
-     ]
+  mm silence
+  reface silence
+  p "drums" silence
+  mm $ t "^phrase" # octave 6
 
 do
   -- @section hush

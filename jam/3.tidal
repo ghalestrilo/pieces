@@ -1,0 +1,24 @@
+drums
+    [ fast 2 $ n "5 <10 [10|11|16]>"
+    , (# gain 1.05) $ (n . randcat) $ l "[13|[13 21 21]] 13 . 2@3 13?" "~ 13 . 2"
+    , degrade $ n "~@7 [18|19]" # pan 0.2
+    , degradeBy 0.2 $ fast 4 $ n "[~ 21]" # gain (range 0.8 1.1 $ rand)
+    ]
+
+
+    drums
+        [ fast 2 $ n "5 <10 [10|11|16]>"
+        , (# gain 1.05)
+          $ someCyclesBy 0.3 (const $ n "[13(3,8), ~ 2]")
+          $ (n . randcat) $ l "[13|[13 21 21]] 13 . 2@3 13?" "~ 13 . 2"
+        , degrade $ n "~@7 [18|19]" # pan 0.2
+        , degradeBy 0.2 $ fast 4 $ n "[~ 21]" # gain (range 0.8 1.1 $ rand)
+        ]
+
+mc []
+
+    drums
+        [ (# gain 1.05) $ (n . randcat) $ l "[13|[13 21 21]] 13 . 2@3 13?" "~ 13 . 2"
+        -- , degrade $ n "~@7 [18|19]" # pan 0.2
+        , degradeBy 0.2 $ fast 4 $ n "[~ 21]" # gain (range 0.8 1.1 $ rand)
+        ]
