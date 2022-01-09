@@ -13,7 +13,7 @@ do
   setkey' 2 "ds" "major"
   setkey' 3 "c" "[dorian minor]/8"
   setcps (148/120/2)
-  all $ (# bus' 0.7 0.7)
+  -- all $ (# bus' 0.7 0.7)
   bank "mc" 85
   bank "mm" 25
   mamps $ repeat 0
@@ -44,9 +44,11 @@ do
           , "0 [2,6,7]"
           ]
 
+
 do
   -- @section intro
   mm $ t' 2 "{9@2 5 4}%4" # amp 0.2 # octave 6
+  resetCycles
 
 do
   -- @section intro 2
@@ -90,6 +92,8 @@ do
     , __
     , t' 1 $ slow 2 ("^gtbass" |+ "^chordpos")
     ]
+
+mamps $ repeat 0.4
 
 do
   -- @section phrase
@@ -162,13 +166,13 @@ do
 
 do
   -- @section chords
-  reface
-    $ (stack . fmap (t' 3) . fmap (slow 2) . fmap (|+ "^chordpos"))
-      [ "[^gtchordrtm]/2" |+ "^gtchord" |- sew "[1 0]/4" "^chordpos" 0
-      , "^gtbass"
+  reface $ stack
+    -- $ (stack . fmap (t' 3) . fmap (slow 2) . fmap (|+ "^chordpos"))
+      [ (|* sus 0.7) . (t' 3) . slow 2 . (|+ "^chordpos") $ "[^gtchordrtm]/2" |+ "^gtchord" |- sew "[1 0]/4" "^chordpos" 0
+      , (t' 3) . slow 2 . (|+ "^chordpos") $ "^gtbass"
       ]
     # octave 4
-    # amp (range 0.3 0.5 rand)
+    # amp (range 0.25 0.4 rand)
 
 -----------------------------------------------------------
 

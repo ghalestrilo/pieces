@@ -15,6 +15,9 @@ do
   bank "mm" 24
   bank "mc" 24
   setcps (60/120/2)
+  all id
+
+do
   all $ (# bus' 0.7 0.7)
 
 do
@@ -25,7 +28,12 @@ do
   setF "volsnare2" 0.0
   setF "volride" 1
   setI "kickpat" $ (0.5 ~>) "0@3 0@3 [~ 0@3|0]@8 0@2"
-  p "drums" $ stack
+  setF "drumamp" 1.2
+  p "drums"
+    $ (|* gain "^drumamp")
+    $ stack
+    $ zipWith (\o pat -> (# orbit o) pat) [0,1,2,3,2]
+    -- $ zipWith (\o pat -> (# orbit o) pat) [0,1,2,3]
     [ fast 4 $ s "br*2"
       # gain (("6 5" / 10 |+ range (-0.1) 0.1 rand) |* cF 0 "volride")
     , n (cN_ "kickpat")
@@ -35,7 +43,6 @@ do
     , n "[~ 0]*4" # s "bhh:2" # gain (cF0 "volhats")
     , "[[~ <~ 0>] ~@2 [~@3.5 0*2]]*2" # n "[17|15|16]*8" # s "bs" # gain (cF0 "volsnare2")
     ]
-    |* gain 1.2
 
 do
   -- @section chords (mm)
@@ -59,7 +66,7 @@ do
   setF "volkick" 0.7
 
 do
-  -- @section full
+  -- @section bass
   mamp 0 0.45
   mc [ t "2 -2 ~ 1 . ~@2 0 1 . [1 2@7]@2 0 -2  . 1 [0 ~ 1 ~]" ]
 
@@ -84,7 +91,7 @@ do
   setF "volride" 0
   setN "bassnotes" $ "[0 | [0 ~]!2 ~ [0 ~] | [0 ~]!2 | 0@3 0]@4 6 7 4 2 . <[0 ~ 0@2 7 0 ~@2] [0@2 3@3 7@3] [0 ~ 0@3 1@3]>"
   mc [ cat $ [t' 1 (0 ~> cI_ "bassnotes"), t' 2 (1 ~> cI_ "bassnotes"), t' 3 (2 ~> cI_ "bassnotes")] ]
-  mamp 0 0.2
+  mamp 0 0.4
   reface silence
 
 do
@@ -116,14 +123,14 @@ do
      # sus "2"
 
 do
-  mamp 0 0.1
+  mamp 0 0.45
   setF "volsnare2" 0.85
   setF "volsnare" 0.75
   setF "volkick" 1.1
 
 do
   -- @section hold
-  mamp 0 0.3
+  mamp 0 0.5
   mc [ fast 4 $ n "0?*4" # sus (rarely (const 4) 0.01) ]
 
 do

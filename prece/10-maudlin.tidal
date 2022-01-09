@@ -18,7 +18,7 @@ do
   p "guitars"
     -- $ ((1/128) ~>)
     $ slow 4
-    $ stack
+    $ (stack . zipWith (\o pat -> (# orbit o) pat) [2,2,3] . zipWith (\p pat -> (# pan p) pat) [0,1,0])
       [ "0" # pan 0.1 # n (irand 30)
       , "0" # pan 0.5 # n (fast 2.1 $ irand 30)
       , "0" # pan 0.9 # n (rev $ irand 30)
@@ -42,14 +42,13 @@ do
   setF "hatrel" "0.1"
   setF "volkick" 1
   p "drums"
-    $ stack
-    [__
-    , n "[[0@3 0] [[~ 0] ~@2 0]!2 [0*2]]/4" # s "bbd"
+    $ (stack . zipWith (\o pat -> (# orbit o) pat) [0,0,1,1] . zipWith (\p pat -> (# pan p) pat) [0,1,0,1])
+    [ n "[[0@3 0] [[~ 0] ~@2 0]!2 [0*2]]/4" # s "bbd"
       # gain (cF0 "volkick")
     , n "[[0 0*2 ~ 0*2]!3 [0*2]]/4"
       # s (cS_ "hatsound")
       # cut 1
-      # gain ("[4 3]*2" |/ 12)
+      # gain ("[4 . 2.6 3]*2" |/ 7)
       # rel 0.1
       # pan 0.7
     , ((1/2) <~) $ s "[[br:1 bcr@3] ~]/4" # gain "<0.65 0>/4" # pan "0.2 0.8"
@@ -57,7 +56,7 @@ do
     , s "~ gretsch" # n "[20,2]" # gain 0.75 # rel 0.6 # lpf 14000
       # hpf 400
       # resonance 0.1
-    ] |* gain 1.38
+    ] |* gain 1.2
 
 do
   -- @section drum variation

@@ -5,10 +5,21 @@ do
   setkey 5 "lydian"
   setkey' 0 10 "mixolydian"
   setcps (90/120/2)
-  all $ (# bus' 0.3 0.3)
-      . swingBy 0.1 8
   bank "mc" 82
   bank "mm" 22
+
+do
+  -- @setup
+  -- @env rec
+  all $ swingBy 0.1 8
+
+do
+  -- @setup
+  -- @env live
+  all $ (# bus' 0.3 0.3)
+      . swingBy 0.1 8
+
+resetCycles
 
 do
   -- @section intro
@@ -28,7 +39,9 @@ do
 do
   -- @section gentle
   hush
+  setF "refaceamp" 0.6
   reface
+    $ (# amp "^refaceamp")
     $ (|- up 12)
     $ cat
       [ t (strum 50 $ "0" |+ "[-7,-3,-1,2,6]") # sus "<5 6>"
@@ -36,11 +49,12 @@ do
       ]
   m3 $ n "0*<1 2> . 0@3 0 . 0 0 . ~ 0" # open ("1!2 [1 5] 2" / 10)
   setI "drumpat"  "[[4 10?]*4, 13 [2@3 13?] 13*2 [2 | 20 | [2 13@3] | 2 [13@2 21 20] | 2 11 ~ 13 | 10!2 6 ~ ]]"
+  setF "drumamp" 1.2
   setF "dhpf" 1300
   setF "dlpf" 3200
   xfadeIn "drums" 12
     $ n (cN_ "drumpat")
-    # s "gretsch" # speed 1 # gain 1.6
+    # s "gretsch" # speed 1 # gain "^drumamp"
     # lpf (cF_ "dlpf")
     # hpf (cF0 "dhpf")
 
@@ -50,13 +64,13 @@ do
   m4 $ t "^phrase"
   setF "dhpf" 0
 
-
 do
   -- @section hide
   setF "dlpf" 1400
 
 do
   -- @section whirls
+  setF "drumamp" 1
   p "piano" $ silence
   setF "dlpf" 3000
   mm $ fast 8 . slow 18 $ (t . (|- 7) . (|+ "[0,3]"))

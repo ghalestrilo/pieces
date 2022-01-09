@@ -4,20 +4,31 @@ do
   -- @setup
   setkey 0 "lydian"
   setkey' 1 (-7) "lydian"
-  all (# bus' 0.6 0.93)
-  all $ (# (bus' 0.6 0.93 # delay 0 # delayfb 0 # delaytime 0))
   bank "mc" 81
   setcps (100/120/2)
   setF "vibegain" 1
   setF "pianovel" 0.26
+  all id
 
-let piano' num = xfadeIn "piano" num ## [s "superpiano" # velocity "^pianovel" # gain 2 # octave 4 # legato 2 # lpf 12000 # sus 4]
-    vibe = p "vibe" ## [s "supervibe" # modamp 0 # sus 4 # velocity 0.3 # sus 4 # gain "^vibegain" # octave 3 # lpf 1200]
+do
+  -- @setup
+  -- @env live
+  all $ (# (bus' 0.6 0.93 # delay 0 # delayfb 0 # delaytime 0))
+
+do
+  -- @setup
+  -- @env rec
+  all id
+
+let piano' num = xfadeIn "piano" num ## [s "superpiano" # velocity "^pianovel" # gain 2 # octave 4 # legato 2 # lpf 12000 # sus "^pianosus"]
+    vibe = p "vibe" ## [s "supervibe" # modamp 0 # sus "^vibesus" # velocity 0.3 # sus 4 # gain "^vibegain" # octave 3 # lpf 1200]
     piano = piano' 0.1
 
 do
   -- @section intro
   vibe $ t "0 4 [2,9]"
+  setF "pianosus" 4
+  setF "vibesus" 4
 
 do
   -- @section piano
@@ -30,17 +41,17 @@ do
         "<[-2,1,3,5] [0,2]>"
         __
       ]
+      # orbit 1
 
 do
   -- @section percussion
   p "sh" $ ((1/4) <~) $ fast 3 $ s "shaker*4" # gain (range 0.3 0.7 saw |* 0.85)
+    # orbit 3
 
-
-  p "drums" $ stack
-    [ n "0 . 7 ~ [0|[0 ~]*2]" # s "bd" # gain 1.1
-    , n "~@3 0 . ~ 0 ~@2 . 0!2 ~@2" # s "sn" # gain 0.85
-    ] # orbit 2
-
+  -- p "drums" $ stack
+  --   [ n "0 . 7 ~ [0|[0 ~]*2]" # s "bd" # gain 1.1
+  --   , n "~@3 0 . ~ 0 ~@2 . 0!2 ~@2" # s "sn" # gain 0.85
+  --   ] # orbit 2
 
 do
   -- @section drums
@@ -56,29 +67,35 @@ do
 do
   -- @section change
   setkey (-4) "lydian"
-  ma 2 0.7
-  piano $ (t . (|+ 7) . stack)
-    [ "6 <[0,4] [1,2,3]> ~"
-    , "<-2 -1 0 1>" |+ "[0,4]" |- 7
+  ma 2 0.70
+  piano $ stack
+    [ t ("6 <[0,4] [1,2,3]> ~" |+ 7) # orbit 1
+    , t ("<-2 -1 0 1>" |+ "[0,4]") # orbit 1
     ]
-  piano' 16 $ (t . (|+ 7) . stack)
-    [ "6 <[0,4] [1,2,3]> ~"
-    , "<-2 -1 0 1>" |+ "[0,4]" |- 7
-    , "{2@2 4@2 5@2 6@2 2 5@2 9 6@2 3@2 2@2 6@2 3 1@2 6@10}%12"
+  piano' 16
+    $ stack
+    [ t ("6 <[0,4] [1,2,3]> ~" |+ 7) # orbit 1
+    , t ("<-2 -1 0 1>" |+ "[0,4]") # orbit 1
+    , t ("{2@2 4@2 5@2 6@2 2 5@2 9 6@2 3@2 2@2 6@2 3 1@2 6@10}%12" |+ 7) # orbit 2
     ]
+
 
 do
   -- @section comeback
   setkey 0 "lydian"
+  setF "pianosus" 4
+  setF "vibesus" 4
   piano $ stack
-    [ (t' 1 . (|+ 7)) "{2@2 4@2 5@2 6@2 2 5@2 9 6@2 3@2 2@2 6@2 3 1@2 6@10}%12" # pan 0.8
-    , t "[-3,0,2,8]" # pan 0.3
-    , ((# pan 0.6) . t . (|+ 7) . cat) $ l
+    [ (# orbit 1) $ (t' 1 . (|+ 7)) "{2@2 4@2 5@2 6@2 2 5@2 9 6@2 3@2 2@2 6@2 3 1@2 6@10}%12" # pan 0.8
+    , (# orbit 1) $  t "[-3,0,2,8]" # pan 0.3
+    , (# orbit 2) $ ((# pan 0.6) . t . (|+ 7) . cat) $ l
         "0 1 2 5 4 -1"
         "-2 [-3 2] -5"
         "<[-2,1,3,5] [0,2]>"
         __
     ]
+
+resetCycles
 
 do
   -- @section fadeout
@@ -87,6 +104,11 @@ do
 do
   -- @section vanish perc
   mamps $ repeat 0
+
+do
+  -- @section close (and hush)
+  setF "pianosus" 14
+  setF "vibesus" 12
 
 do
   -- @section end

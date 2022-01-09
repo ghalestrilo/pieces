@@ -17,52 +17,64 @@ do
   setkey' 2
     (indexed ["ds", "e", "es", "es", "ds", "ds"])
     (indexed ["lydian", "minor", "mixolydian", "dorian", "lydian", "lydian"])
-  all $ swingBy (0.04) 6
-      . ( # (bus' 0.6 0.93 # delay 1 # delaytime (10/26) # delayfb 0.85))
   -- all $ swingBy (0.04) 6
   setcps (104/120/2)
   setN "mel1" "{ 0@3 2 5 2 3 4 8 9@4 0@4 4 5 8 6@3 1@3 3@3 6@7 4 5 6 4 2 1 }%12"
   bank "mc" 87
 
 do
+  all $ swingBy (0.04) 6
+    . ( # (bus' 0.6 0.93 # delay 1 # delaytime (10/26) # delayfb 0.85))
+
+do
+  -- @setup
+  all $ swingBy (0.04) 6
+      . ( # (delay 1 # delaytime (10/26) # delayfb 0.85))
+
+do
   -- @section intro 1
-  p "dr" $ s "bss" # gain 0.6 # speed 0.9
+  p "dr" $ s "bss" # gain 0.6 # speed 0.9 # orbit 0
 
 do
   -- @section intro 2
   p "dr" $ s "bss ~ <br bs:8 btl>" # gain 0.7 # pan "0.5 0.3" # speed 0.9
+    # orbit 0
 
 do
   -- @section piano
   piano $ stack
     [ t "-7@3 <~!2 [<2 3>,8]?>" # pan 0.3
     ]
+    # orbit 1
 
 do
   -- @section phrase
   piano $ (t . stack)
     [ "-7@3 <~!2 [<2 3>,7]>" - 1 ]
+    # orbit 1
   piano' 16 $ (t . stack)
     [ "-7@3 <~!2 [<2 3>,7]>" - 1
     , "12 13 12? [13|10|9] [15|16] 13"
     ]
+    # orbit 1
   xfadeIn "dr" 16 silence
 
 
 
 do
   -- @section theme 2
-  setI "meloct" 5
-  setI "chroct" 4
+  setI "meloct" 3
+  setI "chroct" 5
   setF "melgain" $ 0.8 |+ range 0.05 0.2 rand
   setF "melsus" 4
   setF "chrgain" 0
-  setF "refaceamp" 0.4
+  setF "refaceamp" 0.5
   piano
     $ (stack)
     [ t "<-7!2 -6!2>@3 <~!2 [<2 3>,7]>"
     , t "12 13 12? [13|10|9] [15|16] 13"
     ]
+    # orbit 1
   setkey' 0 "ds" "lydian"
   reface
     $ stack
@@ -89,17 +101,17 @@ do
   ma 1 1
   setI "meloct" 3
   setI "chroct" 4
-  setF "melgain" 1.2
-  setF "chrgain" 0.7
+  setF "melgain" 0.7
+  setF "chrgain" 0.6
 
 do
-  setI "meloct" 5
-  setI "chroct" 4
+  setI "meloct" 4
+  setI "chroct" 5
   piano' 16 $ (t . stack)
     [ "-7@3 <~!2 [<2 3>,[8|9]]>"
     , "12 13 12? [13|10|9] [15|16] 13"
     ] # amp 0.3
-
+    # orbit 1
 
 do
   setF "chrgain" 0.35
@@ -121,13 +133,16 @@ do
     , t' 1 $ (|+ 1) "^2nds"
     ]
 
+piano silence
+
 do
   -- @section closing harmonics
-  piano silence
   mamps [0.6,0.6,0.6,0,0.6,0.6]
   setF "melgain" 0
+  setF "meloct" 6
   setF "bassgain" 0
   setF "hatopen" 0.5
+  setI "chroct" 4
   setI "2nds"
     $ fast (6/(3+3+2+3+3+5+3+2+2))
     $ ring "1 -2 -3" "x@3 x@3 x@2 x@3 x@3 x@5 x@3 x@2 x@2"
