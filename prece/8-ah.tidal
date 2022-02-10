@@ -1,3 +1,4 @@
+
 -- done (last)
 do
   -- @setup
@@ -11,10 +12,14 @@ do
 
 setF "pianogain" 0.7
 
-let mm = vibe
+mm = vibe
+
+
 
 do
-  -- @setup
+  hush
+
+-- @setup
   hush
   setkey "e" "mixolydian"
   setkey' 0 "e" "mixolydian"
@@ -27,13 +32,15 @@ do
   unmute "mm"
   mamps $ repeat 0.2
 
+show 1 1 0.a22a
+
 do
   -- @setup
   -- @env rec
   all $ (# bus' 0.3 0.3)
   -- all $ (# bus' 0 0)
 
-let withparams param values pat = zipWith (\src pat -> pat |* param src) values pat
+withparams param values pat = zipWith (\src pat -> pat |* param src) values pat
 
 do
   -- @setup
@@ -182,8 +189,6 @@ do
     , n "[8 . 9 1]*4" # s "shaker"
     ]
     |* speed 0.9
-
-resetCycles
 
 do
   -- @section anacruse

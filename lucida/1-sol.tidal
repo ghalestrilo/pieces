@@ -1,0 +1,357 @@
+-- vim:fileencoding=utf-8:foldmethod=marker
+
+
+-- Song: 0
+
+-- @setup
+
+:script /home/ghales/git/pieces/lucida/themes.tidal
+
+do
+  -- @setup
+  setkey "gs" "lydian"
+  setcps (108/120/2)
+  all (# bus' 0.3 0.3)
+  bank "mc" 24
+  bank "mm" 13
+  fb 0 2
+  fb 1 21
+  fb 2 12
+
+do
+  let fa value = setF "fsamp" value
+
+fs 0 $ t ("6? 6 ~ 5 6 6 5 ~ . 6 5 6 ~" |+ "[0,3]") # sus 0.2 # octave 3
+
+do
+  -- @intro
+  fs 0 $ t ("6@3 6 ~@2 5@2 . 6 ~ 5 ~ 6 ~@3" |+ "^introchr") # octave 3
+  setN "introchr" "[0,3]@3 -4@5"
+
+
+-- fs 1 $ t "[0@3 4@4 0@4 8 4 ~ 5 ~]/2" # octave 3
+
+do
+  -- @section bass
+  fb 1 1
+  setN "bass" "0@3 0 ~@2 4@2 . 5 ~ <~ 4> ~ 5 ~@3" 
+  fs 1 $ t "^bass" # octave 3
+
+
+do
+  -- @section slap
+  -- fb 1 21
+  fs 1 $ t "[<0 -2>@3 3@4 <0 -2>@4 8 4 ~ 5 ~]/2" # octave 3 # amp 0.6
+
+mc [t "[0@3 4@4 0@4 8 4 ~ 5 ~]/2" # octave 4]
+
+fs 2 $ t (tm "lucida" 1) # amp 0.4 # octave 3
+
+
+  setN "introchr" "[0,3]"
+
+fs 3 $ t "6*2 [4 ~]!2 [2 ~] . 5 ~@2 5 ~ 2 4 5" # octave 4
+
+theme
+
+
+fb 3 15
+
+
+fa 3 0.7
+
+do
+  -- @section 
+  fb 3 30
+  fs 3 $ (t . stack)
+    [
+      tm "lucida" 0,
+      "[~ 0 ~@2 0 ~@3 . [-1 | [-1 ~]!2 ~]@3 -1 ~@2 -1 -1]" |+ "[0,2,4 6]" |- 7
+    ]
+    # octave 4
+    # amp 0.4
+
+do
+  -- @section very crazy drum break
+  fb 3 35
+
+-- use soundfont Rockman & Forte
+-- 37 = drums
+
+do
+  -- @section maraca
+  -- fa 4 0.7
+  fb 4 37
+  fs 4 $ stack
+    [ n "[~ 0*2 . ~@4 0 0 ~ 0 . ~@7 0 . [0@3 0]*2]/2" 
+    , n "[0!2 . -5!2 . 0 0 ~ -5 . ~ -5 -5 ~]" # octave 8 # amp 0.45
+    ]
+    |* amp 0.7
+
+
+do
+  -- @sectio drums
+  fb 3 12
+  all ( # pan 0.5 )
+  damps [ 0.75 ]
+  drums [ s "[bd ho]*4" # cut 1 # lpf 2000
+        ]
+
+
+
+do
+  -- @section outro
+  fb 1 49
+  fb 2 12
+  setN "outromel" $ cat
+    [ "[0 2 ~ 4 9 ~ 8@3 1@2 3 5@2 6@2]"
+    , "~@2 3 2 ~ 2 4 5 [5 6@6|6]@2 5 ~ 2@2 5"
+    , "~@2 3 2 ~ 2 4 5 [5 6@6|6]@2 5 ~ [2 3@6|3]@2 2 ~"
+    ]
+  setN "outrochr" $ "[0 1 . 0 2 . -2 -1]/3" |+ "[0,2,6]" 
+  setkey "gs" "lydian"
+  fs 1 $ (0.02 <~) $ t "^outrochr" # octave 2
+  fs 2 $ t "^outromel" # octave 3
+
+-- Song: 1 (lucida theme)
+
+do
+  -- @setup
+  fb 0 12
+  fb 4 37
+  hush
+  setcps (167 / 120 / 2)
+  setkey "g" "major"
+  setN "chords" $ slow 2 $ cat [0, 1, 2, 3, "3 4", -2, "1 -3", 0]
+  setN "lucida-theme" $ slow 2 $ cat
+       ["13 ~@2 13 . [12 ~]"
+       , "14 8@2 8@5"
+       , "~ 15 14 15 14 15 16 12"
+       , "16@3 15 . 12 ~"
+       --
+       , "~ 15 17 16 14 15 16 [19 20@5]"
+       , "~"
+       , "~ 12 14 13 11 12 13 18"
+       , "~@3 9"
+       --
+       ,"13@3 13 . 12 12"
+       , "14 8@2 8@5"
+       , "~ 15 14 15 14 15 16 12"
+       , "16@3 15 . 12"
+       --
+       , "~ 15 17 16 14 15 16 20" -- todo: variation
+       , "~@7 9"
+       , "10 11 12 14 16@2 11 14"
+       , "~ . ~ [9 ~]"
+       ]
+
+do
+  -- @section start
+  fs 4 $ slow 2 $ stack
+    [ n "[~ 0*2 . ~@4 0 0 ~ 0]" 
+    , n "[0!2 . -5!2 . 0 0 ~ -5 . ~ -5 -5 ~]" # octave 8 # amp 0.45
+    ]
+    |* amp 0.7
+
+
+fb 6 28
+
+
+do
+  -- @section sanfona
+  setN "sanfona" "[-3 ~@3, ~ 0@3, ~ 2, ~ . <6!2 5!2> ~, ~@3 0]*2"
+  fb 7 14
+  fs 7
+    $ t ("^sanfona" |+ "^chords") 
+    # octave 4
+
+do
+  -- @section theme
+  fb 0 9
+  fs 0
+    $ (# octave 3)
+    $ t "^lucida-theme"
+    # octave 2
+
+all id 
+
+do
+  setcps (173 / 120 / 2)
+  fb 1 35
+  fs 1 $
+    n "0 . <0*2 0*4>"
+      # sus 0.02
+      # amp 0.7
+  fb 2 36
+  fs 2 $
+    slow 2 $
+      n "~ 0 ~ 0 ~ ~ 0 ~ . 0(3,8)"
+        # amp 0.5
+  fb 3 34
+  fs 3 $ fast 2 $ n "0 ~ . 0" |* sus "0.02 . 4"
+  fs 3 $ fast 2 $ n "0*2" |* sus 0.02
+  fb 4 37
+  fs 4 $ fast 2 $ chop "1 [1|2] [1!2] 1" $ n ("0 0 0 0" |+ "<7 3>") # octave 7
+  -- fs 4 silence
+
+
+do
+  -- @section chords
+  fb 6 49
+  fs 6
+    $ t ("[-3,0,2,6]/2" |+ "^chords") 
+    # octave 3
+
+
+
+
+
+
+
+
+
+
+-- Song: 2 -> 3
+
+do
+  fb 1 2
+  fb 2 65
+  fb 0 3
+  setkey' 0 ("c" |- ((1/4) <~ "[0 4]/4")) "major"
+  setcps (110/120/2)
+
+
+fs 0 $ t' 0 "10 11 12 14 16@2 ~ 9"
+  # octave 4 
+
+do
+  setI "chordpos" 0
+  fs 1
+    $ (t' 0 . fast 2 . (|+ "^chordpos") . stack) ["[0@3 [0|-3]]" ,  "[0@2 0@3 0@2 0@2 0@2 0@2 0@3]/4" |+ "[4,6@7 5@9,9,12,14]"]
+    # octave 3
+    # amp 0.3
+
+
+do
+  -- resolve
+  setkey' 2 ("c" |- 5) "phrygian"
+  fs 2 $ (1/2) ~> t' 0 "10 11 12 14 15@2 ~ 9"
+    # octave 3 
+
+
+
+
+damps [0.7, 0.8]
+
+all $ (# (orbit 0 # pan 0.5)) 
+
+
+
+
+-- Song: Transparente
+-- Song: Vou pro mar
+-- Song: A banda
+
+do
+  fb 0 1
+  fb 1 11
+  setkey' 0 "d" "major"
+  setcps (115/120/2)
+  setkey' 0 "d" "major@3 <major!3 mixolydian>@5"
+
+do
+  damps $ repeat 0.85
+  drums [ fast 4 $ s "[hh,hh] <hh? ~>", n "[~ 0*2]*2" # s "gretsch"]
+  fs 0
+    $ t' 0 "^bass" 
+    # amp 0.7
+    # octave 3
+  setN "bass" $ cat
+    [ "3 ~@2 3@5", "2@3 5@5", "1@3 4@4 0", "1 1 2 3 4 ~ 0@2" 
+    ]
+  setN "mel" $ cat
+    [ "3 5 ~ 9 ~ 5 3 ~ 8@2 7 ~ [5 6@5 | 6]@2 5 ~"
+    , "2 4 ~ 8 ~ 4 2 ~ . 7 [8 ~]  5 4"
+    , "2 4 ~ 7 ~ 4 2 ~ . 7 6 5 2" |- 1
+    , "[3 ~] [4 ~] [5 ~] [7 ~] . 9 ~"
+    ]
+
+do
+  -- @section keyboards
+  fs 1
+    $ t' 0 "^mel"
+    # octave 3
+
+do
+  -- @section guitars
+  fb 2 2
+  fs 3 silence
+  setkey' 0 "<d!2 ds d>" "<major!2 lydian mixolydian>@5"
+  setN "chordbases" $ "[3 . 2@3 5@5 . 1@3 4@5 . 2@3 0@5]/4" 
+  setN "chords" $ "[[5,7,9] [4,6,8] [4,6,8] [6,8,9@3 [9|10]@5]]/4"
+  setN "gtbassrtm" $ "0@3 0 ~@2 0@4 0@4 0@2"
+  setN "gtchrrtm" $"~ 0 ~@2  ~ 0@2 ~ . [0 ~]*2" 
+  fs 2
+    $ t' 0 (stack [ "^gtbassrtm" |+ "^chordbases", "^gtchrrtm" |+ "^chords"])
+    # octave 3
+    # amp 0.6
+
+do
+  -- @section brasses 
+  setN "gtbassrtm" $ "0@2 ~ 0@5" 
+  setN "gtchrrtm" $ "0@2 ~ 0@5" 
+  fb 2 29
+  setkey' 0 "d" "<major!3 mixolydian>@5"
+  setN "chordbases" $ "[3 . 2@3 5@5 . 1@3 4@5 . 2@3 0@5]/4" 
+  setN "chords" $ "[[5,7,9] [4,6,8] [3@3 4@5,5,9] [6,8,9@3 [9|10]@5]]/4"
+  fb 3 11
+  setN "brass" $ cat
+    [ "7@3 7 5 ~ 7 ~ . 9 ~ 7 ~ 5 9 ~ 8"
+    , "~ 8 ~ 8 9 9 8 ~ . 12 12 11 ~  9 [11 9@3] 7 5"
+    , "~ 7 ~ 2 3 5 7 2 . ~ 9 9 9 8 7"
+    , "6@3 3 4 5 6 8 . 12 11 14 12 11 10 9 8"
+    ]
+  fs 3 $ t' 0 "^brass"
+    # octave 4
+    |* sus 0.1
+
+
+
+
+
+
+
+
+-- Song: Pos-banda
+
+setN "mel" $ cat
+  [ "3 5 ~ 9 ~ 5 3 ~ . 8@2 5 ~ 3@2 8 ~"
+  -- , "2 4 ~ 8 ~ 4 2 ~ . 7 [8 ~]  5 4"
+  -- , "2 4 ~ 7 ~ 4 2 ~ . 7 6 5 2" |- 1
+  -- , "[3 ~] [4 ~] [5 ~] [7 ~] . 9 ~"
+  ]
+
+
+do
+  -- @section keyboards
+  hush
+  setkey' 0 "d" "major harmonicMajor"
+  fs 1
+    $ t' 0 "^mel"
+    # octave 3
+
+scaleList
+
+
+
+
+
+
+
+
+-- Song ? - Ocaso
+
+
+
+
+

@@ -1,8 +1,11 @@
-let
+{- HLINT ignore "Parse error: module header" -}
+
+do
   -- @mocks
   -- @mode test
-  mm = vibe . (|+ up 12) . (# gain 0.7) . (# modamp 0) . (# hpf 300) . (# lpf 600)
-  reface = piano . (# gain 1.2) . (# sus 5)
+  let
+    mm = vibe . (|+ up 12) . (# gain 0.7) . (# modamp 0) . (# hpf 300) . (# lpf 600)
+    reface = piano . (# gain 1.2) . (# sus 5)
 
 do
   -- @section setup

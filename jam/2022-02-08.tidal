@@ -1,0 +1,15 @@
+
+
+once $ s "bd"
+
+do
+  -- @section start
+  setN "mel" "19 17 15 14 12 11 7 4 10 6 3 9 5 2"
+  setN "melc" 14
+  setkey "f" "mixolydian"
+  fb 0 12
+  fs 0
+    $ slow ("^melc" |/ 16)
+    $ timeLoop ("{12 3 15 2 14 12 9}%4" |/ 16)
+    $ t "^mel" # octave 4
+

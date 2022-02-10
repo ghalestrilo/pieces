@@ -1,0 +1,46 @@
+do
+  -- @setup
+  setcps (140 / 120 / 2)
+  all (# (orbit 0 # pan 0.5))
+  setkey "c" "major"
+
+do
+  -- @section drums
+  setF "dlpf" 20000
+  damps $ repeat 1
+  drums $
+    (# (s "gretsch" # lpf "^dlpf"))
+      <$> [ n "~ 23? ~@2 . 23" # gain "0.8 1",
+            n "[13 21? | 13!2] [13 | ~ 13] .~ [~ 13]",
+            fast 2 $ n "<28*2 [28 . 28 17]>" # gain "0.9 0.7" # cut 1
+          ]
+
+do
+  -- @section chords
+  fb 0 12
+  setN "cpos" "[3 ~@2 <1!3 [1 ~ 2@3]>@5]"
+  setN "cpos" "[5 ~@3 . 3 ~@2 2@5 . 3 ~@2 1@5 . 3 ~@2 1 ~ 2@3]/4"
+  fs 0 $ ("[0@3 1@15]/4" |/ 8) <~ t ("^cpos" |+ "[-3,0,2,6]") # octave 3
+
+do
+  -- @section bass
+  setN "bass" "[-2 -2 ~ -2 2 0 1 ~ . -2 ~@2 2@5 . 3 ~@2 1@5 . 3 ~@2 1 ~ 2@3]/4"
+  fb 1 1
+  fs 1 $
+    ("[0@7 1@25]/4" |/ 8) <~ t "^bass"
+      # amp 0.8
+      # octave 4
+
+do
+  -- @section gt
+  fb 1 15
+  fs 1 $
+    t "[~ -2 ~ -1 0 2 [5 6@5]@2 . ~ 5 4 2 4 5 1 2]/2"
+      # amp 0.5
+      # octave 3
+
+
+
+drums []
+
+hush

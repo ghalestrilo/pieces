@@ -1,0 +1,60 @@
+
+
+do
+  -- @setup 
+  setkey' 0 "c" "lydian"
+  setkey' 1 "c" "mixolydian"
+  setI "inst" 46
+  fb 0 "^inst"
+  fb 1 "^inst"
+
+once $ s "bd"
+
+setcps (100/120/2)
+
+
+setN "mel" $ slow 1 "-1 0 2 4 6 5 4 2 5 2 4 2"
+
+do
+  let slowness = slow (range 0.6 4 $ slow 48 sine)
+  setF "sus" 4
+  fs 0
+    $ slowness 
+    $ t' 1 "^mel"
+    # sustain "^sus"
+    # octave "[3|4]"
+  fs 1
+    $ rev
+    $ slowness
+    $ t' 0 "^mel"
+    # sustain "^sus" 
+    # octave "[4|5]"
+
+do
+  setI "inst" 83
+  fb 0 "^inst"
+  -- fb 1 "^inst"
+
+
+do
+  setkey' 0 "bs" "phrygian"
+  setkey' 1 "b" "dorian"
+
+do
+  setkey' 0 "g" "lydian"
+  setkey' 1 "g" "lydian"
+
+
+do
+  -- @section kicks
+  fb 2 "35"
+  fs 2
+    $ n "{ ~ 0 0 ~ 0 ~ 0 ~ 0 ~ ~ 0 ~ ~ ~ 0 ~@5 }%8"
+    # amp 0.7
+    # octave 5
+  fb 3 "36"
+  fs 3 
+    $ n "~ 0"
+    # amp 0.7
+    # octave 5
+

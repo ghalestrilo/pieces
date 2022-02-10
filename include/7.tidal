@@ -1,0 +1,14 @@
+d1 $ qtrigger 1 $ seqP [ 
+  (0, 12, sound "bd bd*2"), 
+  (4, 12, sound "hh*2 [sn cp] cp future*4"), 
+  (8, 12, sound (samples "arpy*8" (run 16)))
+]
+
+
+let pats =
+      [
+        ("a",  n "{1 2 3}%4" # s "superpiano" # gain "0.7"),
+        ("c",  n "{7 8}%4" # s "superpiano" # gain "0.7")
+      ]
+in
+d1 $ qtrigger 1 $ ur 2 "{a@3 b@2 b@2 a@3}%4" pats []
