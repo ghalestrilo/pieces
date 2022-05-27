@@ -1,0 +1,77 @@
+import Sound.Tidal.Safe.Context (someCyclesBy)
+piano $ note "0'maj7"
+
+resetCycles
+
+
+  setF "basecps" (130 / 120)
+
+b number = cps ("^basecps" |* 4 |/ number)
+
+ns = n . squeeze "^seq"
+
+
+setN "seq" $
+  somecyclesBy
+    0.1
+    (const 0)
+    ("1" |* irand 6)
+
+:{
+let ns = n . squeeze "^__seq__"
+    sq = setN "__seq__"
+    -- bars: set time signatures for "^seq"-indexable sequences 
+    bars signatures =
+      p "__clock__" $
+        squeeze "^__seq__" (map ((\pat count -> n pat # b count) "0*3") signatures)
+          # s "can"
+          # gain 0
+:}
+
+bars []
+
+
+
+let ns = n . squeeze "^__seq__"
+    sq = setN "__seq__"
+    b number = cps ("^basecps" |* 4 |/ number)
+    -- bars: set time signatures for "^seq"-indexable sequences 
+    bars signatures =
+      p "__clock__" $
+        squeeze "^__seq__" (map ((\pat count -> n pat # b count) "0*3") signatures)
+          # s "can"
+          # gain 0
+
+
+all $ someCyclesBy 0.1 (fast 2)
+
+
+all $ someCyclesBy 0.1 (chop 3) . someCyclesBy 0.3 rev
+
+all id
+
+mamps [0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
+
+mamps [0.5, 0, 0, 0.5, 0.5, 0.5]
+
+mamps $ [0.5, 0.5, 0.5, 0.5] ++ repeat 0
+
+setkey "c" "lydian"
+
+do
+  setF "basecps" 2.3
+  bars [3, 2, 3, 5, 8]
+  mc
+    [ ns [0, "0*2", 0, "0!2 ~ 0 ~",  "0 ~@2 0 . ~"],
+      ns ["~", "~ 0", "~ 0!2", "~@4 0", "~ . 0 ~@2 0"],
+      ns ["~ 0!2", "~ 0", "~ 0 ~", "0 0 ~ 0 ~", "[~ 0 0 ~]*2"] # open (range 0.1 0.3 rand),
+      ns ["-2", "0 ~@2", "0 ~@2", "0 ~@2 0 ~", "-2 . 0 ~"] |- n 5,
+      ns ["0 ~ 0", "0 ~", "0 ~@2", "0?*5", "0 ~ ~ 0 0 ~ ~ 0"]
+        # n (irand 3 |* 5)
+        # t (irand 7)
+        # octave 4
+      ns ["~ 0 ~", "~ 0", "~ 0 0", "", "~ 0 ~ ~ ~ 0 ~ ~"]
+        # n (irand 3 |* 4)
+        # t (irand 7)
+        # octave 5
+    ]

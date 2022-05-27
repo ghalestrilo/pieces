@@ -1,0 +1,53 @@
+setkey "c" "minor"
+
+all $ fast 8 . (# cps ("1*16" |* range 0.02 0.1 rand)) . rarely (chop $ fast 4 "[0|1]" |*| "[17|15|[32 1]]")
+
+setF "deg" $ 0.2
+
+mc
+  [ t "0 ~",
+    t ("~ 1" |* choose [-4, -3, -1, 0, 2, -7, -6]) # octave 4,
+    fast "[4|5]" $
+      degradeBy "^deg" $
+        n "0" # open (range 0 0.2 rand),
+    fast "3" $
+      degradeBy ("^deg" * 2) $
+        n "0",
+    fast
+      ( range 1 2.5 $
+          slow 5 sine
+      )
+      $ degradeBy "^deg" $
+        n "0",
+    sometimes (shuffle 8) $
+      rarely rev $
+        almostNever (fast 16) $
+          t (ring (shuffle 9 "0 -4 -3 2 5 3 -1 6 7") "x ~ x*2 ~ x*2")
+  ]
+
+setkey "cf" "lydian"
+
+ma 0 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

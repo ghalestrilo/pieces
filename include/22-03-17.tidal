@@ -1,0 +1,8 @@
+
+do
+  -- @setup
+  setkey "c" "lydian"
+  setcps (100/120/2)
+
+
+fb 0 $ t ( "0 ~ ~ -1" |+ "[0,9]")

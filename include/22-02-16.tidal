@@ -1,0 +1,35 @@
+mc [n "0*8" # ccn 65 # ccv (range 64 88 $ slow 30 sine)]
+
+mc [n "0*8" # midibend (range 0 120 rand)]
+
+d2 $ ccn "30*4" # ccv (scale 20 100 $ slow 30 sine) # s "midi"
+
+cycles_knobs
+
+mc
+  [ stack
+      [ midibend $ (slow 8 $ struct "t*8" $ (range 0 8192 $ sine)),
+        n "0*8"
+      ]
+  ]
+
+mc
+  [ stack
+      [ n "c4 c5 d5" # midichan "0 1 2" |+ 0,
+        midibend ("<0>" ~> (segment 128 $ range 0 8192 isaw)) # midichan "0 1 2",
+        miditouch (segment 128 (range 0 127 saw)) # midichan "0 1 2"
+      ]
+  ]
+
+stack
+  [ n "c4 c5 d5" # midichan "0 1 2" |+ 0,
+    midibend ("<0>" ~> (segment 128 $ range 0 8192 isaw)) # midichan "0 1 2",
+    miditouch (segment 128 (range 0 127 saw)) # midichan "0 1 2"
+  ]
+
+
+
+
+
+piano $ note "<>'o"
+

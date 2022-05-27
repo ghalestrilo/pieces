@@ -1,0 +1,29 @@
+
+do
+  -- @section power
+  setcps 1.4
+
+
+  setbpm 164
+
+all id
+
+seqs $ (every 2 . rarely) (const 0) "[1|2]"
+
+
+seqs $ "<[0|1|2] [1|2|3]>"
+
+bars $ l 4 4 3 5
+
+scaleList
+
+setkey "c" "harmonicMinor"
+
+
+
+mc [ ns $ l "0@7 0" "0!3 [~ 0]" "0 ~@2" "0!2 ~ 0 ~"
+   , ns $ l "~ 0" "~ 0" "~@2 0" "~@2 0 ~ 0"
+   , rarely (chop 4) $ ns $ l "~ . ~ 0 0 ~" "[~ 0!3]*2" "~ 0!3 ~ 0" "0*2 ~!4"
+   , (|* t (irand 7)) $ ns $ density 2 <$> l __ "1*4" "1*3" "1*5"
+   , ns $ l "0" __ __ __
+   ]
