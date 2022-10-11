@@ -1,7 +1,14 @@
+{- INCLUDE
+  - Custom commands:
+  - bars [...]: define as assinaturas dos compassos usados
+  - sq $ pat: define a ordem na qual os compassos de bar sao sequenciados
+-}
+
 do
   -- @name Include 1 - Nanan
   -- @setup
   hush
+  trbank 118
   setkey' 0 7 "lydian"
   setkey' 1 7 "lydian"
   setcps (112/120/2)
@@ -24,7 +31,7 @@ do
     # octave 3
 
 do
-  hush
+  -- hush
   d3 $ "[2 ~ 2 ~ 2 1@2 2 ~ 2 ~ 2 2 ~ 1 ~ 2 2]/1.5" # amp ("[3 4 5]*4" |/ 11)
   d2 $ "[3 ~ 5 ~ 5 3 . 3 ~ 5 5 ~ 3 . 3 ~ 5 ~ 5 3]/1.5" # amp 0.4
   d1 "0*4"
@@ -52,6 +59,7 @@ do
       , k 0 "-5"
       , "~"
       ]
+      # sus 4
   s1
     $ fast 2
     $ (note . cat)
@@ -62,16 +70,16 @@ do
     , k 0 ("[~ -5 ~ -5@2 ~]" |+ "[0,4,6,9,13]")
     , k 0 ("[~ -5 ~ -5@2 ~]" |+ "[0,4,6,9,13]")
     , k 0 ("[~ -5 ~ -5@2 ~]" |+ "[0,4,6,9,13]")
-    -- , t $ sharp 3 $ ("[~ 3 ~ 3@2 ~]" |+ "[-2,0,3,6,9]")
-    , k 0 $ ("[~ 3 ~ 3@2 ~]" |+ "[0,1,3,6,9]")
+    -- , k 0 $ ("[~ 3 ~ 3@2 ~]" |+ "[0,1,3,6,9]")
+    , flat 1 $ k 0 $ ("[~ 3 ~ 3@2 ~]" |+ "[0,1,3,6,9]")
     ]
-    # octave 4
+    # octave 3
 
 
 do
-  $ cat
-      [ t "11 9 <7!2 6!2>"
-      , t "[16 13 15 12 13 15,]"
+  s1 $ note $ cat
+      [ k 0 "11 9 <7!2 6!2>"
+      , k 0 "[16 13 15 12 13 15,]"
       ]
 
 
@@ -81,34 +89,16 @@ vibe silence
 
 p "drums" $ silence
 
-p "bes" ## [s "[tb:0,tb:1]" # octave 4 # lpf 300 # gain 0.9]
-  $ (|+ up 0.13)
-  $ fast 2
-  $ cat
-    [ t "11@2 6 7 9 13"
-    , t ("~ 12 ~ 12@2 ~")
-    , t "[16 13 15 12 13 15,]"
-    ]
 
 
 do
-  piano silence
-  p "bes" silence
-  vibe
-    $ cat
-      [ t "11 9 7 . 6 5 4"
-      , t "3 2 1 . 0 -1 -2"
-      , t "-5"
-      , __
-      ]
-
-do
-  p "bes" ## [s "[tb:0,tb:1]" # octave 3 # gain 0.7 # lpf 350]
-    $ (|+ up 0.13)
+  -- @name bass pulse
+  s3 $ (# octave 1)
+    $ (note . k 0)
     $ fast 2
     $ cat
-      [ t "11 9 <7!2 6!2>"
-      , t "[16 13 15 12 13 15,]"
+      [ "11 9 <7!2 6!2>"
+      , "[16 13 15 12 13 15,]"
       ]
 
 -- ALT: M:C
@@ -149,3 +139,232 @@ do
     ]
 
 p "bes" silence
+
+
+
+-- ---------
+-- ---------
+
+-- 2 : Krishna
+
+do
+  -- @NAME Include 1 - Krishna
+  hush
+
+do
+  hush
+  setbpm 120
+  bars [4, 3, 4]
+  setI "__seq__" "<0 1 0 0 1 2>"
+  setkey "c" "kumai"
+
+do
+  -- @name test
+  -- trs [ ns [0, 0, "0 0 ~ 0", "0@3 0 .~ 0"]
+  --   , ns ["~ 0", "~ 0", "~ [~ 0] . 0", "~ 0"]
+  --   , ns ["[~ 0!2 ~]*2", "0*3", "0*4", "~ 0!2 ~ . ~@3 ~"]
+  --   , rarely (chop 3)  $ ns ["0*4", "0*3", "0*4", "0*4"]
+  --   , ns ["0@5 0@3", "~ 0", "0*2", "0*4 . 0"] # t (irand 7 |- 3)
+  --   ]
+  d1 $ ns [0, 0, "0 0 ~ 0", "0@3 0 .~ 0"]
+  d2 $ ns ["~ 0", "~ 0", "~ [~ 0] . 0", "~ 0"]
+  d8 $ ns ["[~ 0!2 ~]*2", "0*3", "0*4", "~ 0!2 ~ . ~@3 ~"]
+  d6 $ rarely (chop 3)  $ ns ["0*4", "0*3", "0*4", "0*4"]
+  d4 $ ns ["0@5 0@3", "~ 0", "0*2", "0*4 . 0"] # t (irand 7 |- 3)
+
+do
+  -- @name alt
+  sq $ (every 2 . someCyclesBy 0.2) (const 3) $ "<0 1 0 0 1 2>"
+  bars [4,3,4,4]
+
+
+-- 2
+
+do
+  setkey "c" "major"
+  setbpm 112
+  bars [4,3,4,3,6,2.5]
+  sq "<0 1 2 3 4 0 1 2 3 4 5>"
+
+sq =  squeeze "^__seq__"
+
+sq 5
+
+do
+  trs [ ns ["0*2 ~", "0", "0!2 ~ 0", "0", "0*2", "~ 0 ~@2 0"]
+    , ns ["~ 0", "~ 0", "~ [~ 0] . 0", "~ 0", "[~ 0]*2", "0 ~ 0 ~ ~"]
+    , ns ["0!3 ~ . 0!2 ~ 0", "0*3", "0!3 ~ . 0!2 ~ 0",  "0*3", "[0 0*2]*3", "0*4"] # open 0.14
+    , __
+    , ns ["6 7", "9 10", "6 7", "11 6","9 4 2 [0 -2]", "3 1 -2 -5 -3"]
+    ]
+
+piano $ note $ sq ["0'maj7", "", "7'maj7", __, "5'maj7", "-2'min7"]
+
+mamps [0.5,0.3,0.4,0,0.4]
+
+   , ns ["6 7", "9 10", "6 7", "11 6"]
+
+piano $ silence
+
+ma 4 0
+
+-- 3
+
+
+do
+  setkey "c" "major"
+  setbpm 98
+  bars [4,5,6]
+  sq "<0!2 [1|2]>"
+
+trs [ ns ["0@3 0@5", "0@3 0@5 0@2", "0!2 ~ 0"]
+   , ns ["~@3 0", "~@3 0 ~", "~ 0"]
+   , fast 2 $ (sometimes . every 6) (chop 3) $ ns ["0*4", "0*5", "0*6"]
+   ]
+
+mamps [0.5,0.3,0.3]
+
+sq "<0!2>"
+
+do
+  mamps [0,0.3,0.2]
+  piano $ (0.07 ~>) $ ns ["8'maj7@2 ~ 8'6@5", "8'maj7@3 8'6@5", "8'maj7 8'6 9'maj7"] |+ n "<0!2 1 -4>" 
+
+mamps [0.7,0.3,0.3]
+
+trs [ ns ["0@3 0@5", "0@3 0@5 0@2", "0!2 ~ 0"]
+   , ns ["~@3 0", "~@3 0 ~", "~ 0"]
+   , __
+   , fast 2 $ (sometimes . every 6) (chop 3) $ ns ["0*4", "0*5", "0*6"] # open 0.2
+   ]
+
+mamps [0.5,0.3,0.3,0.3]
+
+sq "<0!2>"
+
+
+-- 4
+
+sq "<0 1>"
+
+ma 1 $ "" |/ 10
+
+timeloop 3 
+
+setF "t" 2 
+
+bars [4, 3]
+
+trs $ timeLoop (1 |/ sq [4, 3])
+  <$> slow 2
+  <$> [ n "0 ~"
+   , n "~ 0 ~"
+   , n "[~ 0*3] ~ ~"
+   , n " " 
+   ]
+
+
+
+-- old
+let ns = n . squeeze "^__seq__"
+let sq = setN "__seq__"
+let b number = cps ("^basecps" |* 4 |/ number)
+let bars signatures = p "__clock__" $ squeeze "^__seq__" (map ((\pat count -> n pat # b count) "0*3") signatures) # gain 0
+let seqd = squeeze "^__seq__"
+let over n = map (/ n)
+
+
+do
+  hush
+
+do
+  setkey "c" "lydian"
+  sq $
+    somecyclesBy
+      0.1
+      (const 0)
+      ("1" |* irand 6)
+  -- sq $ ("1" |* irand 4)
+  setseq "1"
+  setF "basecps" 2.3
+  setF "basecps" 1.2
+  bars [3, 2, 3, 5, 8]
+  d1 $ ns [0, "0*2", 0, "0!2 ~ 0 ~",  "0 ~@2 0 . ~"]
+  d2 $ ns ["~", "~ 0", "~ 0!2", "~@4 0", "~ . 0 ~@2 0"]
+  d3 $ ns ["~ 0!2", "~ 0", "~ 0 ~", "0 0 ~ 0 ~", "[~ 0 0 ~]*2"]
+  d4 $ ns ["-2", "0 ~@2", "0 ~@2", "0 ~@2 0 ~", "-2 . 0 ~"] |- n 5
+  s1 $ ns ["0 ~ 0", "0 ~", "0 ~@2", "0?*5", "0 ~ ~ 0 0 ~ ~ 0"]
+        # n (irand 3 |* 5)
+        # note (k 0 $ irand 7)
+        # octave 4
+        # sus 2
+  s2 $ ns ["~ 0 ~", "~ 0", "~ 0 0", "", "~ 0 ~ ~ ~ 0 ~ ~"]
+        # n (irand 3 |* 4)
+        # note (k 0 $ irand 7)
+        # octave 5
+        # sus 2
+
+d1 "0*4"
+
+hush
+
+do
+  bars [4]
+  seqs "1"
+  all $ fast 2 . swingBy (1/19) 2
+  d8 $ "0*4"
+  s1
+    $ slow 4
+    $ (note . k 0 . stack) ["0@4 2@2 0@7 2@2 0", "~ 0@3 ~@5 0 ~@2 0@3 ~@3" |+ "[2,5,8]" |+ 7]
+    # octave 3 # amp 0.7
+
+
+let breakpoints bps pat = map (flip zoom $ pat) $ zip ([0] ++ bps) (bps ++ [1])
+    bps = breakpoints
+    frag = bps
+
+
+
+
+show $ breakpoints [0.5] $ n "0*4"
+
+let indices indexer list = map (\index -> list!!index) indexer
+
+let drumdivision = seqd . indices [0,1,0] . breakpoints [7/16]
+in do
+  -- @name alvenaria
+  hush
+  setF "basecps" 1
+  all $ id
+  bars $ over 2 $ [7,9,7]
+  setkey' 0 "0" "major"
+  setseq "<0 1>"
+  d1 $ drumdivision $ "0*4" # amp "[0.44 0.5]*2"
+  d2 $ drumdivision $ "~ ~@3 0@2 ~@2 ~@3 ~@2 0@2 ~@2"
+  d7 $ drumdivision $ "[0 ~]*8" # ccn (tr8sToneCCArray!!6) # ccv "[127 32]*2"
+  d8 $ drumdivision $ fast 4 $ "0*4" # amp ("6 3.5 4 5" |/ 10)
+  d9 $ drumdivision $ ((1/16) ~> "0@8 0@3 0@6")
+  s1
+    $ (|+ note (seqd [0,0,1]))
+    $ seqd
+    -- $ (++ [stack (note . (|+ "1") . k 0) "[2,5,8,11]" # octave 4])
+    $ indices [0,1,0]
+    $ breakpoints [7/16]
+    $ (note . k 0 . stack)
+      [ (1/16) <~ "0@2 ~@3 2@2 0 ~@6 2@2"
+      , "~ 0@3 ~@5 0 ~@2 0@3 ~@3" |+ "[2,5,8,11]" |+ 7
+      ]
+    # octave 3
+
+do
+  -- @name stutter
+  setseq "<0 [0|1|1|2]>"
+
+do
+  -- @name crazy
+  setseq "[0|1|2]"
+
+
+do
+  -- @name push
+  setseq $ ("1" |* irand 3)
