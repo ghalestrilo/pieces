@@ -1,11 +1,12 @@
 
 do
   -- @name ASTRO
-  hush 
+  hush
 
 do
   -- @name intro
   hush
+  setcps 0.9
   trbank 100
   all id
   setcps (122/120/2)
@@ -44,7 +45,7 @@ do
     ([
       k 0 $ "9 9 ~ ~ ~ 5 6 8",
       k 0 $ "9 9 6 5 8 8 ~ ~",
-      k 0 $ "~ 5 6 8 9 9 8 6",
+      k 0 $ "[~ 5 6 8 | ~ [5 6 8]] . 9 9 8 6",
       k 0 $ "8 8 6 5 6 6 5 4",
       k 0 $ "5 4 2 4 -1 0 2 4",
       k 0 $ "7 7 6 7 6 6 5 4",
@@ -61,11 +62,12 @@ do
   -- todo: cc decay
   s1 silence
   d1 $ "[0 ~@3 . 0]*2" # ccn (tr8sDecayCCArray!!0) # ccv "[0 127]*2"
-  d2 $ sometimes (chop "[1@3 2]*4") "0*16" # amp ("6 4 3 6 4 3 6 7 . 3 2 7 3 2 6 2 3" |/ 16)
+  d6 $ sometimes (chop "[1@3 2]*4") "0*16" # amp ("6 4 3 6 4 3 6 7 . 3 2 7 3 2 6 2 3" |/ 16)
+  d2 $ "[~ 0]*2" # amp 0.5
   d7 $ "[[0 0 ~ 0 0 ~ 0 ~ | 0 0 ~ 0 ~ 0 0 ~] . 0 ~ 0 ~ 0 ~ 0 0?]"
   d8 $ "0*16"
   s3 $ fast 2 $ (note . cat)
-    ( fmap (k 0) ["0", "0", "-1", "2", "-2", "1"]
+    (fmap (k 0) ["0", "0", "-1", "2", "-2", "1"]
     ++ fmap (k 1) ["-1", "0"])
     # amp 0.8
     # octave 3
@@ -103,9 +105,9 @@ do
 
 do
   -- @name drums
-  d1 $ fast 2 $ "0 ~ ~ [0|0|~ 0]"
+  d1 $ fast 2 $ "0 ~ . [~ 0 | ~ [~ 0] | ~ 0 ~ ~]"
   d2 $ fast 2 $  "~ 0"
-  d8 $ fast 2 $  "0*4"
+  d8 $ fast 2 $  "0*4" # amp "[0.42 0.33]*2"
 
 do
   -- @name preface
@@ -119,6 +121,7 @@ do
     # octave 5
     # amp 0.6
     # sus 2
+    # sustainpedal 1
 
 do
   -- @name bassline
@@ -137,10 +140,11 @@ do
 
 do
   -- @name drums 2
-  d1 $ fast 2 $ "0 ~ ~ [0|0|~ 0]"
+  d1 $ fast 2 $ "0 ~ . [~ 0 | ~ [~ 0] | ~ 0 ~ ~]"
   d2 $ fast 2 $  "~ 0"
   d8 $ fast 8
     $ sometimes (chop 2) $ "0"
+    # amp "<0.42 0.33>"
 
 
 do
@@ -203,7 +207,7 @@ do
 do
   -- @name drums
   d1 $ "0 . ~ 0 ~@2"
-  d1 $ "[0@3 0]*2"
+  d1 $ "[0@3 0]*2"  
   d1 $ "0 ~ ~ 0? ~ ~ 0? ~ . ~ 0 ~ [~ 0]"
   d2 $ "[~ 0]*2"
   d8 $ "0*16"
@@ -215,9 +219,9 @@ do
   d1 $ "[0@3 0]*2"
   -- d1 $ "0 ~ ~ 0? ~ ~ 0? ~ . ~ 0 ~ [~ 0]"
   d2 $ "[~ 0]*2"
-  d8 $ "0*16"
+  d8 $ "0*16" # amp "[0.37 0.1]*8"  
   d1 $ "0  ~ ~ 0? ~@4. [~ 0] 0 ~ [~ 0]"
-  d3 $ fast 2 $ n "~ 0 0 ~"
+  -- d3 $ fast 2 $ n "~ 0 0 ~"
   s2
     $ fast 2
     $ sometimesBy "^plink" (# (octave (5 |+ irand 3) # sus 4))
@@ -233,33 +237,110 @@ do
     ])
     # sus 1.4
     # amp 0.5
-  s3
+  mt
     $ fast 2
-    $ (note . cat)
+    $ (n . cat)
       ([ k 0 "0(3,8)"
       , k 0 "[~@2 0 ~@2 0 ~@2 | [0 ~] [-3 ~] [0 ~] ~]"
-      , k 0 "0(3,8)" |+ 1
+      , k 0 $ "0(3,8)" |+ 1
       , k 1 "~@2 0 ~@2 4 ~@2"
       ]
     )
+    # midibend "0.1"
+
     # octave 3
     # sus 0.1
     # amp 0.8
 
+
+-- EXPERIMENT
+let trp pat = p "tr"
+                  $  stack [
+                    n pat # s "tr" # midichan 2,
+                    n pat # s "loopback" # midichan 0,
+                    ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double)
+                    # stack [s "tr", s "loopback"]
+                    # midinote (tr8sChanArray!!2)
+                    # ccn (tr8sToneCCArray!!2)
+                  ]
+in
+  do
+    trp
+      $ fast 2
+      $ cat
+        ([ k 0 "0(3,8)"
+        , k 0 "[~@2 0 ~@2 0 ~@2 | [0 ~] [-3 ~] [0 ~] ~]"
+        , k 0 $ "0(3,8)" |+ 1
+        , k 1 "~@2 0 ~@2 4 ~@2"
+        ]
+      )
+
+let trpitch pat = p "tr2"
+                  $  stack [
+                    n pat # s "tr" # midichan 3,
+                    n pat # s "loopback" # midichan 1,
+                    ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double)
+                    # stack [s "tr", s "loopback"]
+                    # midinote (tr8sChanArray!!3)
+                    # ccn (tr8sToneCCArray!!3)
+                  ]
+in
+  trpitch
+      $ fast 2
+      $ cat
+      (
+        fmap (k 0) [
+        "2 4 5 [2|-1] 4 0 4 5"
+      , "6 8 9 6 8 -4 -2 -1"
+      , "1 2 3 1 2 -1 1 2"
+      ] ++ fmap (k 1) [
+        "[0 1 2 0 1 -2 1 2 | 0 1 2 3 6 5 3 2]"
+      ])
+      |+ 12
+
+
+let trp pat = p "tr3"
+                  $  stack [
+                    n pat # s "tr" # midichan 4,
+                    n pat # s "loopback" # midichan 2,
+                    ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double)
+                    # stack [s "tr", s "loopback"]
+                    # midinote (tr8sChanArray!!4)
+                    # ccn (tr8sToneCCArray!!4)
+                  ]
+in trp
+    $ (fast 2 . cat)
+      ([ k 0 $ "~ 6 9 5 . 8 6 4 2"
+       , k 0 $ "~ 1 ~ [6, ~@2 3@3,~@3 1@2]@5"
+       , k 0 $ "[~ 0 ~ [5, ~@2 2@3,~@3 0@2]@5]"
+       , k 1 $ "[~ 0 ~ [5, ~@2 2@3,~@3 -1@2]@5]" |- 4 |+ 7
+       , k 0 $ "~ 6 9 5 . 8 6 4 2"
+       , k 0 $ "~ 1 ~ [6, ~@2 3@3,~@3 1@2]@5"
+       , k 0 $ press $ "2 4 5 6"
+       , k 0 $ press $ "2 4 5 6" |+ 7
+      ])
+    |+ 6
+
+    # amp 0.4
+    # sus 2
+
+
 do
   -- @name steal
   d1 $ "0  ~ ~ 0? ~@4. [~ 0] 0 ~ [~ 0]"
-  d2 $ stack ["[~ [0@3 0??]]*2" # amp 0.45, degrade "0*8" # amp (range 0.1 0.35 $ rand)]
+  d2 $ stack ["[~ [0@3 0??]]*2" # amp 0.4, sometimes (chop 2) $ degrade "0*16" # amp (range 0.1 0.15 $ rand)]
   s1 $ fast 2
     $ stack [
       -- midibend $ (slow 8 $ struct "t*128" $ (range 0 8192 $ sine)),
       (note . cat)
       ([ k 0 $ "~ 6 9 5 . 8 6 4 2"
        , k 0 $ "~ 1 ~ [6, ~@2 3@3,~@3 1@2]@5"
-       -- , k 0 $ "<[~ 0 ~ [5, ~@2 2@3,~@3 0@2]@5] [~ 2 ~ 4 ~ 5 ~ 6]>"
-       -- , k 1 $ "<[~ 0 ~ [5, ~@2 2@3,~@3 0@2]@5] [~ 2 ~ 4 ~ 5 ~ 6]>"
        , k 0 $ "[~ 0 ~ [5, ~@2 2@3,~@3 0@2]@5]"
        , k 1 $ "[~ 0 ~ [5, ~@2 2@3,~@3 -1@2]@5]" |- 4
+       , k 0 $ "~ 6 9 5 . 8 6 4 2"
+       , k 0 $ "~ 1 ~ [6, ~@2 3@3,~@3 1@2]@5"
+       , k 0 $ press $ "2 4 5 6"
+       , k 0 $ press $ "2 4 5 6" |+ 7
        ])
     # amp 0.4
     # sus 2]
@@ -267,5 +348,56 @@ do
 do
   -- @name end
   d2 silence
-  d8 silence
+  d8 silence 
   setF "plink" 0.3
+
+
+
+
+-- samba
+
+
+-- ---------- 3 : alvenaria
+
+let drumdivision = seqd . indices [0,1,0] . breakpoints [7/16]
+in do
+  -- @name alvenaria
+  hush
+  trbank 120
+  setF "basecps" 1.1
+  all $ id
+  bars $ over 2 $ [7,9,7]
+  setkey' 0 "0" "major"
+  setseq "<0 1>"
+  d1 $ drumdivision $ "0*4" # amp "[0.44 0.5]*2"
+  d2 $ drumdivision $ "~ ~@3 0@2 ~@2 ~@3 ~@2 0@2 ~@2"
+  d7 $ drumdivision $ "[0 ~]*8" # ccn (tr8sToneCCArray!!6) # ccv "[127 32]*2"
+  d8 $ drumdivision $ fast 4 $ "0*4" # amp ("6 3.5 4 5" |/ 10)
+  d9 $ drumdivision $ ((1/16) ~> "0@8 0@3 0@6")
+  s1
+    $ (|+ note (seqd [0,0,1]))
+    $ seqd
+    -- $ (++ [stack (note . (|+ "1") . k 0) "[2,5,8,11]" # octave 4])
+    $ indices [0,1,0]
+    $ breakpoints [7/16]
+    $ (note . k 0 . stack)
+      [ (1/16) <~ "0@2 ~@3 4@2 0 ~@6 4@2"
+      , "~ 0@3 ~@5 0 ~@2 0@3 ~@3" |+ "[2,5,8,11]" |+ 7
+      ]
+    # octave 3
+
+do
+  -- @name stutter
+  setseq "<0 [0|1|1|2]>"
+
+do
+  -- @name crazy
+  setseq "[0|1|2]"
+
+do
+  -- @name push
+  setseq $ ("1" |* irand 3)
+
+hush
+
+trpat $ ("1*32" |* irand 10)

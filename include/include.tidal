@@ -14,10 +14,6 @@ do
   setcps (112/120/2)
   all id
 
-let piano = s2
-let vibe = s1
-let bes = s3
-
 do
   -- @name chords
   s2
@@ -82,15 +78,6 @@ do
       , k 0 "[16 13 15 12 13 15,]"
       ]
 
-
-do
-
-vibe silence
-
-p "drums" $ silence
-
-
-
 do
   -- @name bass pulse
   s3 $ (# octave 1)
@@ -138,9 +125,6 @@ do
       ]
     ]
 
-p "bes" silence
-
-
 
 -- ---------
 -- ---------
@@ -149,6 +133,7 @@ p "bes" silence
 
 do
   -- @NAME Include 1 - Krishna
+  -- funcionou pa caralho
   hush
 
 do
@@ -159,6 +144,7 @@ do
   setkey "c" "kumai"
 
 do
+  trbank 119
   -- @name test
   -- trs [ ns [0, 0, "0 0 ~ 0", "0@3 0 .~ 0"]
   --   , ns ["~ 0", "~ 0", "~ [~ 0] . 0", "~ 0"]
@@ -171,14 +157,58 @@ do
   d8 $ ns ["[~ 0!2 ~]*2", "0*3", "0*4", "~ 0!2 ~ . ~@3 ~"]
   d6 $ rarely (chop 3)  $ ns ["0*4", "0*3", "0*4", "0*4"]
   d4 $ ns ["0@5 0@3", "~ 0", "0*2", "0*4 . 0"] # t (irand 7 |- 3)
+  cc $ ns ["0*2", "0 ~ 0", "0*2"]
 
 do
   -- @name alt
-  sq $ (every 2 . someCyclesBy 0.2) (const 3) $ "<0 1 0 0 1 2>"
+  setseq $ (every 2 . someCyclesBy 0.2) (const 3) $ "<0 1 0 0 1 2>"
   bars [4,3,4,4]
 
 
+all $ (every 3 . sometimes) (shuffle "2")
+
+all $ id
+
 -- 2
+
+s3 $ nok 0 "0" # amp 0.5
+
+setkey' 0 "a" "minor"
+
+s3 $ ((nok 0 $ seqd ["0", "-2 4", "0"]) |- note "<0!3 3!3>")
+  # amp 0.5 # octave 3
+
+s3 $ ((nok 0 $ seqd ["0", "-2 4", "0"]) |- note "<0!3 3!3>")
+  # amp 0.5 # octave 3
+
+s3
+  $ ((nok 0 $ seqd ["0", "-2 4", "0"] |- "<0!6 2!6>") |- note "<0!3 3!3 0!3 0!3>")
+  # amp 0.5
+  # octave 3
+
+s3
+  $ ((nok 0 $ seqd ["0", "-3", "0"] |+ "<0!3 1!3 1!3 -1!3>" - 2) |+ note "<0!3 0!3 2!3 0!3>")
+  # amp 0.4
+  # octave 2
+
+s4 silence
+
+s4
+  $ (nok 0 $ seqd ["0", "0", "0"] |+ ("<0!3 1!3 2!3 -1!3>" |+ "[-3,0,2,[4|3]]"))
+  # amp 0.1
+  # octave 4
+
+
+
+s3
+  $ ((nok 0 $ seqd ["0", "6 7", "0@3 2@3 ~@2"] |+ "<0!3 1!3 1!3 -1!3>" - 2) |+ note "<0!3 0!3 2!3 0!3>")
+  # amp 0.4
+  # octave 2
+
+
+all
+    $ sometimes (shuffle $ seqd [4, 3, 4])
+    . rarely (chop (irand 4 * 2) . (# amp (range 0.2 0.5 rand)))
 
 do
   setkey "c" "major"
@@ -188,104 +218,57 @@ do
 
 sq =  squeeze "^__seq__"
 
+
+hush
+
 sq 5
 
-do
-  trs [ ns ["0*2 ~", "0", "0!2 ~ 0", "0", "0*2", "~ 0 ~@2 0"]
-    , ns ["~ 0", "~ 0", "~ [~ 0] . 0", "~ 0", "[~ 0]*2", "0 ~ 0 ~ ~"]
-    , ns ["0!3 ~ . 0!2 ~ 0", "0*3", "0!3 ~ . 0!2 ~ 0",  "0*3", "[0 0*2]*3", "0*4"] # open 0.14
-    , __
-    , ns ["6 7", "9 10", "6 7", "11 6","9 4 2 [0 -2]", "3 1 -2 -5 -3"]
+do 
+  trs $ ns <$>
+    [ ["0*2 ~", "0", "0!2 ~ 0", "0", "0*2", "~ 0 ~@2 0"]
+    , ["~ 0", "~ 0", "~ [~ 0] . 0", "~ 0", "[~ 0]*2", "0 ~ 0 ~ ~"]
+    , ["0!3 ~ . 0!2 ~ 0", "0*3", "0!3 ~ . 0!2 ~ 0",  "0*3", "[0 0*2]*3", "0*4"]
+    , ["~"]
+    , ["6 7", "9 10", "6 7", "11 6","9 4 2 [0 -2]", "3 1 -2 -5 -3"]
     ]
 
-piano $ note $ sq ["0'maj7", "", "7'maj7", __, "5'maj7", "-2'min7"]
-
-mamps [0.5,0.3,0.4,0,0.4]
-
-   , ns ["6 7", "9 10", "6 7", "11 6"]
-
-piano $ silence
-
-ma 4 0
-
--- 3
-
+do
+  s1 $ (note . seqd) ["0'maj7", "", "7'maj7", "~", "5'maj7", "-2'min7"]
+    # amp 1
+    # octave 4
 
 do
+  -- @name sketch 3
+  hush
   setkey "c" "major"
   setbpm 98
   bars [4,5,6]
-  sq "<0!2 [1|2]>"
+  setseq "<0!2 [1|2]>"
+  d1 $ ns ["0@3 0@5", "0@3 0@5 0@2", "0!2 ~ 0"]
+  d2 $ ns ["~@3 0", "~@3 0 ~", "~ 0"]
+  d6 $ fast 2 $ (sometimes . every 6) (chop 3) $ ns ["0*4", "0*5", "0*6"]
 
-trs [ ns ["0@3 0@5", "0@3 0@5 0@2", "0!2 ~ 0"]
-   , ns ["~@3 0", "~@3 0 ~", "~ 0"]
-   , fast 2 $ (sometimes . every 6) (chop 3) $ ns ["0*4", "0*5", "0*6"]
-   ]
-
-mamps [0.5,0.3,0.3]
-
-sq "<0!2>"
 
 do
-  mamps [0,0.3,0.2]
-  piano $ (0.07 ~>) $ ns ["8'maj7@2 ~ 8'6@5", "8'maj7@3 8'6@5", "8'maj7 8'6 9'maj7"] |+ n "<0!2 1 -4>" 
-
-mamps [0.7,0.3,0.3]
-
-trs [ ns ["0@3 0@5", "0@3 0@5 0@2", "0!2 ~ 0"]
-   , ns ["~@3 0", "~@3 0 ~", "~ 0"]
-   , __
-   , fast 2 $ (sometimes . every 6) (chop 3) $ ns ["0*4", "0*5", "0*6"] # open 0.2
-   ]
-
-mamps [0.5,0.3,0.3,0.3]
-
-sq "<0!2>"
-
-
--- 4
-
-sq "<0 1>"
-
-ma 1 $ "" |/ 10
-
-timeloop 3 
-
-setF "t" 2 
-
-bars [4, 3]
-
-trs $ timeLoop (1 |/ sq [4, 3])
-  <$> slow 2
-  <$> [ n "0 ~"
-   , n "~ 0 ~"
-   , n "[~ 0*3] ~ ~"
-   , n " " 
-   ]
-
-
-
--- old
-let ns = n . squeeze "^__seq__"
-let sq = setN "__seq__"
-let b number = cps ("^basecps" |* 4 |/ number)
-let bars signatures = p "__clock__" $ squeeze "^__seq__" (map ((\pat count -> n pat # b count) "0*3") signatures) # gain 0
-let seqd = squeeze "^__seq__"
-let over n = map (/ n)
-
+  s1
+    $ (# (amp 0.9 # octave 4))
+    $ (0.07 ~>) $ (stack . fmap ns) [["-4@3 -4@5"], ["8'maj7@2 ~ 8'6@5", "8'maj7@3 8'6@5", "8'maj7 8'6 9'maj7"]]
+    |+ n "<0!2 1 -4>" 
 
 do
   hush
 
+all id
+
 do
   setkey "c" "lydian"
-  sq $
+  setseq $
     somecyclesBy
       0.1
       (const 0)
       ("1" |* irand 6)
   -- sq $ ("1" |* irand 4)
-  setseq "1"
+  -- setseq "1"
   setF "basecps" 2.3
   setF "basecps" 1.2
   bars [3, 2, 3, 5, 8]
@@ -308,63 +291,313 @@ d1 "0*4"
 
 hush
 
-do
-  bars [4]
-  seqs "1"
-  all $ fast 2 . swingBy (1/19) 2
-  d8 $ "0*4"
-  s1
-    $ slow 4
-    $ (note . k 0 . stack) ["0@4 2@2 0@7 2@2 0", "~ 0@3 ~@5 0 ~@2 0@3 ~@3" |+ "[2,5,8]" |+ 7]
-    # octave 3 # amp 0.7
+-- ------------------------------------------------- ALVENARIA
 
-
-let breakpoints bps pat = map (flip zoom $ pat) $ zip ([0] ++ bps) (bps ++ [1])
-    bps = breakpoints
-    frag = bps
-
-
-
-
-show $ breakpoints [0.5] $ n "0*4"
-
-let indices indexer list = map (\index -> list!!index) indexer
-
-let drumdivision = seqd . indices [0,1,0] . breakpoints [7/16]
+-- chunks
+let barlens = over 2 [3,6,3,4,3,3,3,3,4]
+    nok key = note . k key
+    seqchunks chks = seqd . breakpoints (over (sum chks) . drop 1 . scanl (+) 0 $ chks)
 in do
-  -- @name alvenaria
-  hush
-  setF "basecps" 1
-  all $ id
-  bars $ over 2 $ [7,9,7]
-  setkey' 0 "0" "major"
-  setseq "<0 1>"
-  d1 $ drumdivision $ "0*4" # amp "[0.44 0.5]*2"
-  d2 $ drumdivision $ "~ ~@3 0@2 ~@2 ~@3 ~@2 0@2 ~@2"
-  d7 $ drumdivision $ "[0 ~]*8" # ccn (tr8sToneCCArray!!6) # ccv "[127 32]*2"
-  d8 $ drumdivision $ fast 4 $ "0*4" # amp ("6 3.5 4 5" |/ 10)
-  d9 $ drumdivision $ ((1/16) ~> "0@8 0@3 0@6")
-  s1
-    $ (|+ note (seqd [0,0,1]))
-    $ seqd
-    -- $ (++ [stack (note . (|+ "1") . k 0) "[2,5,8,11]" # octave 4])
-    $ indices [0,1,0]
-    $ breakpoints [7/16]
-    $ (note . k 0 . stack)
-      [ (1/16) <~ "0@2 ~@3 2@2 0 ~@6 2@2"
-      , "~ 0@3 ~@5 0 ~@2 0@3 ~@3" |+ "[2,5,8,11]" |+ 7
-      ]
-    # octave 3
+  -- @name sec2
+  all $ seqchunks barlens
+  -- @name Alvenaria A
+  hush 
+  trbank 121
+  setF "basecps" (118/120)
+  setkey' 0 "g" "mixolydian"
+  bars $ barlens
+  ch $ fast 8 $ sometimes (chop $ "<1 [1|2]>") $ "0*4" # amp ("5 3 4 4.5" |/ 10)
+  bd $ "0 ~ ~ ~ ~ 0 ~ ~ ~ 0 0 ~ ~ ~ ~ 0 0 ~ ~ ~ ~ ~ 0 ~ ~ ~ ~ ~ 0 ~ ~ ~"
+  sd $ "~ ~ ~ 0 ~ ~ ~ 0 ~ ~ ~ ~ [0 ~|~ 0] ~ ~ ~ ~ ~ 0 ~ ~ ~ ~ ~ 0 ~ ~ ~ ~ ~ 0"
+  rs $ fast 2 $ "~ 0 ~ 0? 0? ~ 0 0 0 ~ 0 0 0 ~ 0 0"
+  rs $ "0 0 0 ~ 0 ~ 0 ~ 0 0 0 ~ 0 ~ 0 0 ~ 0 ~ 0 0 ~ 0 ~ 0 0 ~ 0 ~ 0 0 ~"
+  cc $ "[~ ~ 0 ~ ~ ~ ~ ~]*2"
+  mt $ "[~ ~ ~ ~ ~ 0 ~ ~]*2"
+  -- setseq $ randcat [0,1,2,3]
+  setseq $ cat [0,1,2,3,4,5,6,7,8]
+  s3
+    $ nok 0 "0 7? 14? 4 ~ 0 ~ 4 ~ ~ -3 ~ ~ [4|-1] ~ 0 0 ~ ~ 4 ~ ~ -3 ~ ~ 4 ~ ~ 0 ~ ~ ~"
+    # amp 0.7
+    # octave 2
+  s2 $ nok 0 ("[0 ~ ~ 0 ~ ~ ~ 0 ~ ~ ~ 0 ~ ~ ~ ~]*2" |+ "[-3,0,2,6]")
+    # octave 4 # amp 0.4
 
-do
-  -- @name stutter
-  setseq "<0 [0|1|1|2]>"
+
+setseq $ cat [0, randcat [1, 2, 3, 8, 7]]
+
+let barlens = [3,6,3,4,3,3,3,3,4]
+    breaks =  drop 1 . scanl (+) 0 $ barlens
+    drumdivision = seqd . breakpoints (over 32 breaks)
+in do
+  setseq $ "0" |+ irand 9
+  setF "brak" 5
+  all $ slow 8 . sometimes (chop $ irand "^brak")
 
 do
   -- @name crazy
-  setseq "[0|1|2]"
+  setF "brak" 64
+
+do
+  -- @name resume
+  setF "brak" $ 1 |+ irand 4
+  setseq $ cat [0,1,2,3,4,5,6,7,8]
+
+do
+  -- @name resume 2
+  setF "brak" 128
+
+
+-- chunks
+-- update breakpoints to use chunks (drop 1 . scanl (+) 0)
+let barlens = [4, 4, 1]
+    nok key = note . k key
+    seqchunks chks = seqd . breakpoints (over (sum chks) . drop 1 . scanl (+) 0 $ chks)
+in do
+  -- @name sec2
+  all $ seqchunks barlens
+  setseq "<0 1 2>"
+  setF "basecps" (118/120)
+  bars $ barlens
+  ch $ "0 ~ 0 0 0 ~ 0 0   0 0 0 0 0 ~ 0 0 0 0"
+  bd $ "0 ~ ~ ~ ~ 0 0 0   0 ~ ~ ~ 0 ~ ~ ~ 0 ~"
+  sd $ "~ 0 ~ ~ 0 ~ ~ ~   ~ ~ 0 ~ ~ ~ 0 ~ ~ ~"
+  sd $ "0 ~ ~ ~ 0 ~ ~ ~   0 ~ ~ 0 ~ ~ 0 ~ ~ ~"
+  rs $ sometimes (chop "^brak") "0 0 0 0 0 0 0 0*2 0 0 0 0 0 0 0 0*2 0 0"
+    # amp ("5 4 4.3 4.6 5 4 4.2 4.6  5 4 4.5 5 4 4.5 5 4 4.2 4.6" |/ 13)
+  setkey' 0 "g" "melodicMajor"
+  s2 $ nok 0 ("0 ~@2 0 ~@4 1@3 ~@1 1@2 ~ 3@2 ~" |+ "[-3,0,2,6 7]")
+    # amp 0.5 # octave 3
+  s3
+    $ nok 0 "0 ~@2 0 ~@2 7@2 3@4 1@4 -3@2"
+    # amp 0.7
+    # octave 2
+
+let barlens = [4, 4, 1]
+    seqchunks chks = seqd . breakpoints (over (sum chks) . drop 1 . scanl (+) 0 $ chks)
+in do
+  -- @name hold
+  -- @mute all tr, slowly rise bd, ch
+  setF "brak" 1
+  setF "revv" 0
+  setF "skip" 0
+  setseq $ "0"
+  all $ seqchunks barlens
+    . rarely (chop "^brak")
+    . sometimesBy "^skip" (# octave (irand 7 |+ 4))
+    . sometimesBy "^revv" (rev . fast 8)
+
+
+let barlens = [4, 4, 1]
+    seqchunks chks = seqd . breakpoints (over (sum chks) . drop 1 . scanl (+) 0 $ chks)
+in do
+  -- @name swivel
+  -- @mute all tr, slowly rise bd, ch
+  setF "brak" $ irand 7 |+ 1
+  setF "revv" 0
+  setF "skip" 0
+  setseq $ someCyclesBy 0.1 (const 2) "0"
+
+
+let barlens = [4, 4, 1]
+    seqchunks chks = seqd . breakpoints (over (sum chks) . drop 1 . scanl (+) 0 $ chks)
+in do
+  -- @name fuck it
+  -- @mute all tr, slowly rise bd, ch
+  setF "revv" $ slow 16 "<0 0.2>"
+  setF "skip" $ slow 16 "<0 0.2>"
+  setseq $ someCyclesBy 0.1 (const $ "0" |+ irand 2) "0"
+
+
+setseq $ cat [0,1,2]
 
 
 do
-  -- @name push
-  setseq $ ("1" |* irand 3)
+  setF "revv" 0
+  setF "skip" 0
+
+
+
+hush
+
+
+
+
+
+
+
+
+
+
+
+--- --------------- Mamota
+
+let seqchunks chks = seqd . breakpoints (over (sum chks) . drop 1 . scanl (+) 0 $ chks)
+    keys ks = zipWith nok ks
+
+
+do
+  -- @mamota (rua da baixa verde)
+  hush
+  trbank 123
+  setkey' 0 "d" "mixolydian"
+  setkey' 1 "d" "minor"
+  all $ slow (8*3)
+  setF "basecps" (118/120)
+  setseq "<0 1 2 3 4>"
+  bars $ [2,2,2,2,4]
+  all $ slow 2 . seqchunks [2,2,2,2,4]
+  s2
+    $ fastcat [
+      nok 0 "[-3 0 2 7]", nok 0 "[-3 0 3 7]",
+      nok 1 "[-3 1 2 4] ", nok 0 "[-3 6 5 4]",
+      nok 0 "3 4@2 0 ",
+      nok 0 " [3@2 7@2 | 1 5 3@2]"
+    ] # sus 1 # octave 5
+  bd $ fast 3 $ "0 ~ 0 0"
+  sd $ fast 3 $ "~@3 0 ~@2 0@2"
+  ch $ fast 3 $ "0*8"
+  rs $ "0 ~ 0 ~ ~ 0 ~ ~ . ~ 0 ~ ~ ~ 0 ~ ~ . 0 ~ 0 ~ ~ 0 ~ ~"
+  hc $ fast 3 $ "~ ~ 0 ~ 0 ~ ~ ~"
+  rc $ fast 3 $ "0*4"
+
+do
+  -- @name chords
+  s1
+    $ fastcat [
+      nok 0 "[-7,-3,4,7] [-6,1,3,7]",
+      fastcat [nok 1 "[0,2,4,7]", nok 0 "[-1,2,6,7]"],
+      stack [nok 1 "[-4,2]", nok 0 "[5,7]"]
+    ]
+    # octave 4
+
+do
+  -- @name bass
+  s3
+    $ fastcat [
+      nok 0 "0@3 0", nok 0 "1@3 1",
+      nok 1 "2@3 2", nok 0 "4@3 4",
+      nok 0 "3@3 3",
+      nok 0 "[7 5 3 4 | -1 0 -1 ~]"
+    ]
+      # sus 1
+      # octave 2
+      # amp 0.54
+
+do
+  -- @name mel
+  s1 silence 
+  s2 silence
+  s3 silence
+  s4 $ nok 0 "1@2 0 -3   1@2 0 -3   1 0 -3 1 ~ 0@2 -1   -2 -1 0@2  -4 -3 -2@2"
+     # octave 6
+
+do
+  -- @name stuck
+  setseq "0"
+  -- setseq $ "0" |+ irand 4
+  all $ slow 2 . seqchunks [2,2,2,2,4]
+  
+
+do
+  setseq $ "0" |+ irand 4
+  setkey' 0 ("d" |+ "[0 | -2 | -4 | -5]/4") $ "[mixolydian | minor | harmonicMinor]"
+  setkey' 1 ("d" |+ "[0 | -2 | -4 | -5]/4") $ "[mixolydian | minor | harmonicMinor]"
+
+
+do
+  -- @name crazy
+  all $ somecyclesBy 0.4 (rev)
+        . somecyclesBy 0.2 (shuffle 4)
+        . sometimesBy 0.1 (chop "[4 1]" . (# amp 0.4))
+        . slow 2
+        . seqchunks [2,2,2,2,4]
+
+do
+  setkey' 0 ("d" |+ "[0 | -2 | -4]/4") $ "[mixolydian | minor | harmonicMinor]"
+  setseq $ randcat [0,1,2,3,4]
+
+do
+  -- @name finish
+  setseq "<1 2 4>"
+  setkey' 0 ("d" |- 1) $ "phrygian"
+  setkey' 1 "d" $ "lydian"
+  all $ slow 2    
+      . somecyclesBy 0.2 rev
+      . seqchunks [2,2,2,2,4]
+
+
+hush
+
+
+
+do
+  -- mamota 2 (rua do rato)
+  hush
+  bars [7,7]
+  all $ seqchunks [7,7]
+  setseq "<0 1>"
+  setF "chop" 0
+  setN "off" 0
+  rc $ "[0 ~]*7"
+  ch $ fast 7 $ "0*2" # amp "0.5 0.4"
+  lt $ sometimesBy "^chop" (chop $ fast 14 "[3|2]") $ "~@3 0 0 ~ ~ ~ ~@3 0 0 ~"
+  mt $ sometimesBy "^chop" (chop $ fast 14 "[3|2]") $ "0@3 ~ ~ ~ 0 0 ~@3 ~ 0 ~"
+  ht $ sometimesBy "^chop" (chop $ fast 14 "[3|2]") $ "0!3 ~ ~ 0 ~ ~ 0!3 0? ~ 0"
+    # amp ("[5 4] [5 6] [5 4]!2 [4.3 6 | 5 4] [4.3 4]!2" |/ 10)
+  hc $ "0@3 0@3 0@4 0@2 0@2"
+  rs $ "[[~@2 0!2]!3]@6 ~"
+  setF "synthskip" 0 
+  setF "s4amp" $ (range 0.42 0.5 rand)
+  s4
+    -- $ sometimes (chop $ irand 5)
+    $ sometimesBy (rev "^synthskip") (chop "[2|4]*7" . (|+ octave "[-1|0|1]*28"))
+    $ note "-1? 3 6 -6 -4 -3 1 4 8 6 -8? 3 1 -6?"
+    # octave "[6,5]"
+    # sus (rarely (const 0.2) 0.05)
+    # amp "^s4amp"
+  -- bd "~ 0 0 ~ 0*2 0 0 0 ~ 0*2 0 ~ 0 0"
+  bd "0 ~ ~ 0 ~ ~ ~ 0 ~ ~ ~ 0 0 ~"
+  sd $ "0@3 0 ~@4 0@3 0@3"
+
+do
+  -- @name arr
+  setF "s4amp" 0
+  s1 $ note " 3@2 -1@2 -2@2 -4 1@2 -4@2 -6@3"
+  s3 $ note " -1@2 3@2 -6@2 -4 -3@2 1@2 -8@2 -6?" # octave 3
+
+do
+  s2 $ note " [-1,3,6]@2 [-1,3]@2 [-6,-2]@2 [-4,-1] [-3,1]@2 [1, 4]@2 [-6,-4,-1,3]@3" # amp 0.48
+
+do
+  setF "chop" 0.3
+
+do
+  setF "chop" 0.3
+  setF "synthskip" 0.1
+  setF "s4amp" $ (range 0.42 0.5 rand)
+  s3 $ note "-1@3 -6@4 -3@4  -8@2 ~" # octave 3 # amp 1
+
+do
+  s3 $ note "-1@3 -6@4 -3@4  -8@2 ~" # octave 3 # amp 1
+
+setF "chop" 0.1
+
+hush
+
+
+
+
+
+
+
+setF "basecps" 1
+
+all $ slow 2
+  . sometimesBy 0.1 (fast 8 . (3 octave 7))
+  -- . rarely ((chop $ 8) . (|- octave 1))
+  . sometimes (shuffle 4)
+  . (# sus 1)
+
+
+
+hush

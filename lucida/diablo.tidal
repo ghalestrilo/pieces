@@ -1,0 +1,35 @@
+
+trs [ fast 2 $ "0" ]
+
+
+
+let trgroup chans pats = mapM_ (\(pat,idx) -> tr idx pat) $ zip pats chans
+    g1 = trgroup [0,1]
+    g2 = trgroup [2,3,4]
+    g3 = trgroup [5,6]
+    g4 = trgroup [7,8]
+    g5 = trgroup [9,10]
+
+
+hush
+
+trs ["0", "~ 0", "~ 0 ~ ~", "~ ~ ~ 0"]
+
+
+setcps 0.82
+
+
+
+
+
+all $ 
+
+do
+  -- @name diablobeat
+  all $ swingBy 0.08 4 . (every 2 . rarely) (shuffle 4)
+  all $ swingBy 0.08 4 
+  g1 [slow 2 "0 ~ ~ 0 ~ 0 ~ 0", "~ 0"]
+  g2 ["~ <~ 0> ~ ~", "~ . ~ <0 ~> ~ ~", "~ . ~ ~ <0 ~> ~"]
+  g3 [ "[~@3 0]/2", "0/2" ]
+  g4 ["0*8",  "[~ <0 ~>] ~ ~ ~"]
+  g5 ["~ <0 ~>", "~ <~ 0 ~ ~>"]

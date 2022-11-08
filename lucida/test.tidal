@@ -1,0 +1,85 @@
+
+
+-- chunks
+let barlens = over 2 [3,6,3,4,3,3,3,3,4]
+    nok key = note . k key
+    seqchunks chks = seqd . breakpoints (over (sum chks) . drop 1 . scanl (+) 0 $ chks)
+    seqq = seqchunks barlens
+in do
+  -- @name sec2
+  all $ seqchunks barlens
+  -- @name Alvenaria A
+  hush 
+  trbank 121
+  setF "basecps" (118/120)
+  setkey' 0 ("g" |+ (slow 2 . slowcat``) [0, -3, -3, 0, -4, -3, 0])  "major"
+  bars $ barlens
+  ch $ fast 8 $ sometimes (chop $ "<1 [1|2]>") $ "0*4" # amp ("5 3 4 4.5" |/ 10)
+  bd $ "0 ~ ~ ~ ~ 0 ~ ~ ~ 0 0 ~ ~ ~ ~ 0 0 ~ ~ ~ ~ ~ 0 ~ ~ ~ ~ ~ 0 ~ ~ ~"
+  sd $ "~ ~ ~ 0 ~ ~ ~ 0 ~ ~ ~ ~ [0 ~|~ 0]@2 ~ ~ ~ ~ ~ 0 ~ ~ ~ ~ ~ 0 ~ ~ ~ ~ ~ 0"
+  rs $ fast 2 $ "~ 0 ~ 0? 0? ~ 0 0 0 ~ 0 0 0 ~ 0 0"
+  rs $ "0 0 0 ~ 0 ~ 0 ~ 0 0 0 ~ 0 ~ 0 0 ~ 0 ~ 0 0 ~ 0 ~ 0 0 ~ 0 ~ 0 0 ~"
+  cc $ "[~ ~ 0 ~ ~ ~ ~ ~]*2"
+  mt $ "[~ ~ ~ ~ ~ 0 ~ ~]*2"
+  -- setseq $ randcat [0,1,2,3]
+  setseq $ cat [0,1,2,3,4,5,6,7,8]
+  -- s3
+  --   $ nok 0 "0 7? 14? 4 ~ 0 ~ 4 ~ ~ -3 ~ ~ [4|-1] ~ 0 0 ~ ~ 4 ~ ~ -3 ~ ~ 4 ~ ~ 0 ~ ~ ~"
+  --   # amp 0.7
+  --   # octave 2
+  s2 $ nok 0 (fast 4 $ struct "tfftfffff" "0@3 0@5" |+ "[-3,0,2,6,9]" |+ (slow 2 . randcat) [0, -3, -3, 0, -4, -3, 0])
+    # octave 4 # amp 0.4
+
+
+
+bd $ fast 2 "0 ~ <0 ~> ~@4 0"
+
+bd $ fast 2 "0 ~ ~ 0 ~ 0 ~ ~"
+sd $ fast 4 "~ . 0 ~@7"
+
+hush
+
+all $ slow 4
+
+
+let trn pat idx = s (fmap show pat) # n 0
+      # ccn (tr8sToneCCArray!!idx)
+      # ccv (fmap (fromIntegral . toInteger . floor . (max 0) . (min 127) . (* 64) . (/ 12) . toRational) pat :: Pattern Double) # s "tr"
+      -- # ccv ((range 127 0) $ fmap (fromIntegral . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double) # s "tr"
+in rc $ trn (fast 8 $ scale "major" $ "0 2 4 7" |+ 7) 0
+
+
+
+
+
+do
+  -- @name alvenaria 2 tema (pife + percussa)
+  all $ slow 4
+  setkey' 0 "g" "major"
+  hush
+  ch $ fast 8 $ sometimes (chop $ "<1 [1|2]>") $ "0*4" # amp ("5 3 4 4.5" |/ 10)
+  bd $ "0 ~ ~ ~ ~ 0 ~ ~ ~ 0 0 ~ ~ ~ ~ 0 0 ~ ~ ~ ~ ~ 0 ~ ~ ~ ~ ~ 0 ~ ~ ~"
+  sd $ "~ ~ ~ 0 ~ ~ ~ 0 ~ ~ ~ ~ [0 ~|~ 0]@2 ~ ~ ~ ~ ~ 0 ~ ~ ~ ~ ~ 0 ~ ~ ~ ~ ~ 0"
+  g5 $ fast 2 <$> ["0 ~ ~ 0 ~ ~ ~ ~ ~ ~ 0 0 ~ ~ ~ 0", "~ 0 0 ~ 0 0 ~ ~ 0 0 ~ ~ ~ 0 0 ~"]
+  -- g5 $ ["0 ~ ~ 0 ~ ~ ~ ~ ~ ~ 0 0 ~ ~ ~ 0", "~ 0 0 ~ 0 0 ~ ~ 0 0 ~ ~ ~ 0 0 ~"]
+  -- setseq $ randcat [0,1,2,3]
+  -- s3
+  --   $ nok 0 "0 7? 14? 4 ~ 0 ~ 4 ~ ~ -3 ~ ~ [4|-1] ~ 0 0 ~ ~ 4 ~ ~ -3 ~ ~ 4 ~ ~ 0 ~ ~ ~"
+  --   # amp 0.7
+  --   # octave 2
+  
+  s2 $ nok 0 (fast 4 $ struct "tfftfffff" "0@3 0@5" |+ "[-3,0,2,6,9]" |+ (slow 2 . slowcat) [0, -3, -3, 0, 0, -4, -3, 0])
+    # octave 4 # amp 0.4
+  s2 silence
+  -- hc $ trn (scale "major" $ (|+ irand 7) $ fast 2 $ stack ["0 ~ ~ 0 ~ ~ ~ ~ ~ ~ 0 0 ~ ~ ~ 0", "~ 0 0 ~ 0 0 ~ ~ 0 0 ~ ~ ~ 0 0 ~"]) 0
+  s4 $ (scale "major" $ (|+ irand 7) $ fast 2 $ stack ["0 ~ ~ 0 ~ ~ ~ ~ ~ ~ 0 0 ~ ~ ~ 0", "~ 0 0 ~ 0 0 ~ ~ 0 0 ~ ~ ~ 0 0 ~"])
+  s4 $ (scale "mixolydian" $ fast 2 $ "7 4 3 2 ~ 6 4 3 2 -3 -2 0 4 2 ~ ~")
+  s4
+    $ (scale "mixolydian" $ sometimes (|+ irand 8)
+    $ fast 2 $ "7 4 3 2 ~ 2 6 2 5 -3 -2 0 4 2 ~ ~")
+    # octave 4
+
+hush
+
+  hc
+    (scale "mixolydian" $ fast 2 $ "7 4 3 2 ~ 2 6 2 5 -3 -2 0 4 2 ~ ~")
