@@ -275,6 +275,8 @@ in
         ]
       )
 
+
+
 let trpitch pat = p "tr2"
                   $  stack [
                     n pat # s "tr" # midichan 3,
@@ -297,6 +299,37 @@ in
         "[0 1 2 0 1 -2 1 2 | 0 1 2 3 6 5 3 2]"
       ])
       |+ 12
+
+
+
+let trp pat = stack [
+                  n pat # s "tr",
+                  n pat # s "loopback" # midichan 0,
+                  (1 <~) $ ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double)
+                  # stack [s "tr", s "loopback"]
+                  # midinote (tr8sChanArray!!5)
+                  # ccn (tr8sToneCCArray!!5)
+                ]
+
+    trn pat = [\idx -> ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double) # ccn (tr8sToneCCArray!!idx)]
+    trdecay val pats = pats ++ [\idx -> ccn val # ccv idx]
+    trd = trdecay
+in 
+  do
+    hush
+    tr 2 $ trn (scale "major" $ run 10)
+
+    mt $ trp (k 0 $ rev $ run 10)
+
+let trm idx pats = p (toID $ "tr8s" ++ show (tr8sToneCCArray!!idx))
+      $ (stack . map (\f -> f idx)) pats
+      # stack [ s "tr" # midichan 9, s "loopback" # midichan 0 ]
+      # midinote (tr8sChanArray!!idx)
+    -- trn pat = [\idx -> n pat, \idx -> ccv (("^delayy" <~) $ fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double) # ccn (tr8sToneCCArray!!idx)]
+    trn pat = [\idx -> ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double) # ccn (tr8sToneCCArray!!idx)]
+    trdecay val pats = pats ++ [\idx -> ccn val # ccv (tr8sDecayCCArray!!idx)]
+    trd = trdecay
+
 
 
 let trp pat = p "tr3"

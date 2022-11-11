@@ -17,9 +17,9 @@ let tonal root mode = note . (|+ root) . scale mode
 do
   -- @setup
   setcps 0.69
-  setkey (-3) "lydian"
+  setkey' 0 (-3) "lydian"
   -- all $ (|* speed 0.8)
-  all ((|* speed 0.9) . (# bus) . (|* gain 1.04))
+  all id
 
 
 do
@@ -27,6 +27,7 @@ do
   resetCycles
   hush
   p "drums" $ h 1 $ stack
+
     [ fast 2 $ n "5*2" # gain "1 0.82"
     , n "<[13!2 [~@3 13]@2] [~ 13 ~@1.5 13@0.5] [13!2 ~ [~ 13]]>"
     , n  "<[~ 20] [~ [21*3] ~@2 . 20]>" # gain (range 0.93 1.1 $ rand)
@@ -37,14 +38,47 @@ do
     # lpf 17000
     # resonance 0.1
     |* gain 1.1
-  mel [cat phrase]
 
-ch [cat introchords]
 
 do
+  all id
+  ch $ fast 2 $ "0*2" # amp "0.5 0.43"
+  bd $ "<[13!2 [~@3 13]@2] [~ 13 ~@1.5 13@0.5] [13!2 ~ [~ 13]]>" # amp 0.45
+  sd $ "[~ 20]" # amp 0.4
+  oh $ degradeBy "0 . 1 0@7" $ stack ["<[~ ~] [~ [0*3] ~@2 . ~ ]>", degrade $ "0*8" ] # amp (range 0.4 0.5 rand)
+  trm 3 $ trn $ fast 2 $ (|+ 3) $ k 0 $ cat ["9 0", "2 3 4 5", "6 0", "2 3 4 5", "8 6 4 2"]
+  trm 4 $ trn $ fast 2 $ (|+ 3) $ k 0 $ cat ["9 0", "2 3 4 5", "6 0", "2 3 4 5", "8 6 4 2"]
+  trm 2 $ trn
+    $ fast 2 
+    $ (|+ 3)
+    $ (k 0 . cat)
+      [ "0", "7!2 ~@2"
+      , "0", "7!2 6!2"
+      , "~ 5 4 2", "4 5 6 1"
+      ]
+    
+
+do
+  reface
+    $ fast 2
+    $ (tonal (-3) "chromatic" . cat)
+    [ "0'maj7", "~"
+    , "0'maj7", "~"
+    ,  "<4'min7 -1'min7>", (cat ["5" |+ "[0,4,10,14]", "-1" |+ "[0,3,7,11]"]) ]
+    # octave 4
 
 
+do
+  all $ whenmod 2 1 $ sometimesBy "0 1" (shuffle 8 . chop 2)
 
+do
+  all $ whenmod 2 1 $ often (shuffle 8 . chop (segment 4 $ irand 8))
+
+do
+  all
+    $ rarely (shuffle 8 . chop (segment 8 $ (irand 32)))
+
+hush
 
 -- TODO: Break from melody, lower volume, only chords, maybe not even drums?
 
@@ -77,6 +111,7 @@ do
       -- bes = octave 3 # s "supersquare" # cut 1 # bus # orbit 2 # lpf 400 # hpf 90 # resonance 0.1 # gain 0.9
       bes = s "mc" # midichan 5
   mel [cat phrase]
+  
   p "bass" $ fast 2
     $ (t . cat)
       [ "0", "7!2 ~@2"
@@ -84,12 +119,16 @@ do
       , "~ 5 4 2", "4 5 6 1"
       ]
       # bes
-  p "chords" ## [kbdi # sus 1.7 # bus # octave 4 # orbit 1 # velocity 0.4]
+
+  reface
     $ fast 2
+
     $ (tonal (-3) "chromatic" . cat)
-    $ l "0'maj7" "~"
-        "0'maj7" "~"
-        "<4'min7 -1'min7>" (cat ["5" |+ "[0,4,10,14]", "-1" |+ "[0,3,7,11]"])
+    [ "0'maj7", "~"
+    , "0'maj7", "~"
+    ,  "<4'min7 -1'min7>", (cat ["5" |+ "[0,4,10,14]", "-1" |+ "[0,3,7,11]"]) ]
+    # octave 4
+
   p "drums" $ (n . stack)
     [ "5*4"
     , "<[13!2 [~@3 13]@2] [~ 13 ~@1.5 13@0.5] [13!2 ~ [~ 13]]>"

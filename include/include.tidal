@@ -142,8 +142,12 @@ do
   bars [4, 3, 4]
   setI "__seq__" "<0 1 0 0 1 2>"
   setkey "c" "kumai"
+  setkey' 0 "c" "kumai"
+
+let fstack fs pat = stack $ map (\f -> f pat) fs
 
 do
+  all id
   trbank 119
   -- @name test
   -- trs [ ns [0, 0, "0 0 ~ 0", "0@3 0 .~ 0"]
@@ -152,12 +156,31 @@ do
   --   , rarely (chop 3)  $ ns ["0*4", "0*3", "0*4", "0*4"]
   --   , ns ["0@5 0@3", "~ 0", "0*2", "0*4 . 0"] # t (irand 7 |- 3)
   --   ]
-  d1 $ ns [0, 0, "0 0 ~ 0", "0@3 0 .~ 0"]
-  d2 $ ns ["~ 0", "~ 0", "~ [~ 0] . 0", "~ 0"]
-  d8 $ ns ["[~ 0!2 ~]*2", "0*3", "0*4", "~ 0!2 ~ . ~@3 ~"]
-  d6 $ rarely (chop 3)  $ ns ["0*4", "0*3", "0*4", "0*4"]
+  bd $ ns [0, 0, "0 0 ~ 0", "0@3 0 .~ 0"]
+  -- sd $ fstack [w (amp 0.5), density 2 . shuffle 4 . w (amp 0.2)] $ ns ["~ 0", "~ 0", "~ [~ 0] . 0", "~ 0"]
+  sd $ ns ["~ 0", "~ 0", "~ [~ 0] . 0", "~ 0"]
+  ch $ ns ["[~ 0!2 ~]*2", "0*3", "0*4", "~ 0!2 ~ . ~@3 ~"]
+  rs $ rarely (chop 3)  $ ns ["0*4", "0*3", "0*4", "0*4"]
   d4 $ ns ["0@5 0@3", "~ 0", "0*2", "0*4 . 0"] # t (irand 7 |- 3)
   cc $ ns ["0*2", "0 ~ 0", "0*2"]
+
+let trm idx pat = p (toID $ "tr8s" ++ show (tr8sToneCCArray!!idx))
+      $ pat
+      # stack [ s "tr" # midichan 9, s "loopback" # midichan 0 ]
+      # midinote (tr8sChanArray!!idx)
+    chm pat = ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double) # ccn (tr8sToneCCArray!!8)
+    chdecay decaypat pat = stack [pat, ccv decaypat # ccn 62]
+
+    chd = 
+
+let chdecay decaypat pat = stack [pat, pat |> ccv decaypat # ccn (tr8sDecayCCArray!!7)]
+in
+  trm 7
+    $ chdecay (often (const 20) $ (irand 130 |+ 109))
+    $ ns ["[~ 0!2 ~]*2", "0*3", "0*4", "~ 0!2 ~ . ~@3 ~"]
+
+
+trm 8 $ (trm $ k 0 $ seqd ["[~ 0!2 ~]*2", "0*3", "0*4", "~ 0!2 ~ . ~@3 ~"])
 
 do
   -- @name alt
@@ -173,30 +196,32 @@ all $ id
 
 s3 $ nok 0 "0" # amp 0.5
 
-setkey' 0 "a" "minor"
 
-s3 $ ((nok 0 $ seqd ["0", "-2 4", "0"]) |- note "<0!3 3!3>")
-  # amp 0.5 # octave 3
+do
+  -- @name bass
+  setkey' 0 "a" "minor" 
+  trm 2 $ (trn . (|+ 2) .  k 0) $ seqd ["0", "-2 4", "0"]
 
-s3 $ ((nok 0 $ seqd ["0", "-2 4", "0"]) |- note "<0!3 3!3>")
-  # amp 0.5 # octave 3
 
-s3
-  $ ((nok 0 $ seqd ["0", "-2 4", "0"] |- "<0!6 2!6>") |- note "<0!3 3!3 0!3 0!3>")
-  # amp 0.5
-  # octave 3
+-- s3 $ ((nok 0 $ seqd ["0", "-2 4", "0"]) |- note "<0!3 3!3>")
+--   # amp 0.5 # octave 3
 
-s3
-  $ ((nok 0 $ seqd ["0", "-3", "0"] |+ "<0!3 1!3 1!3 -1!3>" - 2) |+ note "<0!3 0!3 2!3 0!3>")
-  # amp 0.4
-  # octave 2
+-- s3
+--   $ ((nok 0 $ seqd ["0", "-2 4", "0"] |- "<0!6 2!6>") |- note "<0!3 3!3 0!3 0!3>")
+--   # amp 0.5
+--   # octave 3
 
-s4 silence
+-- s3
+--   $ ((nok 0 $ seqd ["0", "-3", "0"] |+ "<0!3 1!3 1!3 -1!3>" - 2) |+ note "<0!3 0!3 2!3 0!3>")
+--   # amp 0.4
+--   # octave 2
 
-s4
-  $ (nok 0 $ seqd ["0", "0", "0"] |+ ("<0!3 1!3 2!3 -1!3>" |+ "[-3,0,2,[4|3]]"))
-  # amp 0.1
-  # octave 4
+-- s4 silence
+
+-- s4
+--   $ (nok 0 $ seqd ["0", "0", "0"] |+ ("<0!3 1!3 2!3 -1!3>" |+ "[-3,0,2,[4|3]]"))
+--   # amp 0.1
+--   # octave 4
 
 
 
