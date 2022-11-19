@@ -71,7 +71,10 @@ do
     ++ fmap (k 1) ["-1", "0"])
     # amp 0.8
     # octave 3
-  
+
+
+
+setcps (120/120/2)
 
 do
   -- @name ASTRO REPRISE
@@ -87,9 +90,10 @@ do
   setkey' 0 (-6) "lydian"
   setkey' 1 (-1) "lydian"
   setkey' 2 (-2) "mixolydian"
-  s2
+
+  trm 3 $ trn $ (|+ 12)
     $ fast 2
-    $ (note . cat)
+    $ (cat)
     (fmap (k 0)
       [ "0@5 0 ~@2" |+ 9
       , "0@5 0 ~@2" |+ 9
@@ -101,6 +105,7 @@ do
       , "~"
       ]
     )
+
     # octave 5
 
 do
@@ -164,10 +169,13 @@ do
   -- @name hold
   hush
   setF "plink" 0
-  s3 $ (note . k 0) "0(3,8) . ~@2 0@3 0@3"
+
+  trm 2 $ trn $ (k 0) "0(3,8) . ~@2 0@3 0@3"
+    
     # octave 3
     # amp 0.7
     # sus 0.1
+
   s1
     $ fast 2
     $ (note . cat . fmap (+| "0@5 0 ~@2"))
@@ -178,16 +186,18 @@ do
     ]
     # octave 5
     # amp 0.3
-  s2
+
+  trm 4 $ trn
     $ fast 2
-    $ sometimesBy "^plink" (# (octave (5 |+ irand 3) # sus 4))
+    -- $ sometimesBy "^plink" (# (octave (5 |+ irand 3) # sus 4))
     -- $ (note . cat . fmap (k 0) . fmap (rarely (|+ ("[1 0@3]*4" |* (irand 8) |- 4))))
-    $ (note . cat . fmap (k 0))
+    $ (cat . fmap (|+ 2) . fmap (k 0))
     [
       "2 4 5 2 4 0 4 5"
     , "6 8 9 6 8 -4 -2 -1"
     , "1 2 3 1 2 -1 2 5"
     ]
+
     # sus 1.4
     # amp 0.6
 
@@ -212,6 +222,8 @@ do
   d2 $ "[~ 0]*2"
   d8 $ "0*16"
 
+hush
+
 do
   -- @name full
   setF "plink" 0
@@ -222,7 +234,7 @@ do
   d8 $ "0*16" # amp "[0.37 0.1]*8"  
   d1 $ "0  ~ ~ 0? ~@4. [~ 0] 0 ~ [~ 0]"
   -- d3 $ fast 2 $ n "~ 0 0 ~"
-  s2
+  lt
     $ fast 2
     $ sometimesBy "^plink" (# (octave (5 |+ irand 3) # sus 4))
     $ (note . cat)
@@ -252,98 +264,112 @@ do
     # sus 0.1
     # amp 0.8
 
-
 -- EXPERIMENT
-let trp pat = p "tr"
-                  $  stack [
-                    n pat # s "tr" # midichan 2,
-                    n pat # s "loopback" # midichan 0,
-                    ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double)
-                    # stack [s "tr", s "loopback"]
-                    # midinote (tr8sChanArray!!2)
-                    # ccn (tr8sToneCCArray!!2)
-                  ]
-in
-  do
-    trp
-      $ fast 2
-      $ cat
-        ([ k 0 "0(3,8)"
-        , k 0 "[~@2 0 ~@2 0 ~@2 | [0 ~] [-3 ~] [0 ~] ~]"
-        , k 0 $ "0(3,8)" |+ 1
-        , k 1 "~@2 0 ~@2 4 ~@2"
-        ]
-      )
+-- let trp pat = p "tr"
+--                   $  stack [
+--                     -- n pat # s "tr" # midichan 2,
+--                     n pat # s "loopback" # midichan 2,
+--                     ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double)
+--                     # stack [s "tr", s "loopback"]
+--                     # midinote (tr8sChanArray!!2)
+--                     # ccn (tr8sToneCCArray!!2)
+--                     # midibend (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double)
+--                   ]
+-- in
+--   do
+--     trp
+--       $ fast 2
+--       $ cat
+--         ([ k 0 "0(3,8)"
+--         , k 0 "[~@2 0 ~@2 0 ~@2 | [0 ~] [-3 ~] [0 ~] ~]"
+--         , k 0 $ "0(3,8)" |+ 1
+--         , k 1 "~@2 0 ~@2 4 ~@2"
+--         ]
+--       )
+
+setcps 1
+
+-- let trpitch pat = p "tr2"
+--                   $  stack [
+--                     n pat # s "tr" # midichan 3,
+--                     n pat # s "loopback" # midichan 2,
+--                     ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double)
+--                     # stack [s "tr", s "loopback"]
+--                     # midinote (tr8sChanArray!!3)
+--                     # ccn (tr8sToneCCArray!!3)
+--                   ]
+-- in
+--   trpitch
+--       $ fast 2
+--       $ cat
+--       (
+--         fmap (k 0) [
+--         "2 4 5 [2|-1] 4 0 4 5"
+--       , "6 8 9 6 8 -4 -2 -1"
+--       , "1 2 3 1 2 -1 1 2"
+--       ] ++ fmap (k 1) [
+--         "[0 1 2 0 1 -2 1 2 | 0 1 2 3 6 5 3 2]"
+--       ])
+--       |+ 12
 
 
 
-let trpitch pat = p "tr2"
-                  $  stack [
-                    n pat # s "tr" # midichan 3,
-                    n pat # s "loopback" # midichan 1,
-                    ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double)
-                    # stack [s "tr", s "loopback"]
-                    # midinote (tr8sChanArray!!3)
-                    # ccn (tr8sToneCCArray!!3)
-                  ]
-in
-  trpitch
-      $ fast 2
-      $ cat
-      (
-        fmap (k 0) [
-        "2 4 5 [2|-1] 4 0 4 5"
-      , "6 8 9 6 8 -4 -2 -1"
-      , "1 2 3 1 2 -1 1 2"
-      ] ++ fmap (k 1) [
-        "[0 1 2 0 1 -2 1 2 | 0 1 2 3 6 5 3 2]"
-      ])
-      |+ 12
+-- let trp pat = stack [
+--                   n pat # s "tr",
+--                   n pat # s "loopback" # midichan 0,
+--                   (1 <~) $ ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double)
+--                   # stack [s "tr", s "loopback"]
+--                   # midinote (tr8sChanArray!!5)
+--                   # ccn (tr8sToneCCArray!!5)
+--                 ]
 
+--     trn pat = [\idx -> ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double) # ccn (tr8sToneCCArray!!idx)]
+--     trdecay val pats = pats ++ [\idx -> ccn val # ccv idx]
+--     trd = trdecay
+-- in 
+--   do
+--     hush
+--     tr 2 $ trn (scale "major" $ run 10)
+--     mt $ trp (k 0 $ rev $ run 10)
 
+-- let trm idx pats = p (toID $ "tr8s" ++ show (tr8sToneCCArray!!idx))
+--       $ (stack . map (\f -> f idx)) pats
+--       # stack [ s "tr" # midichan 9, s "loopback" # midichan 0 ]
+--       # midinote (tr8sChanArray!!idx)
+--     -- trn pat = [\idx -> n pat, \idx -> ccv (("^delayy" <~) $ fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double) # ccn (tr8sToneCCArray!!idx)]
+--     trn pat = [\idx -> ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double) # ccn (tr8sToneCCArray!!idx)]
+--     trdecay val pats = pats ++ [\idx -> ccn val # ccv (tr8sDecayCCArray!!idx)]
+--     trd = trdecay
 
-let trp pat = stack [
-                  n pat # s "tr",
-                  n pat # s "loopback" # midichan 0,
-                  (1 <~) $ ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double)
-                  # stack [s "tr", s "loopback"]
-                  # midinote (tr8sChanArray!!5)
-                  # ccn (tr8sToneCCArray!!5)
-                ]
+-- let trp pat = p "tr3"
+--                   $  stack [
+--                     n pat # s "tr" # midichan 4,
+--                     n pat # s "loopback" # midichan 2,
+--                     ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double)
+--                     # stack [s "tr", s "loopback"]
+--                     # midinote (tr8sChanArray!!4)
+--                     # ccn (tr8sToneCCArray!!4)
+--                   ]
+-- in trp
+--     $ (fast 2 . cat)
+--     |+ 6
 
-    trn pat = [\idx -> ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double) # ccn (tr8sToneCCArray!!idx)]
-    trdecay val pats = pats ++ [\idx -> ccn val # ccv idx]
-    trd = trdecay
-in 
-  do
-    hush
-    tr 2 $ trn (scale "major" $ run 10)
+--     # amp 0.4
+--     # sus 2
 
-    mt $ trp (k 0 $ rev $ run 10)
+hush
 
-let trm idx pats = p (toID $ "tr8s" ++ show (tr8sToneCCArray!!idx))
-      $ (stack . map (\f -> f idx)) pats
-      # stack [ s "tr" # midichan 9, s "loopback" # midichan 0 ]
-      # midinote (tr8sChanArray!!idx)
-    -- trn pat = [\idx -> n pat, \idx -> ccv (("^delayy" <~) $ fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double) # ccn (tr8sToneCCArray!!idx)]
-    trn pat = [\idx -> ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double) # ccn (tr8sToneCCArray!!idx)]
-    trdecay val pats = pats ++ [\idx -> ccn val # ccv (tr8sDecayCCArray!!idx)]
-    trd = trdecay
-
-
-
-let trp pat = p "tr3"
-                  $  stack [
-                    n pat # s "tr" # midichan 4,
-                    n pat # s "loopback" # midichan 2,
-                    ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double)
-                    # stack [s "tr", s "loopback"]
-                    # midinote (tr8sChanArray!!4)
-                    # ccn (tr8sToneCCArray!!4)
-                  ]
-in trp
-    $ (fast 2 . cat)
-      ([ k 0 $ "~ 6 9 5 . 8 6 4 2"
+do
+  -- @name steal
+  hush
+  bd $ n "0  ~ ~ 0? ~@4. [~ 0] 0 ~ [~ 0]"
+  sd $ n "[~ [0@3 0??]]*2" # amp 0.6
+  oh $ sometimes (chop 2) $ degrade (n "0*16") # amp (range 0.01 0.05 $ rand)
+  ch $ fast 8 $ n "0*2" # amp "0.1 0.01"
+  -- trm 4 $ trn
+  mt $ n
+     $ (fast 2 . cat)
+       [ k 0 $ "~ 6 9 5 . 8 6 4 2"
        , k 0 $ "~ 1 ~ [6, ~@2 3@3,~@3 1@2]@5"
        , k 0 $ "[~ 0 ~ [5, ~@2 2@3,~@3 0@2]@5]"
        , k 1 $ "[~ 0 ~ [5, ~@2 2@3,~@3 -1@2]@5]" |- 4 |+ 7
@@ -351,18 +377,8 @@ in trp
        , k 0 $ "~ 1 ~ [6, ~@2 3@3,~@3 1@2]@5"
        , k 0 $ press $ "2 4 5 6"
        , k 0 $ press $ "2 4 5 6" |+ 7
-      ])
-    |+ 6
-
-    # amp 0.4
-    # sus 2
-
-
-do
-  -- @name steal
-  d1 $ "0  ~ ~ 0? ~@4. [~ 0] 0 ~ [~ 0]"
-  d2 $ stack ["[~ [0@3 0??]]*2" # amp 0.4, sometimes (chop 2) $ degrade "0*16" # amp (range 0.1 0.15 $ rand)]
-  s1 $ fast 2
+      ]
+  mm $ fast 2
     $ stack [
       -- midibend $ (slow 8 $ struct "t*128" $ (range 0 8192 $ sine)),
       (note . cat)
@@ -377,60 +393,68 @@ do
        ])
     # amp 0.4
     # sus 2]
+  reface
+      $ fast 2
+      $ n
+      $ cat
+      (
+        fmap (k 0) [
+        "2 4 5 [2|-1] 4 0 4 5"
+      , "6 8 9 6 8 -4 -2 -1"
+      , "1 2 3 1 2 -1 1 2"
+      ] ++ fmap (k 1) [
+        "[0 1 2 0 1 -2 1 2 | 0 1 2 3 6 5 3 2]"
+      ])
+      -- |+ 12
+  lt
+    $ n
+    $ fast 2
+    $ cat
+      ([ k 0 "0(3,8)"
+      , k 0 "[~@2 0 ~@2 0 ~@2 | [0 ~] [-3 ~] [0 ~] ~]"
+      , k 0 $ "0(3,8)" |+ 1
+      , k 1 "~@2 0 ~@2 4 ~@2"
+      ]
+    )
+
+hush
 
 do
   -- @name end
   d2 silence
   d8 silence 
-  setF "plink" 0.3
-
-
-
-
--- samba
-
-
--- ---------- 3 : alvenaria
-
-let drumdivision = seqd . indices [0,1,0] . breakpoints [7/16]
-in do
-  -- @name alvenaria
-  hush
-  trbank 120
-  setF "basecps" 1.1
-  all $ id
-  bars $ over 2 $ [7,9,7]
-  setkey' 0 "0" "major"
-  setseq "<0 1>"
-  d1 $ drumdivision $ "0*4" # amp "[0.44 0.5]*2"
-  d2 $ drumdivision $ "~ ~@3 0@2 ~@2 ~@3 ~@2 0@2 ~@2"
-  d7 $ drumdivision $ "[0 ~]*8" # ccn (tr8sToneCCArray!!6) # ccv "[127 32]*2"
-  d8 $ drumdivision $ fast 4 $ "0*4" # amp ("6 3.5 4 5" |/ 10)
-  d9 $ drumdivision $ ((1/16) ~> "0@8 0@3 0@6")
-  s1
-    $ (|+ note (seqd [0,0,1]))
-    $ seqd
-    -- $ (++ [stack (note . (|+ "1") . k 0) "[2,5,8,11]" # octave 4])
-    $ indices [0,1,0]
-    $ breakpoints [7/16]
-    $ (note . k 0 . stack)
-      [ (1/16) <~ "0@2 ~@3 4@2 0 ~@6 4@2"
-      , "~ 0@3 ~@5 0 ~@2 0@3 ~@3" |+ "[2,5,8,11]" |+ 7
-      ]
-    # octave 3
-
-do
-  -- @name stutter
-  setseq "<0 [0|1|1|2]>"
-
-do
-  -- @name crazy
-  setseq "[0|1|2]"
-
-do
-  -- @name push
-  setseq $ ("1" |* irand 3)
+  setF "plink"  0.3
 
 hush
 
-trpat $ ("1*32" |* irand 10)
+
+do
+  hush
+  rs $ "0*4"
+
+
+    bd = d1
+    sd = d2
+    lt = d3
+    mt = d4
+    ht = d5
+    rs = d6
+    hc = d7
+    ch = d8
+    oh = d9
+    cc = d10
+    rc = d11
+
+
+sd = tr 1
+
+tr idx pat = p (toID $ "tr8s" ++ show (tr8sToneCCArray!!idx))
+      $ pat
+      # stack [ s "tr" # midichan 9 # midinote (tr8sChanArray!!idx) , s "loopback" # midichan (pure $ fromIntegral idx) ]
+
+hush
+
+
+let withLoopback channel pat = stack [ pat, pat # s "loopback" # midichan channel ]
+    mm pat = p "mm" $ withLoopback 11 $ pat # s "mm" # midichan 15
+    reface pat = p "reface" $ withLoopback 12 $ pat # s "reface" # midichan 0
