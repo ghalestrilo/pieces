@@ -16,47 +16,48 @@ do
 
 do
   -- @name chords
-  s2
+  reface
     $ fast 2
     $ cat
-      [ (note . k 0) "[[<0!4 -2!4>,4,11]@2 6 7 9 13,]" # sus 5
-      , (note . k 0) ("[~ 1 ~ 1@2 ~]" |+ "[0,4,6,8,9]") # sus "0.2 5" # velocity 0.1
-      , (note . k 0) "[16 13 15 12 13 15,]" # sus 5
+      [ nok 0 "[[<0!4 -2!4>,4,11]@2 6 7 9 13,]" # sus 5
+      , nok 0 ("[~ 1 ~ 1@2 ~]" |+ "[0,4,6,8,9]") # sus "0.2 5" # velocity 0.1
+      , nok 0 "[16 13 15 12 13 15,]" # sus 5
       ]
     # amp (range 0.35 0.5 rand)
     # octave 3
 
 do
   -- hush
-  d3 $ "[2 ~ 2 ~ 2 1@2 2 ~ 2 ~ 2 2 ~ 1 ~ 2 2]/1.5" # amp ("[3 4 5]*4" |/ 11)
-  d2 $ "[3 ~ 5 ~ 5 3 . 3 ~ 5 5 ~ 3 . 3 ~ 5 ~ 5 3]/1.5" # amp 0.4
-  d1 "0*4"
-  d4 $ fast 4 $ ( (1/3) <~) "[0!2 ~]"
+  ch $ n "[2 ~ 2 ~ 2 1@2 2 ~ 2 ~ 2 2 ~ 1 ~ 2 2]/1.5" # amp ("[3 4 5]*4" |/ 11)
+  oh $ n "[3 ~ 5 ~ 5 3 . 3 ~ 5 5 ~ 3 . 3 ~ 5 ~ 5 3]/1.5" # amp 0.4
+  bd $ n "0*4"
+  sd $ fast 4 $ ( (1/3) <~) "[0!2 ~]"
     # ccn (tr8sToneCCArray!!3)
     # ccv "<10 120>"
 
 do
   -- @name bass
-  s3
+  lt
     $ slow 1.5
-    $ (note . k 0 . cat)
+    $ (nok 0 . cat)
     [ "0@7 1@2 . 1"
     , "0@7 1@2 . 1"
     , "0@7 1@2 . 1" |- 2
     ]
-    # amp 0.6 # octave 3
+    # amp 0.6
 
 do
   -- @name curtain
-  s2
+  hush
+  ht
     $ (note . cat)
       [ k 0 "11 9 7 . 6 5 4"
       , k 0 "3 2 1 . 0 -1 -2"
       , k 0 "-5"
       , "~"
       ]
-      # sus 4
-  s1
+      # sus 2 # octave 5 # gain 0
+  reface
     $ fast 2
     $ (note . cat)
     [ k 0 ("[~ 0 ~ 0@2 ~]" |+ "[0,4,6,8,9,12]")
@@ -73,57 +74,58 @@ do
 
 
 do
-  s1 $ note $ cat
+  hush
+  lt $ note $ cat
       [ k 0 "11 9 <7!2 6!2>"
-      , k 0 "[16 13 15 12 13 15,]"
+      , k 0 "[16 13 15 12 13 15]"
       ]
 
 do
   -- @name bass pulse
-  s3 $ (# octave 1)
-    $ (note . k 0)
+  lt
     $ fast 2
-    $ cat
+    $ (nok 0 . cat)
       [ "11 9 <7!2 6!2>"
       , "[16 13 15 12 13 15,]"
       ]
+    # octave 4
 
 -- ALT: M:C
 
-do
-  p "drums" $ stack
-    [ n "2 ~ 2 ~ 2 1@2 2 ~ 2 ~ 2" # s "bhh" # gain (range 0.45 0.6 rand)
-    , s "[bbd:0,bd:0]*4" # gain 0.8
-    ]
-  -- drama
-  piano
-    $ fast 2
-    $ cat
-    [ t ("[~ 0 ~ 0@2 ~]" |+ "[0,4,6,8,9,12]")
-    , t ("[~ 0 ~ 0@2 ~]" |+ "[0,4,6,8,9,12]")
-    , t ("[~ 1 ~ 1@2 ~]" |+ "[0,4,6,8,9]")
-    , t ("[~ -2 ~ -2@2 ~]" |+ "[0,4,7,9,13,15]")
-    , t ("[~ -5 ~ -5@2 ~]" |+ "[0,4,6,9,13]")
-    , t ("[~ -5 ~ -5@2 ~]" |+ "[0,4,6,9,13]")
-    , t ("[~ -5 ~ -5@2 ~]" |+ "[0,4,6,9,13]")
-    -- , t $ sharp 3 $ ("[~ 3 ~ 3@2 ~]" |+ "[-2,0,3,6,9]")
-    , note $ flat 1 $ onkey 0 $ ("[~ 3 ~ 3@2 ~]" |+ "[0,1,3,6,9]")
-    ]
-  mc $
-    [ __
-    , __
-    , __
-    , fast 2 $ t . cat . fmap (|- 14) $
-      [ "11 9 <7!2 6!2>"
-      , "[16 13 15 12 13 15,]"
-      ]
-    , cat
-      [ t "11 9 7 . 6 5 4"
-      , t "3 2 1 . 0 -1 -2"
-      , t "-5"
-      , __
-      ]
-    ]
+-- do
+--   p "drums" $ stack
+--     [ n "2 ~ 2 ~ 2 1@2 2 ~ 2 ~ 2" # s "bhh" # gain (range 0.45 0.6 rand)
+--     , s "[bbd:0,bd:0]*4" # gain 0.8
+--     ]
+--   -- drama
+--   piano
+--     $ fast 2
+--     $ cat
+--     [ t ("[~ 0 ~ 0@2 ~]" |+ "[0,4,6,8,9,12]")
+--     , t ("[~ 0 ~ 0@2 ~]" |+ "[0,4,6,8,9,12]")
+--     , t ("[~ 1 ~ 1@2 ~]" |+ "[0,4,6,8,9]")
+--     , t ("[~ -2 ~ -2@2 ~]" |+ "[0,4,7,9,13,15]")
+--     , t ("[~ -5 ~ -5@2 ~]" |+ "[0,4,6,9,13]")
+--     , t ("[~ -5 ~ -5@2 ~]" |+ "[0,4,6,9,13]")
+--     , t ("[~ -5 ~ -5@2 ~]" |+ "[0,4,6,9,13]")
+--     -- , t $ sharp 3 $ ("[~ 3 ~ 3@2 ~]" |+ "[-2,0,3,6,9]")
+--     , note $ flat 1 $ onkey 0 $ ("[~ 3 ~ 3@2 ~]" |+ "[0,1,3,6,9]")
+--     ]
+--   mc $
+--     [ __
+--     , __
+--     , __
+--     , fast 2 $ t . cat . fmap (|- 14) $
+--       [ "11 9 <7!2 6!2>"
+--       , "[16 13 15 12 13 15,]"
+--       ]
+--     , cat
+--       [ t "11 9 7 . 6 5 4"
+--       , t "3 2 1 . 0 -1 -2"
+--       , t "-5"
+--       , __
+--       ]
+--     ]
 
 
 
@@ -189,26 +191,26 @@ do
   setI "__seq__" "<0 1 0 0 1 2>"
   setkey "c" "kumai"
   setkey' 0 "c" "kumai"
-
-
   setkey' 1 ("a" |+ slow 2 "0") "minor"
   setkey' 1 ("a" |+ slow 2 "<0!3 -3!3>") "minor"
 
-  trm 2 $ k 1 0
+  lt $ nok 1 0
 
 do
-  trm 2 $ k 1 0
-  trm 2 $ (trn . (|+ 12) .  k 1) $ seqd ["0", "0", "0"]
+  lt $ nok 1 0
+  lt $ nok 1 $ seqd ["0", "0", "0"] |+ 7
 
 
 do
   -- @name II theme
   setkey' 1 ("e") "minor"
   setkey' 2 ("e") "phrygian"
-  trm 2 $ (trn . (|+ 12) .  k 1) $ (|+ slow 2 "<0!3 3!3 -3!3>") $ seqd ["0", "0", "0"]
+  lt $ (# octave 4) $ ((|+ 12) .  nok 1) $ (|+ slow 2 "<0!3 3!3 -3!3>") $ seqd ["0", "0", "0"]
   -- theme
-  trm 3
-    $ (trn . (|+ 2) .  k 1)
+  mt
+    $ (# octave 3)
+    $ nok 1
+    -- $ (trn . (|+ 2) .  k 1)
     -- $ sometimes (shuffle "1 4")
     -- $ rarely (|+ "[2|3]*8")
     $ almostNever (fast 2 . (|+ irand 3))
@@ -224,22 +226,11 @@ do
   all id
   setkey' 3 (slow 6 "<b ef a>") (slow 6 "<phrygian lydian harmonicMinor>")
   setI "bases" (slow 6 "<7 4 7>")
-  trm 2 $ (trn . k 3) $ (|+ "^bases") $ 0
-
-
-
-
-
-
-  -- @name III chords down
-  setkey' 3 "a" "harmonicMinor"
-  setI "bases" (slow 1 "0")
-
-hush
-
-  -- theme
-  trm 3
-    $ (trn . (|+ 2) .  k 3)
+  lt $ nok 3 (segment 1 "^bases") # octave 4
+  ht
+    -- $ (trn . (|+ 2) .  nok 3)
+    $ (# octave 4)
+    $ nok 3
     -- $ sometimes press
     $ sometimes (shuffle $ seqd ["1 8", "1 6", "1 8"])
     $ rarely (|+ "[2|3]")
@@ -247,39 +238,27 @@ hush
     $ seqd ["7 6 4 [3 6]", press "4 3 1", "4 3 . [-1 0 1 3]"]
     -- $ segment (seqd [8,6,8]) $ irand 8
 
-
-
-let fstack fs pat = stack $ map (\f -> f pat) fs
-
 do
   -- trm 2 $ (trn . (|+ 12) .  k 2) $ (|+ slow 6 "<3 1 -3>") $ seqd ["0", "0", "0"]
 
 do
-  all id
-  trbank 119
   -- @name test
-  -- trs [ ns [0, 0, "0 0 ~ 0", "0@3 0 .~ 0"]
-  --   , ns ["~ 0", "~ 0", "~ [~ 0] . 0", "~ 0"]
-  --   , ns ["[~ 0!2 ~]*2", "0*3", "0*4", "~ 0!2 ~ . ~@3 ~"]
-  --   , rarely (chop 3)  $ ns ["0*4", "0*3", "0*4", "0*4"]
-  --   , ns ["0@5 0@3", "~ 0", "0*2", "0*4 . 0"] # t (irand 7 |- 3)
-  --   ]
+  -- trbank 119
   bd $ ns [0, 0, "0 0 ~ 0", "0@3 0 .~ 0"]
-  -- sd $ fstack [w (amp 0.5), density 2 . shuffle 4 . w (amp 0.2)] $ ns ["~ 0", "~ 0", "~ [~ 0] . 0", "~ 0"]
   sd $ ns ["~ 0", "~ 0", "~ [~ 0] . 0", "~ 0"]
-  
   ch
-    -- $ chdecay (rarely (const "20 120@7") "20")
     -- $ sometimes (chop "2")
     $ ns ["[~ 0!2 ~]*2", "0*3", "0*4", "~ 0!2 ~ . ~@3 ~"]
-    
+    # sus (rarely (const "0.2 0.9@7") "0.2")
   rs $ rarely (chop 3)  $ ns ["0*4", "0*3", "0*4", "0*4"]
-  d4 $ ns ["0@5 0@3", "~ 0", "0*2", "0*4 . 0"] # t (irand 7 |- 3)
+  ht $ ns ["0@5 0@3", "~ 0", "0*2", "0*4 . 0"] # nok 3 (irand 7 |- 3)
+  -- ht silence
   cc $ ns ["0*2", "0 ~ 0", "0*2"]
-  trm 10
-    $ trn
-    $ rarely (fast 3) $ k 0
-    $ fast (seqd [4,3,4]) (0 |+ irand 10)
+  -- rs
+  mt
+    $ (# octave 2)
+    $ rarely (fast 3) $ nok 3
+    $ fast (seqd [4,3,4]) (0 |+ irand 10 |+ "^bases")
 
 
 -- # Partes
@@ -544,23 +523,23 @@ do
   setseq "<0 1 2 3 4>"
   bars $ [2,2,2,2,4]
   all $ slow 2 . seqchunks [2,2,2,2,4]
-  trm 10 $ trn $ (|+ 3)
+  ht $ note
     $ fastcat [
       k 0 "[-3 0 2 7]", k 0 "[-3 0 3 7]",
       k 1 "[-3 1 2 4] ", k 0 "[-3 6 5 4]",
       k 0 "3 4@2 0 ",
       k 0 " [3@2 7@2 | 1 5 3@2]"
     ]
-  bd $ fast 3 $ "0 ~ 0 0"
-  sd $ fast 3 $ "~@3 0 ~@2 0@2"
-  ch $ fast 3 $ "0*8"
-  rs $ "0 ~ 0 ~ ~ 0 ~ ~ . ~ 0 ~ ~ ~ 0 ~ ~ . 0 ~ 0 ~ ~ 0 ~ ~"
-  hc $ fast 3 $ "~ ~ 0 ~ 0 ~ ~ ~"
-  oh $ fast 3 $ "0*4"
+  bd $ fast 3 $ n "0 ~ 0 0"
+  sd $ fast 3 $ n "~@3 0 ~@2 0@2"
+  ch $ fast 3 $ n "0*8"
+  rs $ n "0 ~ 0 ~ ~ 0 ~ ~ . ~ 0 ~ ~ ~ 0 ~ ~ . 0 ~ 0 ~ ~ 0 ~ ~"
+  hc $ fast 3 $ n "~ ~ 0 ~ 0 ~ ~ ~"
+  oh $ fast 3 $ n "0*4"
 
 do
   -- @name chords
-  s1
+  reface
     $ fastcat [
       nok 0 "[-7,-3,4,7] [-6,1,3,7]",
       fastcat [nok 1 "[0,2,4,7]", nok 0 "[-1,2,6,7]"],
@@ -570,7 +549,7 @@ do
 
 do
   -- @name bass
-  trm 9 $ trn
+  lt $ note 
     $ fastcat [
       k 0 "0@3 0", k 0 "1@3 1",
       k 1 "2@3 2", k 0 "4@3 4",
@@ -621,45 +600,52 @@ do
       . seqchunks [2,2,2,2,4]
 
 
-
-
 do
   -- mamota 2 (rua do rato)
   hush
-  bars [7,7]
-  all $ seqchunks [7,7]
+  -- bars [7,7]
+  -- all $ seqchunks [7,7]
+  all $ slow 2
+  setkey' 0 "-1 -3" "major"
+  setkey' 1 "[-1@5 -3@6 -1@3]" "major"
   setseq "<0 1>"
   setF "chop" 0
   setN "off" 0
-  rc $ "[0 ~]*7"
-  ch $ fast 7 $ "0*2" # amp "0.5 0.4"
-  lt $ sometimesBy "^chop" (chop $ fast 14 "[3|2]") $ "~@3 0 0 ~ ~ ~ ~@3 0 0 ~"
-  mt $ sometimesBy "^chop" (chop $ fast 14 "[3|2]") $ "0@3 ~ ~ ~ 0 0 ~@3 ~ 0 ~"
-  ht $ sometimesBy "^chop" (chop $ fast 14 "[3|2]") $ "0!3 ~ ~ 0 ~ ~ 0!3 0? ~ 0"
-    # amp ("[5 4] [5 6] [5 4]!2 [4.3 6 | 5 4] [4.3 4]!2" |/ 10)
-  hc $ "0@3 0@3 0@4 0@2 0@2"
-  rs $ "[[~@2 0!2]!3]@6 ~"
+  rc $ n "[0 ~]*7"
+  ch $ fast 7 $ n "0*2" # amp "0.5 0.4"
+  -- lt $ sometimesBy "^chop" (chop $ fast 14 "[3|2]") $ note "~@3 0 0 ~ ~ ~ ~@3 0 0 ~"
+  -- mt $ sometimesBy "^chop" (chop $ fast 14 "[3|2]") $ note "0@3 ~ ~ ~ 0 0 ~@3 ~ 0 ~"
+  -- ht $ sometimesBy "^chop" (chop $ fast 14 "[3|2]") $ note "0!3 ~ ~ 0 ~ ~ 0!3 0? ~ 0"
+    -- # amp ("[5 4] [5 6] [5 4]!2 [4.3 6 | 5 4] [4.3 4]!2" |/ 10)
+  hc $ n "0@3 0@3 0@4 0@2 0@2"
+  rs $ n "[[~@2 0!2]!3]@6 ~"
   setF "synthskip" 0 
   setF "s4amp" $ (range 0.42 0.5 rand)
-  s4
+  reface
     -- $ sometimes (chop $ irand 5)
     $ sometimesBy (rev "^synthskip") (chop "[2|4]*7" . (|+ octave "[-1|0|1]*28"))
-    $ note "-1? 3 6 -6 -4 -3 1 4 8 6 -8? 3 1 -6?"
+    -- $ note "-1? 3 6 -6 -4 -3 1 4 8 6 -8? 3 1 -6?"
+    $ nok 1 "0? 2 4 -3 -2 0 2 4 6 5 -3 2 1 -3?"
     # octave "[6,5]"
     # sus (rarely (const 0.2) 0.05)
     # amp "^s4amp"
   -- bd "~ 0 0 ~ 0*2 0 0 0 ~ 0*2 0 ~ 0 0"
-  bd "0 ~ ~ 0 ~ ~ ~ 0 ~ ~ ~ 0 0 ~"
-  sd $ "0@3 0 ~@4 0@3 0@3"
+  bd $ n "0 ~ ~ 0 ~ ~ ~ 0 ~ ~ ~ 0 0 ~"
+  sd $ n "0@3 0 ~@4 0@3 0@3"
+  bd $ n "[0@3 0]!3 0@0.5"
 
 do
   -- @name arr
-  setF "s4amp" 0
-  s1 $ note " 3@2 -1@2 -2@2 -4 1@2 -4@2 -6@3"
-  s3 $ note " -1@2 3@2 -6@2 -4 -3@2 1@2 -8@2 -6?" # octave 3
+  -- setF "s4amp" 0
+  mt silence
+  mm $ note " 3@2 -1@2 -2@2 -4 1@2 -4@2 -6@3"
+  lt $ note " -1@2 3@2 -6@2 -4 -3@2 1@2 -8@2 -6?"
 
 do
-  s2 $ note " [-1,3,6]@2 [-1,3]@2 [-6,-2]@2 [-4,-1] [-3,1]@2 [1, 4]@2 [-6,-4,-1,3]@3" # amp 0.48
+  mm $ note " [-1,3,6]@2 [-1,3]@2 [-6,-2]@2 [-4,-1] [-3,1]@2 [1, 4]@2 [-6,-4,-1,3]@3"
+    -- # amp 0.48
+
+hush
 
 do
   setF "chop" 0.3
@@ -668,10 +654,10 @@ do
   setF "chop" 0.3
   setF "synthskip" 0.1
   setF "s4amp" $ (range 0.42 0.5 rand)
-  s3 $ note "-1@3 -6@4 -3@4  -8@2 ~" # octave 3 # amp 1
+  lt $ note "-1@3 -6@4 -3@4  -8@2 ~"
 
 do
-  s3 $ note "-1@3 -6@4 -3@4  -8@2 ~" # octave 3 # amp 1
+  lt $ note "-1@3 -6@4 -3@4  -8@2 ~"
 
 setF "chop" 0.1
 
@@ -680,9 +666,10 @@ hush
 setF "basecps" 1
 
 all $ slow 2
-  . sometimesBy 0.1 (fast 8 . (3 octave 7))
-  -- . rarely ((chop $ 8) . (|- octave 1))
-  . sometimes (shuffle 4)
+  . sometimesBy 0.1 (fast 2)
+  -- . rarely (chop 8)
+  -- . sometimes (shuffle 28)
+  . sometimes (shuffle "[1 28@3]*7")
   . (# sus 1)
 
 
@@ -737,58 +724,4 @@ do
     -- $ rarely (chop $ irand 8)
     $ degrade
     $ fast 2 $ "0*4 . ~ 0"
-
-
-
-
-
-
-(head $ trn $ k 0 $ run 10) 0
-
-import Data.Map as M
-
-maybe 0 fvalue <$> M.lookup "note" <$> (note $ k 0 $ run 10)
-
-let pat = (note $ k 0 $ run 10)
-in 
-  -- ccn 20 # n (maybe 0 nvalue <$> M.lookup "note" <$> pat)
-  ccv (fromIntegral <$> floor <$> toRational <$> maybe 0 nvalue <$> M.lookup "note" <$> pat) # ccn 20
-
-
-let pat = (note $ k 0 $ run 10)
-in 
-  -- ccn 20 # n (maybe 0 nvalue <$> M.lookup "note" <$> pat)
-  ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational . maybe 0 nvalue . M.lookup "note") pat :: Pattern Double) # ccn (tr8sToneCCArray!!0)
-
-hush
-
-let tr idx = p ""
-
-
-:{
-let putTRCC array idx decaypat pat = stack [pat, pat |> ccv decaypat # ccn (array!!idx)]
-    tralt = putTRCC tr8sAltChanArray
-    trtone = putTRCC tr8sToneCCArray
-    trdecay = putTRCC tr8sDecayCCArray
-    trctrl = putTRCC tr8sCtrlCCArray
-:}
-
--- TR8S NEW IMPLEMENTATION
-let noteToTR8STuneCC idx pat = ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational . maybe 0 nvalue . M.lookup "note") pat) # ccn (tr8sToneCCArray!!idx)
-    decayToTR8SDecayCC idx pat = ccv (maybe 0 fvalue <$> M.lookup "decay" <$> pat) # ccn (tr8sDecayCCArray!!idx)
-    tr idx pat =
-      -- p (toID $ "tr8s" ++ show (tr8sToneCCArray!!idx)) $ 
-      stack [
-        pat,
-        noteToTR8STuneCC idx pat,
-        decayToTR8SDecayCC idx pat,
-      ]
-      # stack [
-        s "tr" # midichan 9 # midinote (tr8sChanArray!!idx),
-        s "loopback" # midichan (pure $ fromIntegral idx)
-      ]
-in 
-  do
-    -- hush
-    tr 4 $ nok 0 "0 2 4 7" # decay 1
 

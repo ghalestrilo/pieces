@@ -1,81 +1,3 @@
-
-do
-  -- @name ASTRO
-  hush
-
-do
-  -- @name intro
-  hush
-  setcps 0.9
-  trbank 100
-  all id
-  setcps (122/120/2)
-  setkey' 0 (-5) "lydian"
-  setkey' 1 (-5) "lydian"
-  -- once $ qtrigger 0
-  --   $ (note . k 0) "~ 6 9 5 . 8 6 4 2 . 0 . ~"
-  --   # amp 0.6
-  --   # sus "0.2"
-  --   # s "loopback" # midichan 13
-  bd $ fast 2 "0 ~ ~ 0"
-  sd $ fast 2 "~ 0"
-  ch $ fast 2 $ "0*4"
-  -- d7 $ "[[0 0 ~ 0 0 ~ 0 0 | 0 0 ~ 0 ~ 0 0 ~] . 0 ~ 0 ~ 0 ~ 0 0]"
-  d7 $ fast 4 $ cat ["0*4", chop (fast 2 $ irand 4 |* 8) $ degradeBy 0.8 "~ 0"]
-  d9 "[~@3 0]*2"
-  s2 $ fast 2 (note $ k 0 $ "0 ~ ~ -1" |+ "[0,2]") # octave 4 # amp 0.8 # sus 0.1
-
-do
-  -- @name phrase
-  s1 $ fast 2
-    $ stack [
-      -- midibend $ (slow 8 $ struct "t*128" $ (range 0 8192 $ sine)),
-      (note . cat)
-      ([ k 0 $ "~ 6 9 5 . 8 6 4 2"
-       , k 0 $ "~ 1 ~ [[6, ~@2 3@3,~@3 1@2] | [6, ~ 3@4,~@3 -1@2]]@5"
-       , k 0 $ "<[~ 0 ~ [5, ~@2 2@3,~@3 0@2]@5] [~ 2 ~ 4 ~ 5 ~ 6]>"
-       ])
-    # amp 0.5
-    # sus 2]
-
-do
-  -- @name counter
-  setkey' 1 2 "mixolydian"
-  s4 $ fast 2 $ (note . cat)
-    ([
-      k 0 $ "9 9 ~ ~ ~ 5 6 8",
-      k 0 $ "9 9 6 5 8 8 ~ ~",
-      k 0 $ "[~ 5 6 8 | ~ [5 6 8]] . 9 9 8 6",
-      k 0 $ "8 8 6 5 6 6 5 4",
-      k 0 $ "5 4 2 4 -1 0 2 4",
-      k 0 $ "7 7 6 7 6 6 5 4",
-      k 1 $ "5 6 ~ 3 ~ 2 1 -1" |- 4,
-      k 1 $ "-1 0 1 2 3 4 5 7"
-     ])
-    # amp 0.9
-    |* sus 0.1
-
-
-do
-  -- @name axe
-  setkey' 1 2 "mixolydian"
-  -- todo: cc decay
-  s1 silence
-  bd $ "[0 ~@3 . 0]*2" # ccn (tr8sDecayCCArray!!0) # ccv "[0 127]*2"
-  d6 $ sometimes (chop "[1@3 2]*4") "0*16" # amp ("6 4 3 6 4 3 6 7 . 3 2 7 3 2 6 2 3" |/ 16)
-  sd $ "[~ 0]*2" # amp 0.5
-  d7 $ "[[0 0 ~ 0 0 ~ 0 ~ | 0 0 ~ 0 ~ 0 0 ~] . 0 ~ 0 ~ 0 ~ 0 0?]"
-  ch $ "0*16"
-  s3 $ fast 2 $ (note . cat)
-    (fmap (k 0) ["0", "0", "-1", "2", "-2", "1"]
-    ++ fmap (k 1) ["-1", "0"])
-    # amp 0.8
-    # octave 3
-
-
-
-setcps (120/120/2)
-
 do
   -- @name ASTRO REPRISE
   hush 
@@ -93,7 +15,7 @@ do
 
   mt
     $ note
-    $ (|+ 12)
+    $ (|- 12)
     $ fast 2
     $ (cat)
     (fmap (k 0)
@@ -108,13 +30,11 @@ do
       ]
     )
 
-    # octave 5
-
 do
   -- @name drums
-  bd $ fast 2 $ "0 ~ . [~ 0 | ~ [~ 0] | ~ 0 ~ ~]"
-  sd $ fast 2 $  "~ 0"
-  ch $ fast 2 $  "0*4" # amp "[0.42 0.33]*2"
+  bd $ fast 2 $ n "0 ~ . [~ 0 | ~ [~ 0] | ~ 0 ~ ~]"
+  sd $ fast 2 $ n "~ 0"
+  ch $ fast 2 $ n "0*4" # amp "[0.42 0.33]*2"
 
 do
   -- @name preface
@@ -154,15 +74,15 @@ do
 
 do
   -- @name bluegrass
-  s3
+  reface
     $ fast 2
     $ (note . cat)
       ([ k 2 "[0 2 4 7, 14@3 13@2 14@3]"
       , k 2 "[0 2 4 7, 14@3 13@2 14@3]"
-      , k 1 "[0 2 4 6, 14@3 13@2 14@3]"
-      , k 1 $ "-2 -1 1 4"
-      ] ++ (take 4 $ repeat (k 0 "0 2 4 6")))
-    # octave 3
+      , k 1 "[0 2 4 6, 13@3 11@2 13@3]"
+      , k 1 $ "[-2 -1 1 4, 13@3 11@2 13@3]"
+      ] ++ (take 4 $ repeat (k 0 "[0 2 4 6, 13@3 [10|11]@2 13@3]")))
+    # octave 4
     # amp 0.8
 
 do
@@ -201,7 +121,7 @@ do
   bd $ n "[0@3 0]*2"  
   bd $ n "0 ~ ~ 0? ~ ~ 0? ~ . ~ 0 ~ [~ 0]"
   sd $ n "[~ 0]*2"
-  ch $ n "0*16"
+  ch $ fast 8 $ n "0*2" # amp "0.7 0.2"
 
 hush
 
@@ -209,11 +129,11 @@ do
   -- @name full
   setF "plink" 0
   setcps (90/120/2)
-  bd $ "[0@3 0]*2"
-  -- bd $ "0 ~ ~ 0? ~ ~ 0? ~ . ~ 0 ~ [~ 0]"
-  sd $ "[~ 0]*2"
-  ch $ "0*16" # amp "[0.37 0.1]*8"  
-  bd $ "0  ~ ~ 0? ~@4. [~ 0] 0 ~ [~ 0]"
+  bd $ n "[0@3 0]*2"
+  -- bd $ n "0 ~ ~ 0? ~ ~ 0? ~ . ~ 0 ~ [~ 0]"
+  sd $ n "[~ 0]*2"
+  ch $ n "0*16" # amp "[0.37 0.1]*8"  
+  bd $ n "0  ~ ~ 0? ~@4. [~ 0] 0 ~ [~ 0]"
   -- d3 $ fast 2 $ n "~ 0 0 ~"
   mt
     $ fast 2
@@ -250,9 +170,10 @@ do
   -- @name steal
   hush
   bd $ n "0  ~ ~ 0? ~@4. [~ 0] 0 ~ [~ 0]"
-  sd $ n "[~ [0@3 0??]]*2" # amp 0.6
+  sd $ fast 2 $ n "~ [0@3 0??]" # amp "0.55@3 [0.05|0.6]"
   oh $ sometimes (chop 2) $ degrade (n "0*16") # amp (range 0.01 0.05 $ rand)
   ch $ fast 8 $ n "0*2" # amp "0.1 0.01"
+  rs $ fast 2 $ n "0*[1|1|2] 0!2 0*2" # amp 0.1
   -- trm 4 $ trn
   ht
     $ note
@@ -306,43 +227,20 @@ do
       ]
     )
 
-hush
-
 do
   -- @name end
   sd silence
   ch silence 
   setF "plink"  0.3
 
-hush
+
 
 do
+  -- @name trans
   hush
-  rs $ "0*4"
-
-
-    bd = bd
-    sd = sd
-    lt = d3
-    mt = d4
-    ht = d5
-    rs = d6
-    hc = d7
-    ch = ch
-    oh = d9
-    cc = bd0
-    rc = bd1
-
-
-sd = tr 1
-
-tr idx pat = p (toID $ "tr8s" ++ show (tr8sToneCCArray!!idx))
-      $ pat
-      # stack [ s "tr" # midichan 9 # midinote (tr8sChanArray!!idx) , s "loopback" # midichan (pure $ fromIntegral idx) ]
-
-hush
-
-
-let withLoopback channel pat = stack [ pat, pat # s "loopback" # midichan channel ]
-    mm pat = p "mm" $ withLoopback 11 $ pat # s "mm" # midichan 15
-    reface pat = p "reface" $ withLoopback 12 $ pat # s "reface" # midichan 0
+  all $ swingBy (1/12) 8 . shuffle "1 8"
+  bd $ n "0  ~ ~ 0? ~@4. [~ 0] 0 ~ [~ 0]"
+  sd $ fast 2 $ n "~ [0@3 0??]" # amp "0.55@3 [0.05|0.6]"
+  oh $ sometimes (chop 2) $ degrade (n "0*16") # amp (range 0.01 0.05 $ rand)
+  ch $ fast 8 $ n "0*2" # amp "0.1 0.01"
+  rs $ fast 2 $ n "0*[1|1|2] 0!2 0*2" # amp 0.1

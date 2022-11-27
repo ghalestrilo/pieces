@@ -1,0 +1,110 @@
+do
+  -- @setup
+  all id 
+  hush
+  setcps (112/120*2)
+  setkey' 0 "-8" "lydian"
+  setkey' 1 "-8" "lydian"
+  unmute "drums"
+  unmute "mel"
+  bank "mc" 33
+
+
+-- intro
+do
+  -- @name intro
+  hush``
+  ch $ n "0*2" # amp "0.8 0.2" # sus 0.1
+
+do
+  -- @name intro
+  bd
+    $ rarely (shuffle 2)
+    $ (n . cat)
+    [ "0 ~ ~ 0"
+    , "~ ~ ~ 0"
+    , "~ ~ 0 ~"
+    , "~@2 0? 0?"
+    ] # amp 0.05
+
+do
+  -- @name intro
+  oh $ rarely (shuffle 2)
+      $ (n . cat) [ "~ 5 ~ ~" , "~ 5 ~ ~" , "~ 5 ~ ~" , "5@2 ~? ~?" ]
+      # amp 0.05
+
+do
+  -- @name chords
+  reface $ slow 3
+    $ (0.026 <~)
+    $ strum 24 $ (note . k 0) "<[0,4,9,13] [0,5,10,13]>"
+    # sus 1.55
+    # octave 4
+    # amp 0.7
+
+do
+  -- @name melody
+  mm $ (|* sus 3) $ nok 0 "{~ 9 6 8 5 ~ \
+      \ [4 [5 6] | 4 5 ~ 6]@2 [~ 2] [~ 4] ~@2 \
+      \ [4 [5 6] | 4 5 ~ 6]@2 [~ 2] ~@0.5 1@2.5 \
+      \ 2 -1@2 \
+      \ }%2" 
+
+do
+  -- @name drums
+  rs $ n "0*2" # amp "0.85 0.7"
+
+-- setkey (-7) "dorian"
+
+hush
+
+do
+  -- @name bridge
+  mute "mel"
+  mute "drums"
+  rs $ n "0*4" # (amp . (0.25 <~) . (|/ 2) . (|+ 1)) saw
+  cc $ (nok 0 . cat) ["~ 0", "0 7", "7 0*2", "~ 7*2"] # amp ((30 <~) $ range 0.9 1 rand) # sus 0.1  
+  rc $ (nok 0 . cat) ["6!2 ~ 4", "~ 4 4 ~", "6 6", "4 4"] # n 0 # amp (range 0.9 1 rand) # sus 0.1
+  bd $ n 0
+  lt $ slow 6
+    $ nok 0
+    $ ring "0 1 2 3 7 6 3 5 2 4"
+    $ "x@5 x@3 x@4 x@3 x@4 x@3 x@2"
+
+hush
+
+do
+  -- @name drop
+  -- setkey (-8) "lydian"
+  -- mc [n 0, n "<~ 0>", n "[[0*2]*<2 1!3>]/2" # open ("1 6" / 10) # note (fast 0.13 $ sine * 14)]
+
+do
+  -- @name comeback
+  unmute "mel"
+  unmute "drums"
+
+do
+  -- @name exit
+  p "bass" $ silence
+  p "perc" $ silence
+  p "ch" $ silence
+  clutchIn "drums" 32 $ silence
+  clutchIn "mel" 64 $ silence
+  mc [n 0, __, n "[0*2 [~ 0]!3 . 0!3 ~]/4" # open ("1@3 <4 1>" / 10)]
+
+do
+  -- @name alt
+  bd $ n 0
+  setkey' 1 "-8" "mixolydian"
+  ch $ n "0*2" # amp "0.8 0.2" # sus 0.1
+  lt $ slow 3
+     $ cat
+     $ (nok 0 <$> ["7(3,8)@2 ~", "6(3,8)@2 ~", "5(3,8)@2 [~ . 5 3]", "1!3 2"]) ++ (nok 1 <$> ["3!4"])
+
+do
+  mm
+     $ (# amp 0.8)
+     $ slow 3
+     $ (cat . zipWith nok [0,0,0,0,1]) 
+     $ ["[-3,0,2]", "[-1,2,4]", "[-2,0,2,6]", "[-2,0,2,6]" |- 4] ++ ["[0,2,4,9]" |- 4]
+

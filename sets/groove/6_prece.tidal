@@ -1,0 +1,203 @@
+{- HLINT ignore "Parse error: module header" -}
+
+do
+  -- @mocks
+  -- @mode test
+  let
+    mm = vibe . (|+ up 12) . (# gain 0.7) . (# modamp 0) . (# hpf 300) . (# lpf 600)
+    reface = piano . (# gain 1.2) . (# sus 5)
+
+do
+  -- @section setup
+  hush
+  setkey "c" "dorian"
+  setkey' 0 "c" "dorian"
+  setkey' 1 "c" "minor"
+  setkey' 2 "ds" "major"
+  setkey' 3 "c" "[dorian minor]/8"
+  setcps (148/120/2)
+  -- all $ (# bus' 0.7 0.7)
+  bank "mc" 85
+  bank "mm" 25
+  mamps $ repeat 0
+  setcps (164/120/2)
+
+
+do
+  -- @setup themes
+  setI "theme" $ cat [ "[~ 6 11 7,0@3 2]"
+      , "[-4@3 -3, 5 3 9 11]"
+      , "[~ 6 11 7,0@3 2]"
+      , "[-4 . -1, 7 8 9 10, 5 6 7 8]"
+      , "[-2, [9,11] 5 10 9]"
+      , "[-4, 7 2 9 3]"
+      , "[-3, 8 4 7 6]"
+      , "[0 1 0 -3, 4]"
+      ]
+  setI "stairs" $ cat
+          [ "[2,5,7 8 9 10]"
+          , "[1,4,6,11 10 8 6]"
+          , "[0,3,5,7 8 9 10]"
+          , "[-3,0,2,11 10 8 6]"
+          ]
+  setI "stairs2" $ cat
+          [ "5 [7,10]"
+          , "4 [6,10]"
+          , "3 [5,9,10]"
+          , "0 [2,6,7]"
+          ]
+
+
+do
+  -- @section intro
+  mm $ t' 2 "{9@2 5 4}%4" # amp 0.2 # octave 6
+  resetCycles
+
+do
+  -- @section intro 2
+  mm $ t' 2 "[ [-7@3 -5 . -10 ~@3]/2 \
+             \, 9@2 5 4]"
+     # amp 0.2
+     # octave 6
+
+do
+  mamps [0,0.3,0.3]
+  mamp 2 $ shuffle 2 ("3 2 3 2 1 3 2 1 3 1 2 1 3 2 1" |/ 10) |+ range 0.05 0.1 rand
+  setI "gtbass" $ "[0@2 [-2 ~] [-1 ~] 0 2 6 4@4 5 2@2 1 2]/2"
+  setI "basspos" (-2)
+  mc [ n "0@3 0"
+    , slow 4 $ shuffle "1 [1|2|4|8]*4" $ n "0@2 0@3 0@4 0@4 0@3"
+    , n "0*4"
+    -- , rarely (fast "1 [2|3|4]") $ n "0 0*<2 1> 0 0" # open 0.19
+    , __
+    , t' 1 $ slow 2 ("^gtbass" |+ "^basspos")
+    ]
+
+do
+  -- @section intro 3
+  mm
+    $ (# octave 6)
+    $ (# amp 0.2)
+    $ t' 0
+    $ slow 4
+    $ cat
+    [ "[ [ -7@3 -5 . -10 ~@3]/2 , 9@2 5 4]*4"
+    , "[ [ -7@3 -5 . -10 ~@3]/2 , 9@2 5 4]*4" |- 2
+    ]
+  mamps [0.3,0.3,0.3]
+  mamp 2 $ shuffle 2 ("3 2 3 2 1 3 2 1 3 1 2 1 3 2 1" |/ 10) |+ range 0.05 0.1 rand
+  setI "gtbass" $ "[0@2 [-2 ~] [-1 ~] 0 2 6 4@4 5 2@2 1 2]/2"
+  setI "chordpos" (-2)
+  mc [ n "0@3 0"
+    , slow 4 $ shuffle "1 [1|2|4|8]*4" $ n "0@2 0@3 0@4 0@4 0@3"
+    , n "0*4"
+    -- , rarely (fast "1 [2|3|4]") $ n "0 0*<2 1> 0 0" # open 0.19
+    , __
+    , t' 1 $ slow 2 ("^gtbass" |+ "^chordpos")
+    ]
+
+mamps $ repeat 0.4
+
+do
+  -- @section phrase
+  mamps [0.3,0.3,0.3]
+  reface $ stack
+    [ slow 4 $ cat
+      [ t' 0 $ "[ [-7@3 -5 . -10 ~@3]/2 , 9@2 5 4]*4"
+      , t' 0 $ "[ [-7@3 -5 . -10 ~@3]/2 , 9@2 5 4]*4" |- 2
+      ] # amp 0.2 # sus 3
+    , t' 0 "[~ 6 11 7 5 3 9 11]/2" # octave 4
+    ]
+
+do
+  -- @section movement
+  mamps [0.5,0.4,0.4]
+  setI "chordpos" $ slow 8 "<<-5 -3> -4 -7 -6>"
+  reface
+    $ (t' 2 . (|+ "^chordpos") . stack) ["[0@3 [0|-3]]" ,  "[0@2 0@3 0@2 0@2 0@2 0@2 0@3]/4" |+ "[4,6@7 5@9,9,12,14]"]
+    # octave 4
+    # amp 0.3
+  mm
+    $ (t' 2 . stack)
+      [ "{4 [1 0] . -3 [0 1 ]. 4 1 0 -3 . ~ 0 1 3  . [1 0] ~ .  ~ . ~ . ~}%1"
+      , ("[7 6 11 7,0@3 2 . -4@3 -3, 5 3 9 11]/2" |- 7)
+      ]
+    # amp 0.5
+    # octave 6
+
+do
+  -- @section prepare
+  ma 4 0.45
+
+do
+  -- @section stairs
+  setI "chordpos" $ "[7 3 7 3 5 3 4 7]/4" |- 7
+  mamps $ repeat 0
+  mm __
+  reface
+    $ t' 1 "^stairs"
+    # amp 0.3
+    # octave "[6 5]/8"
+    # sus 3
+
+do
+  -- @section theme
+  reface
+    $ t' 3 "^theme"
+    # octave 4
+    # amp 0.3
+    -- |* sus "1@3 0.3"
+    -- # sus 4
+
+-----------------------------------------------------------
+
+-----------------------------------------------------------
+
+do
+  -- @section full
+  setkey' 3 "c" "[dorian minor]/8"
+  setI "gtchord" "[4,6@7 5@9,9,12,14]"
+  setI "gtchordrtm" "[0@2 0@3 0@2 0@2 0@2 0@2 0@3]"
+  setI "gtbass" "<[0@3 [0|2|3]]!3 <[0 3] [0 ~ 1 ~ 0 ~ -3 ~]>>*2"
+  setI "chordpos" $ "[7 3 7 3 5 3 4 7]/4" |- 7
+  setI "basspos" $ "[7 3 7 3 5 3 4 7]/4" |- 7
+  mamps $ repeat 0.4
+  mm
+    $ t' 3 "^theme"
+    # octave 5
+    # amp (range 0.4 0.7 rand)
+
+do
+  -- @section chords
+  reface $ stack
+    -- $ (stack . fmap (t' 3) . fmap (slow 2) . fmap (|+ "^chordpos"))
+      [ (|* sus 0.7) . (t' 3) . slow 2 . (|+ "^chordpos") $ "[^gtchordrtm]/2" |+ "^gtchord" |- sew "[1 0]/4" "^chordpos" 0
+      , (t' 3) . slow 2 . (|+ "^chordpos") $ "^gtbass"
+      ]
+    # octave 4
+    # amp (range 0.25 0.4 rand)
+
+-----------------------------------------------------------
+
+do
+  -- @section close
+  setI "chordpos" $ "[7 3 7 3 5 3 4 7]/4" |- 7
+  mamps $ repeat 0
+  mm __
+  reface
+    $ t' 1 "^stairs2" # amp 0.34
+    # octave "[4]/8"
+    # sus 3
+  mm
+    $ t' 1 "^stairs" # amp 0.1
+    # octave "[6 5]/8"
+
+do
+  -- @section end
+  hush
+  once
+    $ t' 1 (strum 14 "[-8,-4,-1,1,4,5,7]" |- 1)
+    # s "[mm,reface]"
+    # midichan 15
+    # sus 3
+    # amp 0.4

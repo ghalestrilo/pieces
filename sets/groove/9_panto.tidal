@@ -1,0 +1,195 @@
+-- done (1a)
+
+let trm idx pats = p (toID $ "tr8s" ++ show (tr8sToneCCArray!!idx))
+      $ (stack . map (\f -> f idx)) pats
+      # stack [ s "tr" # midichan 9, s "loopback" # midichan 0 ]
+      # midinote (tr8sChanArray!!idx)
+    trn pat = [\idx -> ccv (fmap (fromIntegral . (`mod` 127) . toInteger . floor . (* 64) . (/ 12) . toRational) pat :: Pattern Double) # ccn (tr8sToneCCArray!!idx)]
+    trdecay val pats = pats ++ [\idx -> ccn val # ccv (tr8sDecayCCArray!!idx)]
+    trd = trdecay
+    w mod pat = (# mod) pat
+
+do
+  -- @setup
+  trbank 0
+  setcps 0.5
+  setkey' 0 0 "lydian"
+  setkey' 0 0 "major"
+  setkey' 1 3 "lydian"
+  bank "mc" 80
+  bank "mm" 20
+  all id
+
+hush
+
+do
+  -- @setup
+  -- @env live
+  all id
+
+
+do
+  -- @section intro
+  -- mamps $ repeat 0
+  -- mamp 5 0.1
+  hush
+  setF "color" 0.2
+  setI "melody" $ "[6 7 9 11 . 13 [11 8] . 8 9@24 . 12 11 8 [8 9@15] . -3 0 2 4 . 7 5 2 [5 6@15] . ~@2 2 5  . [5 6@15]? [4 5@15 . 4]? ]/4"
+  trm 2 $ trn $ k 0 "0*8"
+  trm 3 $ (trn . (+ 2) . k 0) (cI_ "phrase")
+  trm 4 $ (trn . k 0) (cI_ "melody")
+  bd $ fast 4 0
+  ch $ fast 4 $ n "0 0" # amp "0.4 0.2"
+
+
+     , fast (8/26)
+       $ (# octave 4)
+       $ t' 0
+       $  ring "0 4 9 6 3 2 4 -3"
+       $ "x@3 x@3 x@4 x@4 x@6 x x@2 x!3"
+
+
+  trs
+    [ t (cI_ "phrase") # octave 3
+     , fast (8/26)
+       $ (# octave 4)
+       $ t' 0
+       $  ring "0 4 9 6 3 2 4 -3"
+       $ "x@3 x@3 x@4 x@4 x@6 x x@2 x!3"
+     , fast 4 $ t "[0 ~]*2" # amp 0.1
+     , fast 4 $ t "0*2"
+     , t (cI_ "melody") # cyclesColor (cF 0.2 "color")
+     , t "0*8" # sus 0.01 # octave 3
+     ]
+
+  setF "pianoamp" (range 0.05 0.12 rand)
+  setF "chordchange" 0
+  lt $ fast 8
+    $ (every 32 . someCyclesBy (cF_ "chordchange")) (const $ t
+      (strum 2 "[-5,0,4,8,11,14]") # sus 8
+    )
+    $ (# sus 0.1)
+    $ t ""
+    # amp (cF 0.2 "pianoamp")
+    # gain 2
+    # octave 3
+
+  setI "phrase" $ cat
+        [ "~@2 9@3 7@3"
+        , "5@3 2 3@3 -1"
+        , "0 2 8@3 7@3"
+        , "~@2 9@3 7@3"
+        , "5@3 2 3@3 7"
+        , "0"
+        , ""
+        ]
+
+do
+  -- @section chords
+  setF "chordchange" 1
+
+do
+  -- @section intro drums
+  xfadeIn "drums" 8 $ slow 2 $ stack
+    [ 0.005 <~ n "0*8" # s "br" # gain (range 0.4 0.6 rand) # orbit 1 # pan 1
+    , n "[5 1 2 1]*8" # s "bs" # orbit 0 # pan 1
+    , fast 8
+      $ sometimesBy 0.15 (density "[1 2]*2")
+      $ n "5 1 2 1"
+      # s "bs" # orbit 0 # pan 1
+    , fast 8 $ s "bhh:2*2" # gain "0.6 0.4" # orbit 1 # pan 1
+    ]
+
+
+do
+  -- @section pulse
+  mamp 0 0.5
+
+do
+  -- @section more chords
+  -- set prog 80
+  setF "refaceamp" 0.5
+  reface
+    $ fast 8
+    $ t (strum 5 "[2,4,8]")
+    # sus 0.15
+    # amp "^refaceamp"
+    # octave 4
+  xfadeIn "drums" 8 $ slow 2 $ stack
+    [ n "0*8" # s "br" # gain (range 0.4 0.6 rand) # orbit 1 # pan 1
+    , fast 8
+      $ sometimesBy 0.15 (density "[1 2]*2")
+      $ n "5 1 2 1"
+      # s "bs" # orbit 0 # pan 1
+    , fast 8 $ s "bhh:2*2" # gain "0.6 0.4" # orbit 1 # pan 1
+    ]
+
+do
+  -- @section pre-drop
+  -- mamp 1 0.5
+  mamp 4 0.5
+  xfadeIn "drums" 8 $ slow 2 $ stack
+    [ n "0*8" # s "br" # gain (range 0.4 0.6 rand) # orbit 1 # pan 1
+    , fast 8 $ s "bhh:2*2" # gain "0.6 0.4" # orbit 1 # pan 1
+    ]
+
+reface = p "test"
+
+do
+  -- @section drums
+  -- once $ s "br:1" # gain 0.7
+  setF "refaceamp" 0.5
+  reface $ stack
+    [ fast 8
+    $ t (strum 5 "[2,4,8]")
+    # sus 0.15
+    # amp "^refaceamp"
+    # octave 4
+    ]
+  bd $ slow 2 "0@3 [~ 0] . 0*<2 1> <~ [~ 0@3]>"
+  ch $ fast 4
+      $ rarely (chop "1 2")
+      $ chop 2 $ "0*2" # amp "0.6 0.38"
+  oh $ fast 4 $ "0*2" # amp "0.6 0.5"
+  sd $ "[~ 0]"
+
+
+  p "drums" $ slow 2 $ stack
+    [ n "0@3 [~ 0] . 0*<2 1> <~ [~ 0@3]>" # s "bbd" # amp 0.5 # orbit 0 # pan 0
+    , n "[~ 11]*2" # s "bs" # gain 0.9 # orbit 0 # pan 1
+    , fast 8
+      $ sometimesBy 0.15 (density "[1 2]*2")
+      $ n "5 1 2 1"
+      # s "bs"
+      # orbit 0 # pan 1
+    , fast 8 $ s "bhh:2*2" # gain "0.6 0.38" # orbit 1 # pan 1
+    ]
+
+    -- # orbit 0
+    |* gain 1.2
+
+do
+  -- @section return
+  setkey 0 "lydian"
+  mm silence
+  mamps [0.5, 0.5, 0.1, 0.5, 0.5]
+  xfadeIn "drums" 12 $ slow 2 $ stack
+    [ n "0*8" # s "br" # gain (range 0.4 0.6 rand) # orbit 1 # pan 1
+    , fast 8
+      $ sometimesBy 0.15 (density "[1 2]*2")
+      $ n "5 1 2 1"
+      # s "bs"
+      # orbit 0 # pan 1
+    , fast 8 $ s "bhh:2*2" # gain "0.5 0.3" # orbit 1 # pan 1
+    ]
+
+do
+  -- @section mcraise
+  setF "color" (range 0.1 0.4 $ slow 32 sine)
+
+do
+  -- @section close
+  xfadeIn "drums" 16 silence
+
+do
+  hush
