@@ -1,6 +1,6 @@
-hush
 
 do
+  hush
   setcps 0.78
   setcps (90/120)
   all $ someCyclesBy 0.8 . whenmod 2 1
@@ -20,6 +20,7 @@ do
   oh $ degradeBy "0 . 1 0@7" $ stack ["<[~ ~] [~ [0*3] ~@2 . ~ ]>", degrade $ "0*8" ] # amp (range 0.4 0.5 rand)
   mt $ nok 1 (cI_ "phrase")
   lt $ nok 1 $ slow 2 ("[0@3 7 . <[0 ~ 0 ~@2 7@3] [0@2 0@3 7@3]>]" |+ "[0!3 1]/2")
+  
   setI "phrase" $ slow 2 (cat
     [ "2@3 0 . 2 3 [2 . [[3 2]|~]] 0"
     , cat
@@ -27,15 +28,19 @@ do
       , "-1 . ~"
       ]
     ])
+
   -- ht $ fast 4 . slow 18 $ nok 1
   --    -- $ ring "6 5 3 1 2 -1 0"
   --    $ (|+ 3)
   --    $ ring "6 5 3 1 -1"
   --    $ "x ~ ~ x ~ ~ x ~ ~ x ~ ~ x ~ x ~ x ~"
-  mm $ fast 4 . slow 18 $ (t . (|- 7) . (|+ "[0,3]"))
-     -- $ ring "6 5 3 1 2 -1 0"
-     $ ring "6 5 3 1 -1"
-     $ "x ~ ~ x ~ ~ x ~ ~ x ~ ~ x ~ x ~ x ~"
+  mm $ (# amp "^mmamp")
+      -- $ (# sus 2)
+      $ fast 4 . slow 18
+      $ (nok 0 . (|- 7) . (|+ "[0,3]"))
+      -- $ ring "6 5 3 1 2 -1 0"
+      $ ring "6 5 3 1 -1"
+      $ "x ~ ~ x ~ ~ x ~ ~ x ~ ~ x ~ x ~ x ~"
 
 do
   -- @setup
@@ -52,6 +57,10 @@ do
   all $ swingBy 0.1 8
 
 do
+  setF "refaceamp" 0.8
+  setF "mmamp" 0.9
+  setF "mmamp" 0
+  setF "refaceamp" 0
   reface
     $ slow 2
     $ (# octave 4)

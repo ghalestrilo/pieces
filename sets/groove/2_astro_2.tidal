@@ -8,7 +8,7 @@ do
   trbank 101
   all $ swingBy (1/12) 8
   setcps (92/120/2)
-  setcps (86/120/2)
+  -- setcps (86/120/2)
   setkey' 0 (-6) "lydian"
   setkey' 1 (-1) "lydian"
   setkey' 2 (-2) "mixolydian"
@@ -112,7 +112,7 @@ do
     , "6 8 9 6 8 -4 -2 -1"
     , "1 2 3 1 2 -1 2 5"
     ]
-    # sus 1.4
+    -- # sus 1.4
     # amp 0.5
 
 do
@@ -122,8 +122,6 @@ do
   bd $ n "0 ~ ~ 0? ~ ~ 0? ~ . ~ 0 ~ [~ 0]"
   sd $ n "[~ 0]*2"
   ch $ fast 8 $ n "0*2" # amp "0.7 0.2"
-
-hush
 
 do
   -- @name full
@@ -135,8 +133,10 @@ do
   ch $ n "0*16" # amp "[0.37 0.1]*8"  
   bd $ n "0  ~ ~ 0? ~@4. [~ 0] 0 ~ [~ 0]"
   -- d3 $ fast 2 $ n "~ 0 0 ~"
+  ht silence
   mt
     $ fast 2
+    $ (|+ note 12)
     $ sometimesBy "^plink" (# (octave (5 |+ irand 3) # sus 4))
     $ (note . cat)
     -- $ (note . cat . fmap (k 0) . fmap (rarely (|+ ("[1 0@3]*4" |* (irand 8) |- 4))))
@@ -148,8 +148,8 @@ do
     ] ++ fmap (k 1) [
       "[0 1 2 0 1 -2 1 2 | 0 1 2 3 6 5 3 2]"
     ])
-    # sus 1.4
-    # amp 0.5
+    # sus 0.2
+    # amp 0.4
   lt
     $ fast 2
     $ (note . cat)
@@ -159,8 +159,6 @@ do
       , k 1 "~@2 0 ~@2 4 ~@2"
       ]
     )
-    -- # midibend "0"
-    -- # octave 3
     # sus 0.1
     # amp 0.8
 
@@ -170,7 +168,7 @@ do
   -- @name steal
   hush
   bd $ n "0  ~ ~ 0? ~@4. [~ 0] 0 ~ [~ 0]"
-  sd $ fast 2 $ n "~ [0@3 0??]" # amp "0.55@3 [0.05|0.6]"
+  sd $ fast 2 $ n "~ [0@3 0??]" # amp ("0.55@3 [0.05|0.6]" |* 0.8)
   oh $ sometimes (chop 2) $ degrade (n "0*16") # amp (range 0.01 0.05 $ rand)
   ch $ fast 8 $ n "0*2" # amp "0.1 0.01"
   rs $ fast 2 $ n "0*[1|1|2] 0!2 0*2" # amp 0.1
@@ -237,10 +235,10 @@ do
 
 do
   -- @name trans
-  hush
+  -- hush
   all $ swingBy (1/12) 8 . shuffle "1 8"
   bd $ n "0  ~ ~ 0? ~@4. [~ 0] 0 ~ [~ 0]"
-  sd $ fast 2 $ n "~ [0@3 0??]" # amp "0.55@3 [0.05|0.6]"
+  sd $ fast 2 $ n "~ [0@3 0??]" # amp ("0.55@3 [0.05|0.6]" |* 0.8)
   oh $ sometimes (chop 2) $ degrade (n "0*16") # amp (range 0.01 0.05 $ rand)
   ch $ fast 8 $ n "0*2" # amp "0.1 0.01"
   rs $ fast 2 $ n "0*[1|1|2] 0!2 0*2" # amp 0.1

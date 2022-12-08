@@ -1,111 +1,80 @@
 do
   -- @setup
+  hush
   setcps (82/120)
   setkey' 0 0 "chromatic"
   setkey' 1 (-1) "minor"
+  all $ swingBy (1/24) 4
 
-p "drums"
-  $ stack
-    [ s "~ bsr" # gain 1.15
-    , fast 2 $ n "5 10" # s "gretsch"
-    , slow 2 $ s "~@3 <fingers ~>"
-    ]
-  # bus
-  |* gain 1.2
+do
+  -- @name intro
+  hush
+  ch $ fast 2 $ "0*2" # amp "0.45 0.4"
+  rs $ n "~ 0" # amp 0.5
 
-unmute "bell"
-unmute "bell"
+do
+  lt
+    $ note "[0@3 0@3 0@2. ~]/4"
+    # ctrl "[100@3 -100@5 . ~]/4"
+    # sus "[100@3 100@3 10@2 . ~]/4"
 
-p "bell"
-  $ slow 2
-  $ every 2 (# gain 1)
-  $ note "0@3 -4@5"
-  # gain 0
-  # s "supervibe"
-  # octave 3
-  # modamp 0
-  # accelerate "0.15@3 -0.15@5"
-  # distort "[0.7,0]"
-  # attack 0.5 # decay 1 # release 1
-  -- # hpf 400 # lpf 1000
-  # hpf 100
-  # legato 1
-  # bus
-  # orbit 3
+do
+  reface $ nok 0 "{ 14 10 7 5 4 \
+    \ 14 10 7 5 4 \
+    \ 14 10 7 \
+    \ 15 11 8 \
+    \ 14 10 7 5 4 \
+    \ 0 1 5 12 8 \
+    \ 14 10 7 5 4 \
+    \ 10 9 7 6 \
+    \ 14 10 7 5 4 \
+    \ 14 10 7 5 4 \
+    \ 11 7 4 2 1 \
+    \ 14 10 7 5 4 \
+    \ 14 10 7 5 4 \
+    \ 6 4 1 -2 -6 \
+    \ }%8"
+    # sustainpedal 1
+    # amp (range 0.5 0.7 rand)
+    # sus 4
+    # octave 4
 
-reface $ nok 0 "{ 14 10 7 5 4 \
-   \ 14 10 7 5 4 \
-   \ 14 10 7 \
-   \ 15 11 8 \
-   \ 14 10 7 5 4 \
-   \ 0 1 5 12 8 \
-   \ 14 10 7 5 4 \
-   \ 10 9 7 6 \
-   \ 14 10 7 5 4 \
-   \ 14 10 7 5 4 \
-   \ 11 7 4 2 1 \
-   \ 14 10 7 5 4 \
-   \ 14 10 7 5 4 \
-   \ 6 4 1 -2 -6 \
-   \ }%8"
-   # sustainpedal 1
-   # amp 0.8
-   # sus 4
+do
+  lt
+    $ note "[0@3 0@3 0@2 . 0(3,8) ~]/4"
+    # ctrl "[100@3 -100@5 . 0]/4"
+    # sus "[100@3 100@3 100@2 . 100]/4"
 
-lt
-  $ (2.25 ~>)
-  $ nok 0 "0(3,8)"
+do
+  mm
+    $ (0.5 <~)
+    $ every 4 (# amp 0.8)
+    $ nok 1 "[0,4,7]"
+    # sus 0.1
+    # amp 0
 
-mm
-  $ (0.5 <~)
-  $ every 4 (# gain 0.8)
-  $ nok 1 "[0,4,7]"
-  # octave 5
-  # s "biam:7"
-  # pan 0.4
-  # gain 0
-  # bus
-  # orbit 3
 
 
 -- TODO: Gradually distort
-
-
-p "choral"
-  $ slow 2
-  $ every 2 (# gain 0)
-  $ stack
-    [ t "-5@3 -7@5" # pan 0
-    , t " 0@3 -2@5" # pan 0.3
-    , t " 4@3  2@5" # pan 0.7
-    , t " 7@3  5@5" # pan 1
-    ]
-  |- up 2
-  # begin 0.04
-  # s "vox:1"
-  # legato 1
-  # bus
-  # octave 4
-  # gain 0.65
-  # hpf 400
-  -- # lpf 3000
-  # resonance 0.2
-
-p "choral" $ silence
-
-  p "chords"
-    $ slow 4
-    $ t "0'maj -3'min . -1'min7" # s "superhammond" # bus # gain 0.85 # modamp 0 # modfreq 0 # octave 4
 
 do
   -- piano silence
   mm
     $ slow 4
     $ note "0'maj -3'min . -1'min7"
-  lt $ nok 0 "[0(3,8) . -3(3,8) . -1@3 -1@3 -1 2 . [[~@2 6 9 . ~]|~|[~@2 2 1]|[~@4 2 -1 2 4]]]/4"
+    # octave 4
+  lt
+    $ nok 0 ("[0(3,8) . -3(3,8) . -1@3 -1@3 -1 2 . [[~@2 6 9 . ~]|~|[~@2 2 1]|[~@4 2 -1 2 4]]]/4" |+ 12)
+    # sus 0.3
+    # ctrl 0.5
+  -- reface silence
+  -- mt
   reface
+    $ (# amp (range 0.6 0.8 rand))
+    $ (# sus 2)
+    $ (# octave 4)
     $ (# amp 0.8)
-    $ (# sus 4)
+    $ (# ctrl 0.7)
     $ nok 1
     $ (|+ "1")
     "{ 9 8 6 4 3 \
@@ -120,41 +89,13 @@ do
      \ }%8"
 
 
-
-   ch $ fast 2 $ n "0 0"
-   sd $ n "~ 2"
-   bd $ n "[0 0? | 0 0? | ~ 0] . ~@3 0?"
-
-   bd $ degrade $ n "~@7 0" # pan 0.2
-
-   oh $ degradeBy 0.2 $ fast 4 $ n "[~ 21]" # amp (range 0.2 0.3 $ rand)
-
-drums' 16
-    [ fast 2 $ n "5 <10 [10|11|16]>"
-    , (# gain 1.05) $ (n . randcat) $ l "[13|[13 21 21]] 13 . 2@3 13?" "~ 13 . 2"
-    , degrade $ n "~@7 [18|19]" # pan 0.2
-    , degradeBy 0.2 $ fast 4 $ n "[~ 21]" # gain (range 0.8 1.1 $ rand)
-    ]
-
-xfadeIn "chords" 8 silence
-xfadeIn "bes" 8 silence
-
 do
-  unmute "bell"
-  mute "chords"
-  mute "bes"
-  mute "bass"
+  -- hush
+  ch $ fast 2 $ n "0 0" # note 0
+  sd $ n "~ 2" # amp 0.45
+  bd $ n "<[0 0] [~ ~ 0 ~]> . ~@3 0" # note 12 # amp 0.45
+  --  bd $ degrade $ n "~@7 0" # amp 0.45 # note 12
+  oh $ degradeBy 0.2 $ fast 4 $ n "~ 0*<3 1!3>" # amp (range 0.2 0.5 $ rand)
 
-p "piano" silence
 
-clutchIn "bass" 16 silence
-
-do
-  unmute "bell"
-  solo "drums"
-  solo "bell"
-
--- distort until end
-all $ ((# distort 0.3) . (# crush "[2,5,8]") . (# bus' 0.9 0.9))
-
-all ((# distort 0.3) . (# crush "[2,3,4,5,8]") . (# bus' 0.96 0.96))
+hush

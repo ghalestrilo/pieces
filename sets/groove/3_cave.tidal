@@ -1,6 +1,7 @@
 do
   -- @name steal
   hush
+  trbank 30
   all $ swingBy (1/12) 8
   setcps (86/120)
   setkey' 0 (-8) "lydian"
@@ -8,22 +9,24 @@ do
   bd $ n "0"
   sd $ n "~ 0"
   -- oh $ sometimes (chop 2) $ degrade (n "0*16") # amp (range 0.01 0.05 $ rand)
-  oh $ almostNever (chop 2) $ (n . press) "0*4" # amp 0.01
-  ch $ fast 2 $ n "0*2" # amp "0.1 0.01"
+  oh $ rarely (chop "[2 1]*2") $ (n . press) "0*4" # amp 0.4
+  ch $ fast 2 $ n "0*2" # amp "0.5 0.4"
   bd $ n "[~ 0 0 ~ . ~ ~ 0 ~ . 0 ~ ~ ~ . ~ ~ 0 0]/2" # sus 0.1
-  rs $ n "0*[1|1|2] 0!2 0*2" # amp 0.1
+  rs $ n "0*[1|1|2] 0!2 0*2" # amp 0.4
 
 do
   lt
     $ slow 2
     $ cat [
       nok 0 "0@3 0@3 0!2 . ~",
-      nok 0 "0@3 0@3 0!2 . ~@5 1@3?",
+      nok 0 "[0@3 0@3 0!2 . ~@5 1@3?]",
       nok 0 $ "0@3 0@3 0!2 . ~ ~ 0@2 ~ 0 2 4" |- 1,
       nok 1 $ "5@3 5 . 7 2"
       -- nok 0 ((3/8) <~ "[0@4 0@5 0!2 ~@5]/2")
     ]
-    # sus 0.1
+    -- # sus 0.4
+    # sus 0.2
+    # amp 0.2
   mm $ (slow 2)
     $ cat [
       nok 0 "[-3,0,2,4,6]",
@@ -35,3 +38,4 @@ do
       ]
     ]
     # sus 2
+    # amp 0.5

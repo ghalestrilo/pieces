@@ -1,62 +1,62 @@
 setcps 0.6
 
-let master = 0.9
-    bus = room (cF 0.1 "room") # size (cF 0.1 "size") # orbit 0
-    vk = s "vk" # n 3
-    vs = s "vs" # n 117
-    vh = s "vh" # n 2 # sus 0.08
-    vo = s "vh" # n 15 # sus 1
-    root = (|- 5)
-    tonal scalename pat = (note . root . scale scalename) pat
-    fx n = cF 0 $ "f" ++ (show n) -- Maps ID to FX Fader
-    vx n = cF 0 $ "v" ++ (show n) -- Maps ID to Volume Fader
-    px n = cF 0 $ "p" ++ (show n) -- Maps ID to Pan Knob
-    fader vol = gain (vol |* cF 0 "master")
-    gretsch x = n x # s "gretsch" # (fader . vx) 2 # bus
-    piano x = tonal "chromatic" x # s "superpiano" # (fader . vx) 3 # lpf 450 # bus |* sus 1.1 # octave 4
-    vibe x  = tonal "lydian" x # s "supervibe" # (fader . vx) 4 # lpf 500 # bus |* sus 2 # octave 7
+-- let master = 0.9
+--     bus = room (cF 0.1 "room") # size (cF 0.1 "size") # orbit 0
+--     vk = s "vk" # n 3
+--     vs = s "vs" # n 117
+--     vh = s "vh" # n 2 # sus 0.08
+--     vo = s "vh" # n 15 # sus 1
+--     root = (|- 5)
+--     tonal scalename pat = (note . root . scale scalename) pat
+--     fx n = cF 0 $ "f" ++ (show n) -- Maps ID to FX Fader
+--     vx n = cF 0 $ "v" ++ (show n) -- Maps ID to Volume Fader
+--     px n = cF 0 $ "p" ++ (show n) -- Maps ID to Pan Knob
+--     fader vol = gain (vol |* cF 0 "master")
+--     gretsch x = n x # s "gretsch" # (fader . vx) 2 # bus
+--     piano x = tonal "chromatic" x # s "superpiano" # (fader . vx) 3 # lpf 450 # bus |* sus 1.1 # octave 4
+--     vibe x  = tonal "lydian" x # s "supervibe" # (fader . vx) 4 # lpf 500 # bus |* sus 2 # octave 7
 
--- Guitar Starts
--- anticipate "guitar" $ stack
-anticipateIn "guitar" 2 $ stack
--- p "guitar" $ stack
-  [ slow 2 $ tonal "major" ("6@2 6@3 6@2 6@4  6@3 6@2" |+ "[0,5]@7 [-1,5]@9")
-  , fast 2 $ tonal "major" ("0 ~ ~ 0" |- "<0 3>")
-  ]
-  # s "gtr"
-  # sus 0.3
-  # (fader . vx) 1
-  # lpf 550
-  # bus
 
--- Drums enter
-p "drums" $ fast 2
-  $ sometimesBy 0.2 (# n "5")
-  $ gretsch "10*4"
-  |* gain (range 0.75 1.15 $ rand)
-  # pan 0.3
-    -- |*| gain 0.75
+setI "phrase" "{16 14 11 0 ~     16 14 11 4 6 7 6 7 9 7 9 11 ~   16 14 11 6 ~ }%8"
 
--- Drums enter
-p "drums" $ stack
-    [ fast 2 $ gretsch "13@3 13" # lpf 1600 |* gain 1.05
-    , fast 2
-      $ sometimesBy 0.2 (# n "5")
-      $ gretsch "10*4"
-      |* gain (range 0.75 1.15 $ rand)
-      # pan 0.3
+noks keys = stack . zipWith nok keys
+
+do
+  setcps $ 86 / 120
+  -- all $ swingBy (1/24) 4
+  trbank 36
+  all id
+  setF "drumslow" 1
+  setkey' 0 0 "major"
+  setkey' 1 0 "chromatic"
+  reface $ (stack . zipWith nok [0,0,1])
+    [ slow 2 ("6@2 6@3 6@2 6@4  6@3 6@2" |+ "[0,5]@7 [-1,5]@9")
+    , fast 2 ("0 ~ ~ 0" |- "<0 3>")
+    -- , "^phrase" |+ 12
     ]
-    -- |* gain 0.75
+    # octave 4
+    # sus 4
 
 
--- Piano phrase enters
-let phrase = "{16 14 11 0 ~     16 14 11 4 6 7 6 7 9 7 9 11 ~   16 14 11 6 ~ }%8"
-in xfadeIn "piano" 8 $ stack
-  [ piano (phrase |+ 12) # pan 0.65
-  -- , piano "{~@3 0'maj@2   ~@3 0'maj@3 2'maj@3 0'maj@4   ~@3 4'maj@2 }%8" # pan 0.35
-  -- , piano "{~@3 <[5,9,17]>@2   ~@3 0'maj@3 <2'maj 3'maj>@3 <0'maj -1'maj>@4   ~@3 <4'maj -3'minor -1'maj>@2 }%8" # pan 0.35
-  ]
-  -- # gain 0.75
+do
+  setI "phrase" "{16 14 11 0 ~     16 14 11 4 6 7 6 7 9 7 9 <11 10 11> ~   <16 15 16> 14 <11 10 11> <6 9 6> ~ }%8"
+  mm
+    $ (note . stack)
+      [ "^phrase" |+ 12
+      , "{~@3 0'maj@2   ~@3 0'maj@3 2'maj@3 <0'maj 3'maj -3'min>@4   ~@3 <4'maj 5'maj -1'min>@2 }%8"
+      ]
+    # sus 4
+    # octave 4
+
+do
+  ch $ slow "^drumslow" $ fast 8
+    $ "0"
+    # amp (range 0.3 0.45 rand)
+    # sus (sometimesBy 0.9 (const "0.1") 1)
+  bd $ slow "^drumslow" $ fast 2 "<0 ~!3> . <0 [~ 0]!3>"
+  oh $ slow "^drumslow" $ fast 4 $ n "~ 0*<3 1!3>" # amp (range 0.2 0.5 $ rand)
+  sd $ slow "^drumslow" "~ 0"
+
 
 -- Snare + Variations enters
 p "drums" $ stack
@@ -72,32 +72,20 @@ p "drums" $ stack
     ]
     -- |* gain 0.75
 
--- Piano chords enter
-let phrase = "{16 14 11 0 ~     16 14 11 4 6 7 6 7 9 7 9 <11 10 11> ~   <16 15 16> 14 <11 10 11> <6 9 6> ~ }%8"
-in p "piano" $ stack
-  [ piano (phrase |+ 12) # pan 0.65
-  , piano "{~@3 0'maj@2   ~@3 0'maj@3 2'maj@3 <0'maj 3'maj -3'min>@4   ~@3 <4'maj 5'maj -1'min>@2 }%8" # pan 0.35
-  ]
 
+do
+  -- @name plinks
+  ht
+    $ off 3 id
+    $ fast (4 |+ (range (-1) 1 $ slow 4 sine))
+    $ nok 0 (run 4 |- 2 |+ ("0/4" |+ irand 4) |+ "<0 2 4 6>")
 
--- Start shimmers (fader F2 set to 0.07)
--- p "shimmers"
-xfadeIn "shimmers" 32
-  $ off 3 id
-  $ fast (4 |+ (range (-1) 1 $ slow 4 sine))
-  $ vibe (run 4 |- 2 |+ ("0/4" |+ irand 4) |+ "<0 2 4 6>")
-  |* sus (cF 0.1 "f2")
-  # pan (slow 4 sine)
-  # bus
-
--- Start Drone (fader F1 set to 0.07)
-p "drone"
-  $ vibe ("{0@3 0@3 0@4 0@4}%4" |- 5 |+ (irand 7))
-  # octave 4
-  # sus 8
-  # distort (cF 0 "f1" |* 0.7)
-  # fader (vx 5)
-  # bus
+do
+  -- @name drone
+  lt
+    $ nok 0 ("{0@3 0@3 0@4 0@4}%4" |- 12 |+ (irand 7))
+    # sus 1
+    # amp 1
 
 -- Leave Shimmers
 xfadeIn "shimmers" 32 $ silence
@@ -105,18 +93,8 @@ xfadeIn "shimmers" 32 $ silence
 -- Leave Guitars
 xfadeIn "guitar" 16 $ silence
 
+bd $ "0*2 . ~@3 0" # sus 0.1 # amp 0.1
 
-
--- Simplify Drums
-p "drums" $ stack
-    [ fast 2 $ gretsch "13@3 13" # lpf 1600 |* gain 1.05
-    , fast 2
-      $ sometimesBy 0.2 (# n "5")
-      $ gretsch "10*4"
-      |* gain (range 0.75 1.15 $ rand)
-      # pan 0.3
-    ]
-    -- |*| gain 0.75
 
 -- Leave Piano
 xfadeIn "piano" 16 $ silence
@@ -143,3 +121,12 @@ in d1
   # sound "superpiano"
   # velocity 0.45
   # octave 4
+
+do
+  setcps $ 86 / 120
+  setF "drumslow" 1
+  -- setcps (94/120)
+
+do
+  setF "drumslow" 2
+  setcps (103/120)

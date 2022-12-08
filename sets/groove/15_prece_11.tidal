@@ -1,14 +1,3 @@
-let
-
-let
-  -- @mocks
-  -- @mode test
-  -- reface = vibe . (|+ up 12) . (# gain 0.7) . (# modamp 0) . (# hpf 300) . (# lpf 600) . (# sus 0.1)
-  piano' tt = xfadeIn "piano" tt ## [s "superpiano" # velocity "^pianogain" # gain 2 # octave 4 # legato 2]
-  piano = piano' 0.1
-  reface = piano' (sus $ cF 1 "pianosus")
-  mm = m5
-
 do
   -- @setup
   setkey "e" "phrygian"

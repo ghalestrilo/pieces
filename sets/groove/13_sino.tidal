@@ -1,66 +1,33 @@
-
-
-let tonal root mode = note . (|+ root) . scale mode
-    -- kbdi = s "onyx"
-    kbdi = s "supervibe" # sus 0.3 # lpf 400 # resonance 0.13 # modfreq 0
-    phrase = l "9 0" "2 3 4 5" "6 0" "2 3 4 5" "8 6 4 2"
-    introchords = l "0" "~ 2 . ~"
-    basechords = l "0" "~ 2 . ~" "0" "~ 2 . ~" "1"
-    ch pats = p "chords" $ fast 2 $ (0.01 <~) $ (t . stack) pats # kbdi # sus 1.7 # bus # octave 4 # orbit 1 # velocity 0.4
-    mel pats = p "melody" $ fast 2 $ (0.01 <~) $ (t . stack) pats # kbdi # sus 1.7 # bus # orbit 3
-    -- bus = bus' 0.55 0.55
-    bus =  bus' 0 0
-    humanize x = ((range (-(x/100)) (x/100) $ slow 32 sine) <~)
-                                -- (range 0 x rand)
-    h = humanize
-
 do
   -- @setup
-  setcps 0.69
+  setcps (90/120)
   setkey' 0 (-3) "lydian"
   setkey' 1 (-3) "lydian"
   -- all $ (|* speed 0.8)
   all id
 
-  trm 2 $ trn $ (|+ 15) $ k 1 $ "0@5 2@3"
-
-
--- do
---   -- @name intro
---   resetCycles
---   hush
---   p "drums" $ h 1 $ stack
---     [ fast 2 $ n "5*2" # gain "1 0.82"
---     , n "<[13!2 [~@3 13]@2] [~ 13 ~@1.5 13@0.5] [13!2 ~ [~ 13]]>"
---     , n  "<[~ 20] [~ [21*3] ~@2 . 20]>" # gain (range 0.93 1.1 $ rand)
---     , n "[~ 20]"
---     , degrade $ n "21*8" # gain (range 0.8 1.1 $ rand)
---     ]
---     # s "gretsch" # bus
---     # lpf 17000
---     # resonance 0.1
---     |* gain 1.1
-
-hush
+  lt $ (|+ 15) $ nok 1 $ "0@5 2@3"
 
 do
   all id
-  trbank 19
+  trbank 22
   ch $ fast 2 $ "0*2" # amp "0.5 0.43"
   bd $ "<[13!2 [~@3 13]@2] [~ 13 ~@1.5 13@0.5] [13!2 ~ [~ 13]]>" # amp 0.45
   sd $ "[~ 20]" # amp 0.4
   oh $ degradeBy "0 . 1 0@7" $ stack ["<[~ ~] [~ [0*3] ~@2 . ~ ]>", degrade $ "0*8" ] # amp (range 0.4 0.5 rand)
-  trm 3 $ trn $ fast 2 $ (|+ 3) $ k 0 $ cat ["9 0", "2 3 4 5", "6 0", "2 3 4 5", "8 6 4 2"]
-  trm 4 $ trn $ fast 2 $ (|+ 3) $ k 0 $ cat ["9 0", "2 3 4 5", "6 0", "2 3 4 5", "8 6 4 2"]
-  trm 2 $ trn
+  mt $ fast 2 $ (|+ note 3) $ nok 0 $ cat ["9 0", "2 3 4 5", "6 0", "2 3 4 5", "8 6 4 2"]
+  ht $ fast 2 $ (|+ note 3) $ nok 0 $ cat ["9 0", "2 3 4 5", "6 0", "2 3 4 5", "8 6 4 2"]
+  lt
     $ fast 2 
-    $ (|+ 3)
-    $ (k 0 . cat)
+    $ (|+ note 3)
+    $ (nok 0 . cat)
       [ "0", "7!2 ~@2"
       , "0", "7!2 6!2"
       , "~ 5 4 2", "4 5 6 1"
       ]
-    
+    # sus "<<1!2 0.3> 0.3>"
+    # amp 0.42
+
 
 let reface = s2
 
