@@ -151,7 +151,7 @@ do
     # sus ("4 . 10 4" |/ 10)
     # amp ("[0.5 0.4]*2" |* 0.8)
   sd $ slow "^drumslow" "~ 0"
-  
+
   lt
     $ nok 1 (slow 2 $ "^gtbass" |+ "^basspos" |+ 7)
     # sus "1"
@@ -206,9 +206,9 @@ do
 
   mm silence
 
-do
-  setF "drumslow" 1
-  setcps (94/120)
+-- do
+--   setF "drumslow" 1
+--   setcps (94/120)
 
 do
   -- @name "double tempo"

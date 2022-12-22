@@ -26,6 +26,7 @@ do
   -- all $ swingBy (1/24) 4
   trbank 36
   all id
+  hush
   setF "drumslow" 1
   setkey' 0 0 "major"
   setkey' 1 0 "chromatic"
@@ -45,32 +46,39 @@ do
       [ "^phrase" |+ 12
       , "{~@3 0'maj@2   ~@3 0'maj@3 2'maj@3 <0'maj 3'maj -3'min>@4   ~@3 <4'maj 5'maj -1'min>@2 }%8"
       ]
-    # sus 4
-    # octave 4
+    -- # sus 4
+    # octave 3
 
 do
   ch $ slow "^drumslow" $ fast 8
     $ "0"
     # amp (range 0.3 0.45 rand)
     # sus (sometimesBy 0.9 (const "0.1") 1)
+
+do
+  bd $ n "{~@3   0@2   ~@3       0@3 <0 ~>@3 0@4   ~@3 0@2 }%8"
+  sd $ n "{~ 0@2 ~@2   ~@2 <0 ~> ~@3 <~ 0>@3 ~@4   0@3 ~@2 }%8"
+  oh $ slow "^drumslow" $ fast 4 $ n "~ 0*<3 1!3>" # amp (range 0.2 0.4 $ rand)
+
+do
+  -- @straight
   bd $ slow "^drumslow" $ fast 2 "<0 ~!3> . <0 [~ 0]!3>"
-  oh $ slow "^drumslow" $ fast 4 $ n "~ 0*<3 1!3>" # amp (range 0.2 0.5 $ rand)
-  sd $ slow "^drumslow" "~ 0"
+  sd $ slow "^drumslow" "~ 0" # amp 0.6
 
 
--- Snare + Variations enters
-p "drums" $ stack
-    [ fast 2 $ gretsch "13@3 13" # lpf 1200 |* gain 1.05
-    , fast 2
-      $ sometimesBy 0.05 ((# n "16") . (# gain 0.7))
-      $ sometimesBy 0.1 (# n "19")
-      $ sometimesBy 0.2 (# n "5")
-      $ gretsch "10*4"
-      |* gain (range 0.75 1.15 $ rand)
-      # pan 0.3
-    , gretsch (degradeBy 0.9 "20*8") |* gain (range 0.75 0.95 $ rand)
-    ]
-    -- |* gain 0.75
+-- -- Snare + Variations enters
+-- p "drums" $ stack
+--     [ fast 2 $ gretsch "13@3 13" # lpf 1200 |* gain 1.05
+--     , fast 2
+--       $ sometimesBy 0.05 ((# n "16") . (# gain 0.7))
+--       $ sometimesBy 0.1 (# n "19")
+--       $ sometimesBy 0.2 (# n "5")
+--       $ gretsch "10*4"
+--       |* gain (range 0.75 1.15 $ rand)
+--       # pan 0.3
+--     , gretsch (degradeBy 0.9 "20*8") |* gain (range 0.75 0.95 $ rand)
+--     ]
+--     -- |* gain 0.75
 
 
 do
@@ -87,25 +95,9 @@ do
     # sus 1
     # amp 1
 
--- Leave Shimmers
-xfadeIn "shimmers" 32 $ silence
-
--- Leave Guitars
-xfadeIn "guitar" 16 $ silence
-
-bd $ "0*2 . ~@3 0" # sus 0.1 # amp 0.1
-
-
--- Leave Piano
-xfadeIn "piano" 16 $ silence
-
--- Leave Drums
-xfadeIn "drums" 16 $ silence
-
-p "drone" $ silence
-
-d1 $ s "bd"
-
+do
+  -- straight
+  bd $ "0*2 . ~@3 0" # sus 0.1 # amp 0.1
 
 {-| TODO: Test if this in fact implements the behavior
   This means, I can tag a pattern and later manipulate what I tagged

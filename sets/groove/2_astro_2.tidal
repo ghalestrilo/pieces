@@ -88,6 +88,10 @@ do
 do
   -- @name hold
   hush
+  bd $ n "0(3,8) . ~@2 0@3 0@3"
+  ch $ fast 8
+    $ n "0*<3 1> 0"
+    # amp "<0.42 0.33>"
   setF "plink" 0
   lt $ nok 0 "0(3,8) . ~@2 0@3 0@3"
     -- # octave 3
@@ -121,7 +125,7 @@ do
   bd $ n "[0@3 0]*2"  
   bd $ n "0 ~ ~ 0? ~ ~ 0? ~ . ~ 0 ~ [~ 0]"
   sd $ n "[~ 0]*2"
-  ch $ fast 8 $ n "0*2" # amp "0.7 0.2"
+  -- ch $ fast 8 $ n "0*2" # amp "0.7 0.2"
 
 do
   -- @name full
@@ -173,19 +177,6 @@ do
   ch $ fast 8 $ n "0*2" # amp "0.1 0.01"
   rs $ fast 2 $ n "0*[1|1|2] 0!2 0*2" # amp 0.1
   -- trm 4 $ trn
-  ht
-    $ note
-    -- $ (|- 12)
-     $ (fast 2 . cat)
-       [ k 0 $ "~ 6 9 5 . 8 6 4 2"
-       , k 0 $ "~ 1 ~ [6, ~@2 3@3,~@3 1@2]@5"
-       , k 0 $ "[~ 0 ~ [5, ~@2 2@3,~@3 0@2]@5]"
-       , k 1 $ "[~ 0 ~ [5, ~@2 2@3,~@3 -1@2]@5]" |- 4 |+ 7
-       , k 0 $ "~ 6 9 5 . 8 6 4 2"
-       , k 0 $ "~ 1 ~ [6, ~@2 3@3,~@3 1@2]@5"
-       , k 0 $ press $ "2 4 5 6"
-       , k 0 $ press $ "2 4 5 6" |+ 7
-      ]
   mm $ fast 2
     $ stack [
       -- midibend $ (slow 8 $ struct "t*128" $ (range 0 8192 $ sine)),
@@ -230,8 +221,6 @@ do
   sd silence
   ch silence 
   setF "plink"  0.3
-
-
 
 do
   -- @name trans

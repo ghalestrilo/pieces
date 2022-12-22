@@ -1,6 +1,7 @@
 -- Chromatic Packing
 do
   trbank 33
+  hush
   all $ byacc (segment 16) . byshuf (shuffle "1 8@3")
   setcps (118/120)
   setkey' 0 (-1) "chromatic"
@@ -19,6 +20,7 @@ do
   -- Enter Bass
   lt
     $ nok 0 "[12@3 7@3 10@2 5@3 5 5@3 5@4 5 5@3 5@4 5 7 9 16@2]/8"
+    # octave 4
 
 do
   bd $ n "[<0 ~!3>@3 0 . 0@3 0]/2" # amp 0.43
