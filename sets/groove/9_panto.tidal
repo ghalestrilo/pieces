@@ -69,24 +69,11 @@ do
     $ (# sus 0.1)
     $ nok 0 "0"
     # amp (cF 0.2 "pianoamp")
-    # gain 2
     # octave 3
 
 do
   -- @section chords
   setF "chordchange" 1
-
-do
-  -- @section intro drums
-  xfadeIn "drums" 8 $ slow 2 $ stack
-    [ 0.005 <~ n "0*8" # s "br" # gain (range 0.4 0.6 rand) # orbit 1 # pan 1
-    , n "[5 1 2 1]*8" # s "bs" # orbit 0 # pan 1
-    , fast 8
-      $ sometimesBy 0.15 (density "[1 2]*2")
-      $ n "5 1 2 1"
-      # s "bs" # orbit 0 # pan 1
-    , fast 8 $ s "bhh:2*2" # gain "0.6 0.4" # orbit 1 # pan 1
-    ]
 
 
 do
@@ -105,32 +92,9 @@ do
     # octave 4
 
 do
-  -- @section pre-drop
-  -- mamp 1 0.5
-  mamp 4 0.5
-  xfadeIn "drums" 8 $ slow 2 $ stack
-    [ n "0*8" # s "br" # gain (range 0.4 0.6 rand) # orbit 1 # pan 1
-    , fast 8 $ s "bhh:2*2" # gain "0.6 0.4" # orbit 1 # pan 1
-    ]
-
-reface = p "test"
-
-do
-  -- @section drums
-  -- once $ s "br:1" # gain 0.7
-  setF "refaceamp" 0.5
-  reface $ stack
-    [ fast 8
-    $ t (strum 5 "[2,4,8]")
-    # sus 0.15
-    # amp "^refaceamp"
-    # octave 4
-    ]
-
-do
   bd $ slow 2 "0@3 [~ 0] . 0*<2 1> <~ [~ 0@3]>"
   ch $ fast 2
-      $ rarely (chop "1 2")
+      $ rarely (chop "1 [2|3|4]")
       $ chop 2 $ "0*2" # amp "0.6 0.38"
   oh $ fast 2 $ "[~ 0]*2" # amp "0.6 0.5"
   sd $ "[~ 0]"

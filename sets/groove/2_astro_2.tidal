@@ -3,6 +3,10 @@ do
   hush 
 
 do
+  -- @name ASTRO REPRISE
+  hush 
+
+do
   -- @name intro
   hush
   trbank 101
