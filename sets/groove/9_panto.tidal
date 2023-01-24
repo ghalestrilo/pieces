@@ -11,7 +11,7 @@ let trm idx pats = p (toID $ "tr8s" ++ show (tr8sToneCCArray!!idx))
 
 do
   -- @setup
-  trbank 0
+  trbank 8
   setcps $ 140 / 120 / 2
   setkey' 0 0 "major"
   setkey' 1 3 "lydian"

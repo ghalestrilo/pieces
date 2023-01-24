@@ -14,7 +14,8 @@ do
   bank "mm" 25
   trbank 5
   -- mamps $ repeat 0
-  setcps (164/120/2)
+  -- setcps (164/120/2)
+  setcps (95/120)
 
 do
   -- @setup themes

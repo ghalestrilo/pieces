@@ -38,7 +38,7 @@ do
   bd $ fast 2 $ "<0 ~> 0 . ~@3 0"
 
 do
-  hush
+  -- hush
   reface
     $ (nok 2 . (|+ "^chr") . stack)
     [ struct "tftfftftftftftft" "[-6,0,2,4@7 3@9, 6]", fast 4 $ "0 ~ ~ 0" |+ "<0 -3>" |- 7]
@@ -84,7 +84,7 @@ do
   -- rc $ (cat . zipWith nok [10..]) ["[~ 2 0 -3 -1 0 1 ~ 2 ~@2 0@2 2 4 7]", "[~ 11 11 11 9 7 6 6@5 2 4 6 6]", "~ 7 6 2 4 5 6@2 6@4 7 6 5 3"," ~ 5 6 2 4 5 6 5@5 5 6 7 8"]
   setF "refacesus" 0.24
   setF "soloamp" 0
-  reface
+  mm
     $ (# sus "^refacesus")
     $ stack 
     $ zipWith (flip (#)) (map amp [0.45, 0.5,"^soloamp"])

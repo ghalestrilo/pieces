@@ -111,7 +111,7 @@ do
 
 do
   -- @name movement
-  mamps [0.5,0.4,0.4]
+  -- mamps [0.5,0.4,0.4]
   setI "chordpos" $ slow 8 "<<-5 -3> -4 -7 -6>"
   reface
     $ (nok 2 . (|+ "^chordpos") . stack) ["[0@3 [0|-3]]" ,  "[0@2 0@3 0@2 0@2 0@2 0@2 0@3]/4" |+ "[4,6@7 5@9,9,12,14]"]
@@ -132,8 +132,8 @@ do
 do
   -- @name stairs
   setI "chordpos" $ "[7 3 7 3 5 3 4 7]/4" |- 7
-  mamps $ repeat 0
-  mm __
+  -- mamps $ repeat 0
+  -- mm __
   reface
     $ nok 1 "^stairs"
     # amp 0.3

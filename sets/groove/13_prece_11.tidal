@@ -4,12 +4,10 @@ do
   setkey' 1 "e" "phrygian"
   setkey' 0 "e" "minor"
   setcps (110/120/2)
-  all $ (# bus' 0.1 0.1)
-     . swingBy 0.1 4
+  trbank 12
+  all $ swingBy 0.1 4
   bank "mc" 90
   bank "mm" 30
-
-resetCycles
 
 do
   -- drums
@@ -116,9 +114,9 @@ do
 
 do
   -- @section bass
-  mamps $ [0] ++ repeat 0.6
+-- mamps $ [0] ++ repeat 0.6
   mm
-    $ t' 1
+    $ nok 1
     "{ ~@2 [2 3@6] 2 \
      \ ~@2 [-1 0@6] -1 \
      \ ~@2 -2 -1 0 -5@4 -4@4 -6@4 \

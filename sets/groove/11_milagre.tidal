@@ -1,26 +1,17 @@
-let piano' tt = xfadeIn "piano" tt ## [s "superpiano" # velocity 0.3 # lpf 1800 # gain 1.8 # octave 6 # sus (cF 1 "pianosus") # orbit 0]
-    piano = piano' 0.1
-
--- @env dev
-let reface = piano
-    vibe = p "vibe" ## [s "supervibe" # modamp 0 # sus 0.2 # velocity 0.3 # sus 4 # gain "^vibegain" # octave 5 # lpf 1200 # orbit 3]
-    mc = vibe . stack
-    mm = p "mm" ## [s "superhammond" # modamp 0 # velocity 0.3 # rel "^mmrel" # gain "^mmgain" # octave 5]
-    -- keyboard = reface
-
-
 do
+  -- Start
   setF "vibegain" 0.8
   setF "mmgain" 0.6
   setF "mmrel" 3
-
--- Start
-hush
+  setI "bassoffset" 9
+  hush
 
 do
   -- @setup
+  -- @name setup
   setkey' 0 ("f" |- 11) "lydian"
-  setkey' 1 ("fs" |- 11) "minor"
+  setkey' 1 ("fs" |- 11) "phrygian"
+  setkey' 4 ("fs" |- 11) "locrian"
   setkey' 2 ((1/4) <~ "[f@3 fs]/4" |- 11) ((1/4) <~ "[lydian@3 minor]/4")
   setkey' 3 "c" "lydian" 
   bank "mc" 91
@@ -28,20 +19,19 @@ do
   -- all $ (# (orbit 0 # room 0.1))
   -- all id
   setcps (93/60/2)
-
-hush
+  trbank 10
 
 do
   -- @env rec
   all id
 
 do
-  -- @section intro
+  -- @name intro
   let mphrases = ((|+ 5) <$> ["[-3 0] 0!2 0*2", "0 [0*2]!3", "0 [0*2]!2 0", "0!4", "1!2 -1!2"] :: [Pattern Int])
   setI "m1" $ randcat mphrases
   setI "m2" $ randcat mphrases
-  mt $ nok 0 "^m1" # sus 0.2
-  ht $ nok 0 "^m2" # sus 0.2
+  mt $ (|+ note 4) $ nok 0 "^m1" # sus 0.2
+  ht $ (|+ note 4) $ nok 0 "^m2" # sus 0.2
 
 
 -- trm 3 $ trn $ (|- 12) $ k 2 $ "[7 [7 ~@2]*3 [7 ~@3]!2 3 4 6 [~ 7@3|7]@4 0 [2 ~] [3 ~] [6 ~] [5 ~] . 4 3 2 4 [[0,-3] ~@2 [-1,-4] ~@2]@3 [0,-3]@5 3 4 6 ~]/8"
@@ -61,27 +51,28 @@ do
 
 
 do
-  -- @section tinks
+  -- @name tinks
   setI "vmel" $ ("[6@4 5@3 3@4 [-3,-1,3]@4 [-3,-1,2]@17]/8" |+ 10)
   mm $ nok 2 "^vmel" # amp "[1.3@11 0.7@21]/8"
   rs $ nok 0 $ "[6@4 5@3 3@4 3@4 2@17]/8" |+ 10
   cc $ nok 0 $ "[~@4 ~@3 ~@4 -1@4 -1@17]/8" |+ 10
   -- seconds
-  ht $ nok 0 "^m2" # sus 0.2 # nok 0 6
+  ht $ nok 0 "^m2" # sus 0.2 # note (k 0 0 |+ 15)
 
 do
-  -- @section drums
+  -- @name drums
   trbank 11
   setF "drumgain" 0.87
   setF "kickgain" 1
   setI "kicks" $ "<13 13(3,8) [~@3 13] [13@3 13]>"
   setI "sn" silence
-  bd $ n "^kicks" # amp ("^kickgain" |* 0.5) # note (irand 120)
+  bd $ n "^kicks" # amp ("^kickgain" |* 0.5)
   sd "[~ 20]"
   ch $ fast 2 $ n "5*2" # amp "0.5 0.1"
   oh $ degradeBy "0 . 1 0@7" $ stack ["<[~ 20] [~ [21*3] ~@2 . 20] ~ ~>", degrade "0*8" # amp (range 0.3 0.5 rand)]
-  setI "bass" $ "[0 9 5 6 1 2 4 0@2 9 5 6 1 2 4 -1]/4"
-  lt $ nok 0 "^bass" # sus 0.2
+  
+  setI "bass" $ ("[0 9 5 6 1 2 4 0@2 9 5 6 1 2 4 -1]/4" |+ 7)
+  lt $ nok 0 ("^bass" |+ 7) |+ note "^bassoffset"
 
 
 do
@@ -97,25 +88,32 @@ hush
 
 do
   -- maybe another mc voice
-  -- bank "mm" 32
+  -- @name theme
+  -- @colors mm:green
+  bank "mm" 32
   setF "mmgain" 0.6
   mm
     $ (# amp "^mmgain")
     $ nok 0
     $ "[7 [7 ~@2]*3 [7 ~@3]!2 3 4 6 [~ 7@3|7]@4 0 [2 ~] [3 ~] [6 ~] [5 ~] . 4 3 2 4 [[0,-3] ~@2 [-1,-4] ~@2]@3 [0,-3]@5 3 4 6 ~]/8"
-    |+ 9 |+ 7
+    |+ 9
   setI "bass" $ slow 8 "0 . 1 2 4 -2 . ~@3 -1 . ~@3 0 . ~ . 0 ~ ~ -1 ~ ~ 0 ~ . ~@3 6 . ~ 4 5 2"
+
+kcat = cat . (zipWith nok)
+
+reface silence
 
 do
   lt
     $ ((1/4) <~)
     $ slow 2
-    $ kcat [0,0,1,0]
+    $ ((|+ note "^bassoffset") . cat . zipWith nok [0,0,4,0])
     [ "-2@2 0 6 2 4 5 ~"
     , "-1@2 1 6 2 4 5 ~"
     , "0@2 -2 4 2 5 4 2"
     , "0@2 2 4 6 5 3 -1"
     ]
+    # sus "1 0.2@3"
  
 
 do
@@ -126,6 +124,7 @@ do
     $ nok 0
     $ "[7 [7 ~@2]*3 [7 ~@3]!2 3 4 6 [~ 7@3|7]@4 0 2 3 6 5 . 4 3 2 4 [[0,-3] ~@2 [-1,-4] ~@2]@3 [0,-3]@5 3 4 6 ~]/8"
     |+ 9
+
 
 do
   -- maybe another mc voice
@@ -143,29 +142,9 @@ do
     # octave 5
     # sus ("[1@3 0.3]/4" |* 3)
 
-
 do
-  -- @section lift
-  setF "kickgain" 0
-  setF "mmgain" 0
-
-do
-  setF "mmgain" 0.1
-  setF "kickgain" 1.1
   mm
     $ (# amp "^mmgain")
     $ nok 0
     $ "[7 [7 ~@2]*3 [7 ~@3]!2 3 4 6 [~ 7@3|7]@4 0 2 3 6 5 . 4 3 2 4 [[0,-3] ~@2 [-1,-4] ~@2]@3 [0,-3]@5 3 4 6 ~]/8"
     |+ 2
-
-do
-  xfadeIn "drums" 16 silence
-
-do
-  -- @release (third chord)
-  setF "refacesus" 16
-
-  reface silence
-
-do
-  hush

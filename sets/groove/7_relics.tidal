@@ -1,30 +1,7 @@
-setcps 0.6
-
--- let master = 0.9
---     bus = room (cF 0.1 "room") # size (cF 0.1 "size") # orbit 0
---     vk = s "vk" # n 3
---     vs = s "vs" # n 117
---     vh = s "vh" # n 2 # sus 0.08
---     vo = s "vh" # n 15 # sus 1
---     root = (|- 5)
---     tonal scalename pat = (note . root . scale scalename) pat
---     fx n = cF 0 $ "f" ++ (show n) -- Maps ID to FX Fader
---     vx n = cF 0 $ "v" ++ (show n) -- Maps ID to Volume Fader
---     px n = cF 0 $ "p" ++ (show n) -- Maps ID to Pan Knob
---     fader vol = gain (vol |* cF 0 "master")
---     gretsch x = n x # s "gretsch" # (fader . vx) 2 # bus
---     piano x = tonal "chromatic" x # s "superpiano" # (fader . vx) 3 # lpf 450 # bus |* sus 1.1 # octave 4
---     vibe x  = tonal "lydian" x # s "supervibe" # (fader . vx) 4 # lpf 500 # bus |* sus 2 # octave 7
-
-
-setI "phrase" "{16 14 11 0 ~     16 14 11 4 6 7 6 7 9 7 9 11 ~   16 14 11 6 ~ }%8"
-
-noks keys = stack . zipWith nok keys
-
 do
   setcps $ 86 / 120
-  -- all $ swingBy (1/24) 4
-  trbank 36
+  trbank 6
+  bank "mm" 23
   all id
   hush
   setF "drumslow" 1
@@ -33,7 +10,6 @@ do
   reface $ (stack . zipWith nok [0,0,1])
     [ slow 2 ("6@2 6@3 6@2 6@4  6@3 6@2" |+ "[0,5]@7 [-1,5]@9")
     , fast 2 ("0 ~ ~ 0" |- "<0 3>")
-    -- , "^phrase" |+ 12
     ]
     # octave 4
     # sus 4
@@ -56,30 +32,14 @@ do
     # sus (sometimesBy 0.9 (const "0.1") 1)
 
 do
-  bd $ n "{~@3   0@2   ~@3       0@3 <0 ~>@3 0@4   ~@3 0@2 }%8"
-  sd $ n "{~ 0@2 ~@2   ~@2 <0 ~> ~@3 <~ 0>@3 ~@4   0@3 ~@2 }%8"
+  bd $ n "[0 ~ ~ 0]*2"
+  rs $ n "{~ 0@2 ~@2   ~@2 <0 ~> ~@3 <~ 0>@3 ~@4   0@3 ~@2 }%8"
   oh $ slow "^drumslow" $ fast 4 $ n "~ 0*<3 1!3>" # amp (range 0.2 0.4 $ rand)
 
 do
   -- @straight
   bd $ slow "^drumslow" $ fast 2 "<0 ~!3> . <0 [~ 0]!3>"
-  sd $ slow "^drumslow" "~ 0" # amp 0.6
-
-
--- -- Snare + Variations enters
--- p "drums" $ stack
---     [ fast 2 $ gretsch "13@3 13" # lpf 1200 |* gain 1.05
---     , fast 2
---       $ sometimesBy 0.05 ((# n "16") . (# gain 0.7))
---       $ sometimesBy 0.1 (# n "19")
---       $ sometimesBy 0.2 (# n "5")
---       $ gretsch "10*4"
---       |* gain (range 0.75 1.15 $ rand)
---       # pan 0.3
---     , gretsch (degradeBy 0.9 "20*8") |* gain (range 0.75 0.95 $ rand)
---     ]
---     -- |* gain 0.75
-
+  sd $ slow "^drumslow" "~ 0"
 
 do
   -- @name plinks
@@ -98,27 +58,3 @@ do
 do
   -- straight
   bd $ "0*2 . ~@3 0" # sus 0.1 # amp 0.1
-
-{-| TODO: Test if this in fact implements the behavior
-  This means, I can tag a pattern and later manipulate what I tagged
- -}
-let tag = pI "tag"
-    ntag = grp [mF "note", mI "tag"]
-    phrase = "{16 14 11 0 ~     16 14 11 4 6 7 6 7 9 7 9 11:1 ~   16:1 14 11:1 6:2 ~ }%8"
-    on tagname lambda = fix lambda (tag tagname)
-in d1
-  $ (on 1 . every 2) (|- up 1)
-  $ (on 2 . every 2) (|+ up 3)
-  $ ntag phrase
-  # sound "superpiano"
-  # velocity 0.45
-  # octave 4
-
-do
-  setcps $ 86 / 120
-  setF "drumslow" 1
-  -- setcps (94/120)
-
-do
-  setF "drumslow" 2
-  setcps (103/120)
