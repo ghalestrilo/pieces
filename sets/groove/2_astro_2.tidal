@@ -1,13 +1,16 @@
+
+
 do
   -- @name ASTRO REPRISE
   hush 
+
 
 do
   -- @name intro setup
   hush
   trbank 1
   setI "shuf" "1"
-  all $ swingBy (1/12) 8 . byshuf (shuffle "^shuf")
+  all $ swingBy (1/12) 8 . byshuf (shuffle "^shuf") . byacc (chop "[16|8|4]" . (|* amp 0.3))
   setcps (92/120/2)
   -- setcps (86/120/2)
   htoff 1
@@ -97,9 +100,11 @@ do
   -- @name hold
   hush
   bd $ n "0(3,8) . ~@2 0@3 0@3"
+
   ch $ fast 8
     $ n "0*<3 1> 0"
     # amp "<0.42 0.33>"
+
   setF "plink" 0
   lt
     $ nok 0 ("0(3,8) . ~@2 0@3 0@3" |- 7)
@@ -116,18 +121,21 @@ do
     ]
     -- # octave 5
     # amp 0.6
+  -- htoff (-3)
+  -- htoff 0
   ht
     -- $ sometimesBy "^plink" (# (octave (5 |+ irand 3) # sus 4))
     -- $ (note . cat . fmap (k 0) . fmap (rarely (|+ ("[1 0@3]*4" |* (irand 8) |- 4))))
     $ fast 2
-    $ ((|+ note "^htoffset") . (|+ note 12) . nokc [0,0,3])
+    $ ((|+ note 13) . nokc [0,0,3])
     -- $ nokc [0,0,3]
     [ "2 4 5 2 4 0 4 5"
     , "6 8 9 6 8 -4 -2 -1"
     , "1 2 3 1 2 -2 2 4"
     ]
+
     -- # sus 1.4
-    # sus 0.12
+    -- # sus 0.12
 
 do
   -- @name drums
@@ -179,8 +187,8 @@ all $ id
 do
   -- @name steal
   hush
-  bd $ n "0  ~ ~ 0? ~@4. [~ 0] 0 ~ [~ 0]"
-  sd $ fast 2 $ n "~ [0@3 0??]" # amp ("0.55@3 [0.05|0.6]" |* 0.7)
+  bd $ "0  ~ ~ 0? ~@4. [~ 0] 0 ~ [~ 0]"
+  sd $ fast 2 $ n "~ [0@3 0??]" # amp ("0.55@3 [0.05|0.05|0.05|0.6]" |* 0.7)
   oh $ sometimes (chop 2) $ degrade (n "0*16") # amp (range 0.01 0.05 $ rand)
   ch $ fast 8 $ n "0*2" # amp "0.1 0.01"
   rs $ fast 2 $ n "0*[1|1|2] 0!2 0*2" # amp 0.1
@@ -222,6 +230,7 @@ do
       ]
     )
   hc $ fast 2 "~ <0*2 ~>"
+  rc $ fast 4 $ n "0*2" # amp "0.45 0.42"
 
 
 do
@@ -238,6 +247,7 @@ do
   lt $ nok 0 "0" +| note "0 ~ ~ 0 ~ ~ 0@4 -1 ~ 0 ~ ~ ~" # amp 0.8 # octave 4
   bd $ "0 ~ ~ ~ 0 ~ 0 ~ ~ ~ 0 ~ 0 ~ ~ ~" # amp 0.48 # sus 1
   sd $ "~ ~ ~ 0 ~ ~ ~ ~ ~ 0 ~ ~ ~ ~ ~ 0"
+  rc $ fast 4 $ n "0*2" # amp "0.45 0.42"
   ch $ fast 4
     $ n "0 0 0*2 0"
     # amp "<0.42 0.33>"
@@ -258,3 +268,5 @@ do
     # sus 0.18
 
 hush
+
+htnoteoffset 0

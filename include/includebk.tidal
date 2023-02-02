@@ -9,10 +9,8 @@ do
   -- @setup
   hush
   trbank 113
-  setkey' 0 0 "lydian"
-  setkey' 1 0 "lydian"
-  setkey' 1 (-3) "dorian"
-  setkey' 2 "3" "mixolydian"
+  setkey' 0 7 "lydian"
+  setkey' 1 7 "lydian"
   setcps (112/120/2)
   all id
 
@@ -29,22 +27,10 @@ do
     # octave 3
 
 do
-  reface
-    $ fast 2
-    $ stack
-      [ slow 3 $ nokc [1] (repeat $ "[0@7 1 ~ 1@9]" |+ "[0,4,6,12] [0,4,6,8,9]@2")
-      -- "[<0!4 -2!4>,4,11]"
-      , nok 0 "[4@2 6 7 9 13 . ~ 12 ~ 12@3 . 16 13 15 12 13 15]/3" # sus 5
-      ]
-    # amp (range 0.35 0.5 rand)
-    # octave 4
-
-do
   -- hush
-  ch $ "[2 ~ 2 ~ 2 1@2 2 ~ 2 ~ 2 2 ~ 1 ~ 2 2]/1.5" # amp ("[3 4 5]*4" |/ 11)
-  oh $ "[3 ~ 5 ~ 5 3 . 3 ~ 5 5 ~ 3 . 3 ~ 5 ~ 5 3]/1.5" # amp 0.4
-  hc $ "[~ 0 ~ . 0]*2"
-  bd $ "0*4"
+  ch $ n "[2 ~ 2 ~ 2 1@2 2 ~ 2 ~ 2 2 ~ 1 ~ 2 2]/1.5" # amp ("[3 4 5]*4" |/ 11)
+  oh $ n "[3 ~ 5 ~ 5 3 . 3 ~ 5 5 ~ 3 . 3 ~ 5 ~ 5 3]/1.5" # amp 0.4
+  bd $ n "0*4"
   sd $ fast 4 $ ( (1/3) <~) "[0!2 ~]"
     # note "<10 120>"
 
@@ -86,8 +72,8 @@ do
       -- , k 0 $ ("[~ 3 ~ 3@2 ~]" |+ "[0,1,3,6,9]")
       , flat 1 $ k 0 $ ("[~ 3 ~ 3@2 ~]" |+ "[0,1,3,6,9]")
       ]
-      # octave 3
-    ]
+    # octave 3
+  ]
 
 
 do
@@ -109,7 +95,7 @@ do
 
 
 
-hush
+
 
 
 
@@ -367,66 +353,34 @@ do
   -- @name Alvenaria A
   hush 
   all $ slow 4
+      . byshuf (chop $ segment 8 $ irand 4 |+ 2)
+      . byacc (rev . fast 4)
   setcps $ 125 / 120
   trbank 122
   setkey' 0 "f" "mixolydian"
   setI "chord" $ "[-3,0,2,[5|6],8]"
-  setI "phrase" $ "[0 [0? ~] ~ 0@2 0 ~ 0@2 0 ~ 0 ~ ~ ~ ~]*2"
-  setF "refaceamp" 0.4
-  reface $ nok 0 ("^phrase"  |+ "^chord")
-    # octave 4 # amp "^refaceamp"
-    # sus 0.1
-
-hush
-
-do
-  -- @name verse 1
-  all $ slow 4 . (# amp 0.5)
-  bd $ (n . stack) ["^phrase", "[0 ~ [~@3 0] [0 0*3]]*2"]
-  sd $ n "^phrase"
-  lt $ nok 0 ("^phrase" |+ 3)
-  ch $ n "^phrase"
-  oh $ n "^phrase"
-  setF "refaceamp" 0.7
-  ht
-    $ (note . neg . k 0) ("^phrase" |+ fast 2 "0 5 7 5 8 6 0 2 . 6 4 6 4 0 5 3 5" |+ 4)
-    # amp 0.5
-
-do
-  -- @name verse 1
-  all $ slow 4
-      . byshuf (chop $ segment 8 $ irand 4 |+ 2)
-      . byacc (rev . fast 4)
   ch
     $ fast 8 $ sometimes (chop $ "<1 [1|2]>") $ "0*4"
     # amp ("5 3 4 4.5" |/ 10)
     # sus (almostNever (const 0.6) $ segment 8 0.4)
-  -- bd $ "0 ~ ~ ~ ~ 0 ~ ~ ~ 0 0 ~ ~ ~ ~ 0 0 ~ ~ ~ ~ ~ 0 ~ ~ ~ ~ ~ 0 ~ ~ ~"
-  bd $ "[0 ~ ~ [[0 <0 ~>]!2]@4 ~]*2"
+  bd $ "0 ~ ~ ~ ~ 0 ~ ~ ~ 0 0 ~ ~ ~ ~ 0 0 ~ ~ ~ ~ ~ 0 ~ ~ ~ ~ ~ 0 ~ ~ ~"
   sd $ "~ ~ ~ 0 ~ ~ ~ 0 ~ ~ ~ ~ [0 ~|~ 0]@2 ~ ~ ~ ~ ~ 0 ~ ~ ~ ~ ~ 0 ~ ~ ~ ~ ~ 0"
   rs $ fast 2 $ "~ 0 ~ 0? 0? ~ 0 0 0 ~ 0 0 0 ~ 0 0"
   rs $ "0 0 0 ~ 0 ~ 0 ~ 0 0 0 ~ 0 ~ 0 0 ~ 0 ~ 0 0 ~ 0 ~ 0 0 ~ 0 ~ 0 0 ~"
   cc $ "[~ ~ 0 ~ ~ ~ ~ ~]*2"
   rc $ "[~ ~ ~ ~ ~ 0 ~ ~]*2"
   -- setseq $ randcat [0,1,2,3]
-  -- lt $ nok 0 "0 7? 14? 4 ~ 0 ~ 4 ~ ~ -3 ~ ~ [4|-1] ~ 0 0 ~ ~ 4 ~ ~ -3 ~ ~ 4 ~ ~ 0 ~ ~ ~"
-  lt $ nok 0 "[0 ~ ~ ~    ~ 1 ~ ~    -1 ~ <~ -3> ~   <~ -1> <3 ~> ~ ~]*2"
+  lt $ nok 0 "0 7? 14? 4 ~ 0 ~ 4 ~ ~ -3 ~ ~ [4|-1] ~ 0 0 ~ ~ 4 ~ ~ -3 ~ ~ 4 ~ ~ 0 ~ ~ ~"
   ht
     $ (nok 0) $ fast 2 "0 5 7 5 8 6 0 2 . 6 4 6 4 0 5 3 5"
   -- reface $ nok 0 ("[0 ~ ~ 0 ~ ~ ~ 0 . ~ ~ ~ 0 ~ ~ ~ ~]*2"  |+ "^chord")
   --   # octave 4 # amp 0.4
-  oh $ n "0*8" # amp 0.2
+  reface $ nok 0 ("[0 [0? ~] ~ 0@2 0 ~ 0@2 0 ~ 0 ~ ~ ~ ~]*2"  |+ "^chord")
+    # octave 4 # amp 0.4
+    # sus 0.1
 
 
 do
-  -- @chords
-  setI "chord" $ "[-3,0,2,6 5,8]"
-  setF "refaceamp" "0.4"
-  reface $ (note . k 0) ("<0 -1>@3 1@4 0@4 -3@5"  |+ "^chord") |+ note "0@3 1@3 0@2 . 0"
-    # octave 4 # amp "^refaceamp"
-
-do
-  -- @name house decay
   hc $ fast 4 "~ 0*2" # amp 0.5
   bd $ "0*8" # amp 0.4
   bd $ fast 4 "~ 0*2" # amp 0.45
@@ -434,7 +388,6 @@ do
 
 do
   -- @name quiet
-  setkey' 0 "f" "mixolydian"
   setI "chord" $ stack["[-3,6]", "[0,2]" |+ sew "[tttttffttffttttt]*2" (almostNever (const 1) "0*16") "-1"] |+ "[3 0]"
   setI "bes" $ "0"
   ht
@@ -451,20 +404,86 @@ do
 
 
 do
-  -- @name drama
   setI "bes" $ "<1 -1>"
 
 
 do
-  -- @name glitches
-  all $ slow 4
-    . byshuf (degradeBy 1) 
-    . byacc (rev . fast 4)
   setI "bes" $ "0"
   setkey' 0 ("f" |- 5) "mixolydian"
   setI "chord" $ ("[-3,2,6,8,12]" |+ "[0@7 2@2 -2@2 -1@5]*2")
-  lt $ nok 0 "[0 ~ ~ ~    ~ 1 ~ ~    3 ~ <~ 2> ~   <~ 3> <5 ~> ~ ~]*2" # sus 0.3
-  -- lt $ nok 0 "0 7? 14? 4 ~ 0 ~ 4 ~ ~ -3 ~ ~ [4|-1] ~ 0 0 ~ ~ 4 ~ ~ -3 ~ ~ 4 ~ ~ 0 ~ ~ ~" |+ note "0" # note 0 # sus 0.1
+  lt $ nok 0 "0 7? 14? 4 ~ 0 ~ 4 ~ ~ -3 ~ ~ [4|-1] ~ 0 0 ~ ~ 4 ~ ~ -3 ~ ~ 4 ~ ~ 0 ~ ~ ~" |+ note "0 12@3"
+
+
+do
+  setI "bes" $ "0"
+  setkey' 0 ("f" |- 5) "mixolydian"
+
+  lt $ nok 0 "0 7? 14? 4 ~ 0 ~ 4 ~ ~ -3 ~ ~ [4|-1] ~ 0 0 ~ ~ 4 ~ ~ -3 ~ ~ 4 ~ ~ 0 ~ ~ ~" |+ note "0" # note 0 # sus 0.1
+
+do
+  setkey' 0 "f" "mixolydian"
+
+do
+  all $ slow 4
+      . byshuf (degradeBy 1) 
+      . byacc (rev . fast 4)
+
+hush
+
+
+
+do
+  -- @name alvenaria C - xote lo fi
+  -- all $ slow 2 . swingBy (1/12) 4 . (|* amp 1.1)
+  hush
+  all $ slow 2 . swingBy (1/9) 4
+  -- entre 130 e 135
+  setcps $ (135/120)
+  bd $ "0. 0*2" # sus "0.1 1"
+  bd $ "<0 ~> 0 . ~ [~ 0]" # sus "0.1 1"
+  ch $ fast 4 $ "0*2" # amp "0.45 0.5"
+    -- # sus "<0.1 1 0.1!2> . 0.1"
+    -- # sus "<0.1 1> . 0.1"
+    # sus "[0.1 0.6 1 0.1]/2"
+    -- # sus "[0.1 . 1 0.5]/2"
+  sd $ "<[~ 0 ~ ~] [~ 0 ~ 0]> . 0"
+  sd $ "~ 0"
+  sd $ "<~ [~ 0 ~ ~]> . 0"
+  -- bd $ "0 . 0*2"
+  -- sd $ "[~ 0 . ~ 0 ~ ~]/2"
+
+
+bd $ slow 2 $ "0 . ~ [~ 0] . ~ 0 . 0*2" # sus "0.1 1"
+
+bd "0. 0*2"
+
+do
+  setN "base" "<4 0>"
+  reface
+    -- $ nok 0 (stack ["[0*2, 2*2, <6 4> 5, <9 7> 8, 11 10]"] |+ "<4 0 4 [-1 0] 3 -1 2 5>") 
+    $ (fast 2 . strum 10 . slow 2)
+    $ nok 0 (stack ["[0*2, 2*2, <6 4> 5, <9 7> 8, 11 10]"] |+ "^base") 
+    # octave 4
+    # amp 0.02
+    # sus 2
+  lt $ nok 0 ("0@3 0?. <[1 -3] [-3 0]>" |+ "^base" |+ 7) # sus "0.6 0.2@3"
+
+do
+  setkey' 0 0 $ slow 2 "lydian@3 major"
+  setkey' 0 0 $ slow 2 "mixolydian@3 <major minor>"
+  setN "base" "<4 0 4 [-1 0] 3 -1 2 5>"
+  -- setN "base" "<3 -1 2 5>"
+  ch $ fast 4 $ "0*2" # amp "0.45 0.5" # sus 0.2
+  reface
+    -- $ nok 0 (stack ["[0*2, 2*2, <6 4> 5, <9 7> 8, 11 10]"] |+ "<4 0 4 [-1 0] 3 -1 2 5>") 
+    $ (fast 2 . strum 10 . slow 2)
+    $ nok 0 (stack ["[0*2, 2*2, <6 4> 5, <9 7> 8, 11 10]"] |+ "^base") 
+    # octave 4
+    # amp 0.02
+    # sus 2
+
+hush
+
 
 
 
@@ -734,74 +753,221 @@ do
 
 
 
-
-
-
-
-
-
-
-
-
-
 -- Include 1:AYLA
+
+do
+  -- @name techno vibe
+  trbank 112
+  all $ shuffle 4
+  bd
+    $ chctrl (fast 2 $ irand 256)
+    $ chdecay (fast 5 (irand 130 |+ 109))
+    $ "0 0 . ~ 0 ~ ~ 0 ~ ~ ~"
+  bd $ "0*4"
+  sd $ "~@3 0 . ~ 0 ~ ~ 0 ~ ~ ~"
+  ch
+    $ chctrl (fast 2 $ irand 256)
+    $ chdecay (fast 5 (irand 130 |+ 109))
+    $ rarely (chop $ irand 8)
+    $ fast 2 $ "0*4 . ~ 0"
+  
+  rc
+    $ n "0*8"
+    # note (irand 250)
+    # ctrl (fast 2 $ rand)
+    # sus (fast 5 (range 0 0.59 rand |+ 0.4))
+
+
+
+do
+  hush
+  all $ slow 2
+  setcps $ (90/120/2)
+  bd
+    -- $ bdctrl (fast 2 $ irand 256)
+    -- $ bddecay (fast 5 (irand 130 |+ 109))
+    $ "0@3 0 . ~ . ~ . ~"
+  sd
+    -- $ bdctrl (fast 2 $ irand 256)
+    -- $ bddecay (fast 5 (irand 130 |+ 109))
+    $ fast 2
+    $ "~ <0 0?>"
+    -- # note 13
+    # note 8
+  ch
+    -- $ rarely (chop $ irand 8)
+    $ degrade
+    $ note "[0*4 . ~ 0]*2"
+    # ctrl (fast 2 $ irand 256)
+    # sus (fast 5 (range 0 0.59 rand |+ 0.4))
+
+  rs $ "0 . 0 . ~ . ~ "
+
+bd
+    $ stack ["0@3 0 . ~ . ~ . ~ <~ [0*2|0*3]>@3", degradeBy 0.7 $ fast 4 $ every 4 (degradeBy 1) $ "0*4"]
+    # sus "1 0.1@3"
+
+
+
+do
+  setkey' 0 0 "lydian"
+  
+  mt
+    $ someCyclesBy 0.3 (|+ note 12)
+    $ fast 4
+    $ stack [
+      nok 0 "6 . <4!2 5!2> 2" # amp 0.3 # sus 0.8,
+      (nok 0 $ degradeBy ("[0|1|1]*4") $ sometimes (fast 4) $ segment 16 $ irand 9) # amp 0.3 # sus 0.5
+    ]
+    -- # amp 0.2
+
+  reface $ chop 4 $ nok 0 "[-3,0,2 3,6]" # amp 0.01 # octave 4
+
+
+rs $ slow $ "0*2 . ~ . ~ . ~"
+
+do
+  sd
+    $ fast 2
+    $ "~ <~ 0> ~@2 . 0"
+  bd
+    $ stack ["0@3 0 . ~@3 0 . ~@3 0 . ~ <[~@2 0] [0*2|0*3]>@3", degradeBy 0.9 $ fast 4 $ every 4 (degradeBy 1) $ "0*4"]
+    # sus "1 0.1@3"
+    # amp 0.01
+
+
+setF "chord" 0
+
+setF "chord" "[0 . -2 -1]/2"
+
+setF "chord" "[3 0]/4"
+
+all $ slow 2 . byshuf (shuffle "<1 4>") . byacc (chop "<1 8>")
+
+reface
+  $ stack [
+    chop 4 $ (nok 0 ("[-3,0,2 3,6]" |+ "^chord") # amp 0),
+    (# sus 6) $ nok 0 $ degrade $ segment 16 $ (irand 8 |+ 7 |+ "^chord")
+  ]
+  # amp 0.02 # octave 4
+
+    reface silence
+
+ht $ n "[~ ~ ~ 0*3 . 0]*2" # amp "[0.4 0]/2"
+
+
+
+do
+  all $ slow 2 . byshuf (shuffle "<1 4>") . byacc (chop "<1 8>")
+
+
+do
+  reface silence
+  setkey' 0 4 "lydian"
+  lt $ nok 0 "[~ ~ 4@3 0@2 -3 . 0!3 ~@3 . ~ .  ~]/2"
+  lt $ nok 0 "[~ ~ 4@3 0@2 -3 . 0!3 ~@3]" |+ note 12
+  oh $ fast 2 "0*2 0 0 0*3 . 0*4"
+
+do
+  bd
+    -- $ bdctrl (fast 2 $ irand 256)
+    -- $ bddecay (fast 5 (irand 130 |+ 109))
+    $ "0@3 0 . ~ . ~ . ~"
+  sd
+    -- $ bdctrl (fast 2 $ irand 256)
+    -- $ bddecay (fast 5 (irand 130 |+ 109))
+    $ fast 2
+    $ "~ <0 0?>"
+    -- # note 13
+    # nok 0 0
+    |+ 8
+
+
+ch $ "0*8" # amp ""
+
+
+setF "chord" "[3 0]/4"
+
+hush 
+
+
+
+hush
+
+
+
+
+
+--- Ayla 2
+
+do
+  bd $ "0 ~ ~ ~ 0 ~ 0 ~ ~ ~ 0 ~ 0 ~ ~ 0"
+
+  sd $ "~ <0 ~> ~ ~"
+
+  setcps $ 110/120
+
+  ch
+    $ sometimes (chop "1 [2|4]")
+    $ fast 4
+    $ n "0*4" # amp ("5 4 4 4" / 10)
+  
+
+  ht $ :
+
+  sd $ fast 2 "~ 0"
+
+do
+  lt $ nok 0 "~ ~ 5 5 ~ 4 4 ~"
+  lt $ nok 0 "<0 ~> ~ 5 5 ~ 4 4 <~ 1>"
+
+do
+  ch
+    $ fast 4
+    $ n "0*4" # amp ("[5 3]*2" / 10)
+
+
+do
+  ht $ fast 2 "<[0 0 ~ 0] 0*2> . <~ 0> 0*<2 3>"
+  reface
+    $ slow 2
+    $ nok 0 (stack [
+      ("0@2 ~ 0@5 . ~" |+ "[-3,0,3,6,9]"),
+      "~ . ~@3 [9 ~] [8 ~] [7 ~] [8 ~] ~" |+ "[-3,0]"
+    ])
+    # amp 0.02 |+ note "1 0@15"
+    # octave 4
+
+do
+  rc
+    -- $ byshuf (rev . shuffle 4 . density 2 . (|+ note (irand 20)))
+    $ "0 0 ~ 0 ~ 0 0 ~ 0 ~ 0 ~ 0 ~ 0 0"
+
+
+
+
+
+
+hush
+
+
+-- Ayla 3 - swing
+
 do
   trbank 112
   setcps $ 160 / 120 / 2
+  -- all $ swingBy (1/16) 0.2 . slow 2
   all $ slow 2 . swingBy (1/8) 6
-  hush
-  setN "steps" 0
-  setN "steps" "[0 -2 . -4 -7 . -6 . -5 -3]/4"
-  setN "steps" "<0 5 2 5>"
-  setkey' 0 ("0" |+ 7) "<lydian major>"
-  reface
-    $ swingBy (-1/8) 6
-    -- $ (note . (|+ k 0 "[-3,0,2, 6 6 6 5]/2" )) "^steps" 
-    $ nok 0 (stack ["<[-7,~ -3@2,0,~ 2@2,6]!2 [7,-3,0,2,6]!2>", byacc (const silence) $ rarely (density 2) "[0 0? 0]*6" |+ irand 8 |+ 7])
-    # amp 0.2
-    # octave 4
-    |- note "<0 5 2 5>"
-
-
-do
-  lt $ nok 0 "[2 ~ 4 . 0 ~ 1]" |- note "^steps"
-  ch
-    $ fast 6
-    $ "0*2"
-    # amp ("0.3 0.1" |+ (rand / 10))
-    # sus ("[1 0.1@5]/6" / 2)
-
-do
-  -- @name dry
   bd "0 . ~@2 [~ 0]"
   sd "~ . 0"
   ch
     $ fast 6
     $ "0*2"
-    # amp ("0.3 0.1" |+ (rand / 10))
-    # sus ("[1 0.1@5]/6" |/ 2)
+    # amp "0.4 0.2"
+    # sus "[1 0.1@5]/3"
   setkey' 0 ("0" |+ 7) "major"
-  reface silence
-  lt silence
 
-
-do
-  -- @name enter bass
-  -- lt $ nok 0 "[2 ~ 4 . 1 ~ 3 . 0 . 0@3 -3 0 1]/2"
-  -- lt $ nok 0 "[2 ~ 4 . 1 ~ 3 . 0 ~ 2. -1@3 -3 0 1]/2"
-  setN "steps" "[0 -2 . -4 -7 . -6 . -5 -3]/4"
-  lt
-    $ (|+ note "^steps")
-    $ nok 0 "[<2!4 2 -1 2 -1> ~ <4!7 0>]*2"      
-
-do
-  -- @name enter keys
-  reface
-    $ swingBy (-1/8) 6
-    $ (note . (|+ k 0 "[-3,0,2, 6 6 6 5]/2" )) "^steps" 
-    # amp 0.4
-    # octave 4
-
+  lt $ nok 0 "[2 ~ 4 . 1 ~ 3 . 0 . 0@3 -3 0 1]/2"
 
 
 -- oh $ fast 6 $ "~ [0!3 ~]" # amp (rev (run 6 / 10) |* 0.8 |* "<1 1 0>")
@@ -894,3 +1060,66 @@ do
     ]
     # octave 4
 
+
+
+
+
+
+
+
+
+
+
+
+
+do
+  -- @name alvenaria C - xote lo fi
+  -- all $ slow 2 . swingBy (1/12) 4 . (|* amp 1.1)
+  hush
+  all $ slow 2 . swingBy (1/9) 4
+  -- entre 130 e 135
+  setcps $ (135/120)
+  bd $ "0. 0*2" # sus "0.1 1"
+  bd $ "<0 ~> 0 . ~ [~ 0]" # sus "0.1 1"
+  ch $ fast 4 $ "0*2" # amp "0.45 0.5"
+    -- # sus "<0.1 1 0.1!2> . 0.1"
+    -- # sus "<0.1 1> . 0.1"
+    # sus "[0.1 0.6 1 0.1]/2"
+    -- # sus "[0.1 . 1 0.5]/2"
+  sd $ "<[~ 0 ~ ~] [~ 0 ~ 0]> . 0"
+  sd $ "~ 0"
+  sd $ "<~ [~ 0 ~ ~]> . 0"
+  -- bd $ "0 . 0*2"
+  -- sd $ "[~ 0 . ~ 0 ~ ~]/2"
+
+
+bd $ slow 2 $ "0 . ~ [~ 0] . ~ 0 . 0*2" # sus "0.1 1"
+
+bd "0. 0*2"
+
+do
+  setN "base" "<4 0>"
+  reface
+    -- $ nok 0 (stack ["[0*2, 2*2, <6 4> 5, <9 7> 8, 11 10]"] |+ "<4 0 4 [-1 0] 3 -1 2 5>") 
+    $ (fast 2 . strum 10 . slow 2)
+    $ nok 0 (stack ["[0*2, 2*2, <6 4> 5, <9 7> 8, 11 10]"] |+ "^base") 
+    # octave 4
+    # amp 0.02
+    # sus 2
+  lt $ nok 0 ("0@3 0?. <[1 -3] [-3 0]>" |+ "^base" |+ 7) # sus "0.6 0.2@3"
+
+do
+  setkey' 0 0 $ slow 2 "lydian@3 major"
+  setkey' 0 0 $ slow 2 "mixolydian@3 <major minor>"
+  setN "base" "<4 0 4 [-1 0] 3 -1 2 5>"
+  -- setN "base" "<3 -1 2 5>"
+  ch $ fast 4 $ "0*2" # amp "0.45 0.5" # sus 0.2
+  reface
+    -- $ nok 0 (stack ["[0*2, 2*2, <6 4> 5, <9 7> 8, 11 10]"] |+ "<4 0 4 [-1 0] 3 -1 2 5>") 
+    $ (fast 2 . strum 10 . slow 2)
+    $ nok 0 (stack ["[0*2, 2*2, <6 4> 5, <9 7> 8, 11 10]"] |+ "^base") 
+    # octave 4
+    # amp 0.02
+    # sus 2
+
+hush

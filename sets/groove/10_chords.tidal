@@ -30,13 +30,13 @@ do
   oh $ fast 2 $ n "[~ 0]!3 [~ 0*[1|2|4]]"
 
 do
-  ch $ fast 2 $ chop 2 $ "0*2" # amp "0.6 0.38"
+  ch $ fast 8 $ "0*2" # amp "0.6 0.38"
   rs silence
   cc $ fast 4 $ n "0*2" # amp (("6 5" / 12 |+ range (-0.1) 0.1 rand) |* cF 1 "volride")
 
 
 do
-  ch $ fast 8 $ n "0 . <0!3 [0*2]>" # amp "0.6 0.38"
+  ch $ fast 4 $ n "0 . <0!3 [0*2]>" # amp "0.6 0.38"
   cc $ fast 4 $ n "0*2" # amp (("6 5" / 12 |+ range (-0.1) 0.1 rand) |* cF 1 "volride")
 
 do
@@ -86,7 +86,7 @@ do
 do
   -- @section flip
   setN "bassnotes" $ "[0 | [0 ~]!2 ~ [0 ~] | [0 ~]!2 | 0@3 0]@4 6 7 4 2 . <[0 ~ 0@2 7 0 ~@2] [0@2 3@3 7@3] [0 ~ 0@3 1@3]>"
-  lt $ nokc [1,2,3] ["^bassnotes", "^bassnotes", "^bassnotes"] # octave 4 # sus 1
+  lt $ nokc [1,2,3] ["^bassnotes", "^bassnotes", "^bassnotes"] # sus 1
   reface silence
   mm silence
 
@@ -129,9 +129,13 @@ do
   -- @section hold
   lt
     $ fast 4
-    $ n "0?*4"
-    # octave 4
-    # sus 0.4
+    $ note ("0?*4")
+    -- # octave 4
+    # sus 0.2
+
+hush
+
+  bd $ fast 2 $ "0 0 . ~@3 0"
 
 do
   -- @section outro
