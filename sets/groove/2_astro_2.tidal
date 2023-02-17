@@ -6,7 +6,7 @@ do
 
 
 do
-  -- @name intro setup
+  -- @name intro set
   hush
   trbank 1
   setI "shuf" "1"
