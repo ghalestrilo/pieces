@@ -1,0 +1,135 @@
+do
+  all id
+  all $ byshuf (shuffle "[[1 4@3]*2 | 1 4@7]" . chop "1 [1|2]@3") . byacc press
+  hush
+  -- setcps (90/120)
+  setcps (93/120)
+  trbank 114
+  bank "mm" 103
+  setkey' 0 "-5" "major"
+  mm $ (0.01 <~) $ fast 2
+    $ (n . k 0) "<6 6 5 9> 4 2 0"
+    # amp 0.3
+    # sus "1@3 0.6"
+
+do
+  bd $ "[0@7 0 . [~ 0]!4]/2"
+  sd $ "~ 0"
+  ch $ "0*8" # amp "[0.5 0.3]*4" # sus "0.05!6 0.3 0.05"
+
+
+do
+  setF "bassroot" 0
+  lt $ slow 2
+    $ nok 0 "0 ~ ~ 0 ~ ~ ~ 0 ~ ~ ~ 0 ~ ~ 0 ~"
+    # nok 0 "^bassroot"
+    # amp 0.5
+    |- note 12
+
+do
+  setkey' 0 "-5" "major lydian"
+  setkey' 1 "-2" "lydian"
+  setF "bassroot" 0
+  lt $ slow 2
+    $ ((1/16) <~ )
+    $ nok 0 "0@2 0 2 4 6 5 4 0 ~ 1 ~ 2 ~ 4 ~"
+    |- note 12
+
+  mm $ slow 2
+    $ ((1/16) <~)
+    $ nok 0 ("0@4 0 0 ~ ~ 0 ~ 2 ~ 4 ~ 1 ~" |+ "[-3,0,2,4]")
+
+do
+  setkey' 0 "-5" "major lydian"
+  setkey' 1 "-2" "lydian"
+  lt $ slow 2
+    $ ((1/16) <~ )
+    -- $ nokc [0, 1] (repeat "0@4 0 0 ~ ~ 0 ~ 1 ~ 2 ~ 4 ~")
+    $ nokc [0, 1] (repeat "0@2 0 2 4 6 5 4 0 ~ 1 ~ 2 ~ 4 ~")
+    |- note 12
+  mm $ slow 2
+    $ ((1/16) <~ )
+    $ cat [ 
+     nok 0 $ "0@4 0 0 ~ ~ 0 ~ 1 ~ 2 ~ 3 ~" |+ "[-3,0,2,4]",
+     nok 1 $ "2@4 2 2 ~ ~ 2 ~ 1 ~ 0 ~ -1 ~" |+ "[-2,0,2,4]"
+    ]
+
+do
+  setkey' 0 "-5" "major lydian"
+  setkey' 1 "-2" "lydian"
+  setI "octave" "4"
+  mt silence
+  bd $ "<0 [~ 0] 0  0*4> . ~@3 0"
+  lt $ slow 2
+    $ nok 1 ((1/16) <~ "0@2 0 2 4 6 5 4 0 ~ 1 ~ 2 ~ 4 ~")
+    |- note 12 
+  rs $ fast 4 "~ 0*<2 1!7>"
+  setI "mmpat" "[9 6 5 | 9 6 8 | 2 4 6 | [4 5 6 | 3 4 5]]@3 0"
+  mm $ (0.01 <~) $ fast 2
+      $ byshuf (shuffle "1 8*3")
+      $ (n . k 1) "^mmpat"
+      # octave "^octave"
+      # amp 0.3
+      # sus "1@3 0.6"
+
+do
+  setI "octave" "[4|5]/4"
+  setI "mmpat" $ byacc (fast 2) "[9 6 5 | 9 6 8 | 2 4 6 | [4 5 6 | 3 4 5]]@3 0"
+  mt 
+    $ (|+ note "<12!2 0!2>")
+    $ slow 2
+    $ ((1/16) <~)
+    $ nokc [0, 1] (repeat $ fast 8 $ ("1 6 4 9 3 8 2 7" |- 3))
+
+
+-- do
+--   setkey' 0 "-5" "major lydian"
+--   setkey' 1 "-2" "lydian"
+  
+--   mm silence
+--   lt
+--     $ ((1/8) <~ )
+--     -- $ nokc [0, 1] (repeat "0@4 0 0 ~ ~ 0 ~ 1 ~ 2 ~ 4 ~")
+--     $ nokc [1, 2, 0, 0] ((take 3 . repeat) "0@2 0 2 4 6 5 4" ++ ["0 ~ 1 ~ 2 ~ 4 ~"])
+--     |- note 12
+--   mm
+--     $ ((1/8) <~)
+--     $ cat [ 
+--       nok 1 $ "2@4 2 ~ ~ ~ " |+ "[-2,0,2,4]",
+--       nok 2 $ "2@4 2 ~ ~ ~ " |+ "[-2,0,2,4]",
+--       nok 0 $ "0@4 0 ~ ~ ~ " |+ "[-3,0,2,4,6]",
+--       nok 0 $ "0 ~ 1 ~ 2 ~ 3 ~" |+ "[-3,0,2,4]"
+--       ]
+
+do
+  setkey' 2 "0" "lydian"
+  mm $ ((0.01 <~) . stack)
+    [
+      ((1/8) <~)
+      $ cat [ 
+        nok 1 $ "2@4 2 ~ ~ ~ " |+ "[-2,0,2,4]",
+        nok 2 $ "2@4 2 ~ ~ ~ " |+ "[-2,0,2,4]",
+        nok 0 $ "0@4 0 ~ ~ ~ " |+ "[-3,0,2,4,6]",
+        nok 0 $ "0 ~ 1 ~ 2 ~ 3 ~" |+ "[-3,0,2,4]"
+      ],
+        ((1/8) ~>)
+        $ nokc [1,2,0,0]
+        [ "[6 9 5 8 . 4 6 2 5]"
+        , "[1 4 0 3 . -2 1 -3 0]" |- 2
+        , "[6 9 5 8 . 4 6 2 5]"
+        , "[1 4 0 2 . -2 1 -3 0]"
+        ]
+        # amp 0.2
+        # sus 0.4
+        # octave 6
+    ]
+  lt
+    $ ((1/8) <~ )
+    $ nokc [1, 2, 0, 0] ((take 3 . repeat) "0@2 0 2 4 6 5 4" ++ ["0 ~ 1 ~ 2 ~ 4 ~"])
+    |- note 12
+
+setkey' 1 "-5" "major lydian"
+
+  mm
+    
+hush

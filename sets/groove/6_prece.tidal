@@ -16,6 +16,7 @@ do
   -- mamps $ repeat 0
   -- setcps (164/120/2)
   setcps (95/120)
+  setcps (90/120)
 
 do
   -- @setup themes
@@ -41,25 +42,41 @@ do
           , "0 [2,6,7]"
           ]
 
+hush
 
 do
   -- @section intro
+  -- setF "bend" "8192"
+  -- mm $ nok 2 "{9@2 5 4}%4" # amp 0.2 # octave 6 # midibend "^bend" # pitchbend "^bend" # pbend "^bend"
   mm $ nok 2 "{9@2 5 4}%4" # amp 0.2 # octave 6
   resetCycles
 
 do
-  -- @section intro 2
   mm $ nok 2 "[ [-7@3 -5 . -10 ~@3]/2 \
              \, 9@2 5 4]"
      # amp 0.2
      # octave 6
 
 do
-  bd $ "0 <0 ~> . ~ <0 ~> <~ 0> ~" # sus 0.1
-  ch $ fast 2 $ "0 0*<2 1!3> 0!2"
-    # sus ("4 . 10 4" |/ 10)
-    # amp ("[0.5 0.4]*2")
-  sd $ "[~ 0 . ~@3 0@4 0]/2"
+  -- @section intro 2
+  mm $ nok 2 "[ [-7@3 -5 . -10 ~@3]/2, [-9 -8 -11 -4 . -5 -10 -8 -3]/2 \
+             \, 9@2 5 4]"
+     # amp 0.2
+     # octave 6
+
+do
+  -- @intro drums
+  ch $ fast 4 $ n "0*2" # amp "0.4 0.2"
+  bd $ slow 2 "0 ~ ~ 0 0 ~ ~ ~ ~ ~ 0 ~ 0 ~ ~ ~"
+  hc $ "[~ ~ ~ 0 ~ ~ 0 ~]/2" # amp 0.5
+  rs $ rarely (chop "1 8@3" . (# amp 0.2)) "[~ . ~ . ~ . 0 0 ~ 0*2 0 ~ 0 0]/4"
+
+-- do
+--   bd $ "0 <0 ~> . ~ <0 ~> <~ 0> ~" # sus 0.1
+--   ch $ fast 2 $ "0 0*<2 1!3> 0!2"
+--     # sus ("4 . 10 4" |/ 10)
+--     # amp ("[0.5 0.4]*2")
+--   sd $ "[~ 0 . ~@3 0@4 0]/2"
 
 
 do
@@ -97,20 +114,24 @@ do
     ]
 
 do
+  ch $ fast 4 $ n "0*2" # amp "0.4 0.3"
+
+do
   -- @section movement
   -- mamps [0.5,0.4,0.4]
   rc $ n "[0 ~]*2"
+  rc $ fast 2 $ n "0*2" # amp "0.4 0.25"
   setI "chordpos" $ slow 8 "<<-5 -3> -4 -7 -6>"
   reface
     $ (nok 2 . (|+ "^chordpos") . stack) ["[0@3 [0|-3]]" ,  "[0@2 0@3 0@2 0@2 0@2 0@2 0@3]/4" |+ "[4,6@7 5@9,9,12,14]"]
     # octave 4
-    # amp 0.5
+    # amp 0.4
   mm
     $ (nok 2 . stack)
       [ "{4 [1 0] . -3 [0 1 ]. 4 1 0 -3 . ~ 0 1 3  . [1 0] ~ .  ~ . ~ . ~}%1"
       , ("[7 6 11 7,0@3 2 . -4@3 -3, 5 3 9 11]/2" |- 7)
       ]
-    # amp 0.5
+    # amp 0.4
     # octave 6
 
 do
@@ -152,7 +173,6 @@ do
     # sus ("4 . 10 4" |/ 10)
     # amp ("[0.5 0.4]*2" |* 0.8)
   sd $ slow "^drumslow" "~ 0"
-
   lt
     $ nok 1 (slow 2 $ "^gtbass" |+ "^basspos" |+ 7)
     # sus "1"
@@ -162,11 +182,13 @@ do
   -- @section chords
   reface
       $ stack
-      [ (|* sus 0.7) . (nok 3) . slow 2 . (|+ "^chordpos") $ "[^gtchordrtm]/2" |+ "^gtchord" |- sew "[1 0]/4" "^chordpos" 0
+      [ (nok 3) . slow 2 . (|+ "^chordpos") $ "[^gtchordrtm]/2" |+ "^gtchord" |- sew "[1 0]/4" "^chordpos" 0
+      -- [ (# sus 0.7) . (nok 3) . slow 2 . (|+ "^chordpos") $ "[^gtchordrtm]/2" |+ "^gtchord" |- sew "[1 0]/4" "^chordpos" 0
       , (nok 3) . slow 2 . (|+ "^chordpos") $ "^gtbass"
       ]
     # octave 4
     # amp (range 0.3 0.4 rand |* 1.5)
+    # sus 0.45
 
 -----------------------------------------------------------
 
@@ -189,8 +211,7 @@ do
     $ nok 1 "^stairs" # amp 0.1
     #octave "[6 5]/8"
     #sus 8
-
-  mm silence
+  hc $ "~ 0" # amp 0.5
 
   ht
     $ (|+ note "2")
@@ -204,8 +225,11 @@ do
     # amp 0.3
     # sus 0.2
 
+bd $ "0 ~ ~ 0"
 
   mm silence
+
+
 
 -- do
 --   setF "drumslow" 1
@@ -218,16 +242,21 @@ do
   bd
     $ slow "^drumslow"  "[0@3 0 . ~ [~ 0] . [~ 0] [~ 0] . ~ [~ 0]]/2"
     # sus 0.1
-    # amp 0.5
+    # amp 0.4
   ch $ slow "^drumslow" $ fast 4
     -- $ sometimes (shuffle 2)
     -- $ rarely (chop 2)
     $ "0*2 . 0*2 0" # sus ("7 4 5 6" |/ 12)
     -- $ "0*2" # sus ("7 4" |/ 10)
-    # amp ("0.8 0.1" |* 0.8)
+    # amp ("0.8 0.1" |* 0.6)
   sd $ slow "^drumslow" "~ 0"
-  rc $ slow ("^drumslow" * 2) $ degradeBy "<1 0>" $ "~ . ~@3 0" # sus 1 # amp 0.6
-  cc $ slow ("^drumslow" * 2) $ degradeBy "<0 1>" $ "0" # sus 1 # amp 0.6
+  rc $ slow ("^drumslow" * 2) $ degradeBy "<1 0>" $ "~ . ~@3 0" # sus 1 # amp 0.4
+  cc $ slow ("^drumslow" * 2) $ degradeBy "<0 1>" $ "0" # sus 1 # amp 0.4
+  rs $ rarely (chop "1 8@3" . (# amp 0.2)) "[~ . ~ . ~ . ~ . ~ . ~ . ~ . 0 0 ~ 0*2 0 ~ 0 0]/8"
+
+do
+  setI "shuf" "1 8*3"
+  all $ byshuf (shuffle "^shuf") . byacc (chop "[16|8|4]" . (|* amp 0.3))
 
 
 hush

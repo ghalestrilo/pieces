@@ -909,9 +909,7 @@ do
           "[~@2 [7 6 4] | 3@2 4 5@2 0 | ~@3 7 6 7 4 3 4]"
   cc $ fast 2 $ "~@2 ~ 0 ~ 0" # amp ("~ 2.3 4.5" |/ 10)
   lt $ (note . (|+ "^steps") . k 0 . fast 2 . byacc (const "0 2@2 7 6 4")) "0 . 7 6 4"
-
-
-
+  hc $ slow 2 $ "0 0 ~ 0 ~ ~ 0 0 ~ ~ 0 ~ 0 ~ ~ ~"
   reface silence
 
 do
@@ -940,11 +938,3 @@ do
 
 -- 6 : Pial
 
-do
-  all id
-  setcps (90/120)
-  bd $ "[0@7 0 . [~ 0]!4]/2"
-  sd $ "~ 0"
-  ch $ fast 4 $ "0*2" # amp "0.5 0.3"
-  setkey' 0 "-5" "major"
-  reface $ fast 2 $ (n . k 0) "6 4 2 0" # octave 4 # amp 0.2

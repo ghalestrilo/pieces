@@ -1,0 +1,26 @@
+do
+  hush
+  setcps (165/120)
+
+do
+  hush
+  bank "mm" 41
+  trbank 15
+  setkey' 0 (-1) "lydian"
+  setkey' 0 (-1) "enigmatic"
+
+  scaleList
+
+do
+  hc $ nok 0 ("6 4 2 0" - 0) |+ up 10 # amp 0.34
+  rs $ nok 0 ("6 4 2 0" - 0) |+ up 10 # amp 0.34
+  lt $ nok 0 "[0 ~ ~ ~ . ~ -5 -2 -4]/4" |+ up 10 # amp 0.55
+  ch $ fast 2 $ n "0*2" # amp ("0.51 0.4" * 0.7)
+  bd
+    $ n "[0(5,16),~@15 <0 ~>]/4"
+    # amp 0.45
+  sd $ "[[~ 0]/2, [~ . ~ . ~ <0 ~> ~ ~ ~@4 . ~]/8]" # amp ("[0.4 0.51]/2" * 0.8)
+  ch $ fast 2 $ n "0*2" # amp "0.51 0.4"
+  lt
+    $ slow 4
+

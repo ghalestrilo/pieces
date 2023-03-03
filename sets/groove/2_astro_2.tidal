@@ -11,7 +11,7 @@ do
   trbank 1
   setI "shuf" "1"
   all $ swingBy (1/12) 8 . byshuf (shuffle "^shuf") . byacc (chop "[16|8|4]" . (|* amp 0.3))
-  setcps (92/120/2)
+  setcps (93/120/2)
   -- setcps (86/120/2)
   htoff 1
   setkey' 0 (-6) $ "lydian"
@@ -100,11 +100,9 @@ do
   -- @name hold
   hush
   bd $ n "0(3,8) . ~@2 0@3 0@3"
-
   ch $ fast 8
     $ n "0*<3 1> 0"
     # amp "<0.42 0.33>"
-
   setF "plink" 0
   lt
     $ nok 0 ("0(3,8) . ~@2 0@3 0@3" |- 7)
@@ -188,7 +186,7 @@ do
   -- @name steal
   hush
   bd $ "0  ~ ~ 0? ~@4. [~ 0] 0 ~ [~ 0]"
-  sd $ fast 2 $ n "~ [0@3 0??]" # amp ("0.55@3 [0.05|0.05|0.05|0.6]" |* 0.7)
+  sd $ fast 2 $ n "~ [0@3 0??]" # amp ("0.55@3 [0.15|0.15|0.15|0.4]" |* 0.7)
   oh $ sometimes (chop 2) $ degrade (n "0*16") # amp (range 0.01 0.05 $ rand)
   ch $ fast 8 $ n "0*2" # amp "0.1 0.01"
   rs $ fast 2 $ n "0*[1|1|2] 0!2 0*2" # amp 0.1
@@ -229,6 +227,7 @@ do
       , k 1 "~@2 0 ~@2 4 ~@2"
       ]
     )
+  cc $ n "[~ 0]*2"
   hc $ fast 2 "~ <0*2 ~>"
   rc $ fast 4 $ n "0*2" # amp "0.45 0.42"
 
@@ -236,14 +235,15 @@ do
 do
   -- @name closing hold
   -- reface $ nok 0 "[-3,0,2,6,9]" +| note "0 ~ ~ 0 ~ ~ 0@4 -1 ~ 0 ~ ~ ~" # amp 0.5 # octave 4
-  reface
-    $ fast 2
-    $ (note . cat . fmap (+| "0@5 0 ~@2"))
-    [ k 0 $ "[-2,0,2,7]" |+ 2
-    , k 0 $ "[-3,0,4,7]" |+ 2
-    , k 0 $ "[0,2,3 4,7 5]" |+ 1
-    , k 1 $ "[0,2,5 4,7 6]" |- 5
-    ] # amp 0.4 # octave 5
+  reface silence
+  -- reface
+  --   $ fast 2
+  --   $ (note . cat . fmap (+| "0@5 0 ~@2"))
+  --   [ k 0 $ "[-2,0,2,7]" |+ 2
+  --   , k 0 $ "[-3,0,4,7]" |+ 2
+  --   , k 0 $ "[0,2,3 4,7 5]" |+ 1
+  --   , k 1 $ "[0,2,5 4,7 6]" |- 5
+  --   ] # amp 0.4 # octave 5
   lt $ nok 0 "0" +| note "0 ~ ~ 0 ~ ~ 0@4 -1 ~ 0 ~ ~ ~" # amp 0.8 # octave 4
   bd $ "0 ~ ~ ~ 0 ~ 0 ~ ~ ~ 0 ~ 0 ~ ~ ~" # amp 0.48 # sus 1
   sd $ "~ ~ ~ 0 ~ ~ ~ ~ ~ 0 ~ ~ ~ ~ ~ 0"
@@ -270,3 +270,4 @@ do
 hush
 
 htnoteoffset 0
+
