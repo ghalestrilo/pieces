@@ -5,6 +5,7 @@ do
   hush
   all $ byacc (segment 16) . byshuf (shuffle "1 8@3")
   setcps (118/120)
+  setcps (120/120)
   setkey' 0 (-1) "chromatic"
   mt $ note ("0@3 0" |+ 12) # amp 0.45
   ht $ note ("~ -7 0 0 <7!3 -9> 0 ~ 0" |+ 15) # amp 0.45
@@ -35,12 +36,12 @@ mm silence
 reface $ ((1/4) <~) $ nok 0 ("{~ 12@3 7@3 10@2 5@23}%4" |- 24 |+ "[0,7,11,14]") # octave 4
 
 --Enter Piano Melody
-reface
+mm
   $ stack
     [ nok 0 "[11 9 11 6 4 2 9@2 7 4 -5 -3 7 4 -5 -3 . [7 4 [-10,-5] [-8,-3]]!3 [-1 0 2 4]]/8" # sus 4 # amp (range 0.35 0.5 rand) |+ note 12
     , nok 0 $ "{12@3 7@3 10@2 5@23 ~}%4" |- 24 |+ "[0,7,11]"
     ]
-  # amp 0.3
+  |* amp 0.3
   # octave 4
 
 do
@@ -74,3 +75,5 @@ do
 
 
 --   lt $ fast 4 "^tr_section"
+
+hush

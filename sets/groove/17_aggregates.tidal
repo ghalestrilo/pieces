@@ -1,0 +1,77 @@
+do
+  hush
+  setcps $ 136 / 120
+  setcps $ 137 / 120
+  -- setkey' 0 5 "phrygian"
+  setkey' 0 ("b") "phrygian"
+  bank "mm" 120
+  trbank 19
+  all $ slow 2
+
+  mm
+    $ slow 3
+    -- $ (note . (|- 2) . scale "chromatic" . stack)
+    $ (note . (|- 1) . (|- 2) . scale "chromatic" . stack)
+      [ "{2 0 2 0 3 2 0@7}%4"
+      , (0.005 <~ "{~ ~ ~ ~ <1 ~> <0 ~> <-2 ~>@7}%4") |- 5
+      , (0.010 <~ "{~ ~ -4 -5 -2 -4 -5@7}%4") |- 5
+      ]
+      # amp (cF 0.5 "mm_amp")
+      
+      -- # octave 4
+
+do
+  -- mm $ note "{2 0 2 0 3 2 0}%8" + note 3 # sus 3
+  bd $ "0*2 ~"
+  sd $ "~ 0"
+  lt $ nok 0 "0!5 0*2 0!2" |+ note 12
+  lt $ nok 0 "0!5 0*2 0!2"
+  -- lt $ nok 0 ("0!5 0*2 0!2" |- "<0 5 3 4>/2")
+  -- lt $ nok 0 "0!7 ~"
+  -- lt $ nok 0 (run 8) |+ note 12
+  ch $ fast 4 $ "0 0*<1 1 [1|2|3] 1>" # amp ("<4 7> 3" / 10)
+
+do
+  -- @name fx
+  rs $ "~ ~ ~ [~ 0]"
+  hc $ "~ ~ 0 ~"
+  ht $ nok 0 ("3 0 ~ ~")
+
+do
+  -- @name arr 2
+  mm
+    $ slow 4
+    $ (nok 0 . stack)
+    [ "{ -3 -1  0  2  0@4 1  -2 -4@3 4 2@3 }%4"
+    , "{ -4 -3 -2 -1  0@4 1@9 }%4" |- 7 |+ "[-7,0,2,6]"
+    ]
+
+do
+  -- @name ending
+  bd $ "0*<2!3 4> ~"
+  mm $ stack [
+    slow 3
+    $ (note . (|- 1) . (|- 2) . scale "chromatic" . stack)
+      [ "{2 0 2 0 3 2 0@7}%4" |+ 5
+      , (0.010 <~ "{~ ~ -4 -5 -2 -4 -5@7}%4")
+      ]
+    , slow 4
+      $ degradeBy 1
+      $ ((|- note 12) . nok 0 . stack)
+      [ "{ -3 -1  0  2  0@4 1  -2 -4@3 4 2@3 }%4"
+      -- , "{ -4 -3 -2 -1  0@4 1@9 }%4" |- 7 |+ "[-7,0,2,6]"
+      ]
+    ]
+    # amp 0.7
+
+hush
+
+
+all $ byshuf (shuffle "1")
+
+do
+  all $ slow 2
+    . mapShuffle
+    . mapChop
+
+

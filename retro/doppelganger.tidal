@@ -5,9 +5,11 @@ do
 do
   hush
   bank "mm" 41
-  trbank 15
+  trbank 16
   setkey' 0 (-1) "lydian"
   setkey' 0 (-1) "enigmatic"
+  setkey' 0 (-1) "neapolitanMajor"
+  all id
 
   scaleList
 
@@ -23,4 +25,5 @@ do
   ch $ fast 2 $ n "0*2" # amp "0.51 0.4"
   lt
     $ slow 4
-
+    $ nokc [0,0,0,0] ["0 ~ ~ ~ . ~ -5 -2 -4", "0 ~ ~ ~ . ~ -5 -2 -4", "0@3 -1@3 -5@10", "0@3 -1@3 -5@10"]
+    |+ up 10 # amp 0.55

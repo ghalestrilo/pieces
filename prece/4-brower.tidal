@@ -94,3 +94,6 @@ do
       ]
       # sus 2
       # amp 0.5
+
+
+cF0 "slider1"

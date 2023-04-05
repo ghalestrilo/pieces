@@ -1,0 +1,418 @@
+-- Include 1:AYLA
+let antiswing = swingBy (-1/8) 6
+    
+let accselect list = select tracc $ list ++ [""]
+
+
+{-| Summary
+- intro
+- verse 1
+- bridge 1
+- verse 2
+  -
+- void
+- bridge 1:
+  - reface0*6
+-}
+
+hush
+
+
+mm $ nok 0 "0 2 4 6"
+
+
+-- Include 1:AYLA
+do
+  trbank 112
+  setcps $ 160 / 120 / 2
+  all $ slow 2 . swingBy (1/8) 6 . byshuf (shuffle "1 6@5" . byacc (chop "1 [2]!5"))
+  hush
+  setN "steps" 0
+  setN "steps" "[0 -2 . -4 -7 . -6 . -5 -3]/4"
+  setN "steps" "<0 5 2 5>"
+  -- setkey' 0 ("0" |+ 7) "<lydian major>"
+  setkey' 0 ("0" - 5) "major mixolydian"
+
+
+do
+  -- @name dry
+  hush
+  bd $ accselect ["0 . ~@2 [~ 0]", "[0@5 0]*2", "[0@3 . 0 ~ 0]*2"]
+  sd $ stack
+    [ "~ . 0" # amp 0.3
+    , accselect
+      [ ""
+      , antiswing "~ . 0 ~ 0 .  ~ . 0 . ~ . ~"
+      , antiswing $ fast 2 $ "[~ 0 ~] [0!2 ~] [0 ~ 0 | 0!2 ~]"] # amp (range 0.05 0.1 rand)
+      ]
+  oh $ "~ . 0"
+  ch
+    $ fast 2
+    $ whenmod 2 1 (degradeBy "0 1@5")
+    $ fast 3
+    $ "0*2"
+    # amp ("0.3 0.1" |+ (rand / 10))
+    # sus ("[1 0.1@11]/6" |/ 2)
+
+
+do
+  -- @name verse 1
+  setkey' 0 (- 5) "phrygian"
+  setkey' 1 (- 2) "mixolydian"
+  setkey' 3 (- 5) "minor"
+  setF "refaceamp" 1
+  lt silence
+  reface silence
+  lt
+    $ nokc [0, 1, 3, 3]
+      [0, 0, "5 [4|6]" , "10 6"]
+    # sus "<0.5!2 1!2>"
+    |- note "<12!2 24!2>"
+  reface
+    $ nokc [0, 1, 3, 3]
+      [ "0 ~" + "[-3, 0, 2, 6]"
+      , "0 ~" + "[[-3,-1,0,2,5] | [-3,-1,0,,5,7]]"
+      , "5 4" - 7 + "[-3,0,2,6]"
+      , "3 6" - 7 + "[-3,0,2,6]"
+      ]
+    # amp (0.3 |* "^refaceamp")
+    # octave 4
+
+do
+  -- @name bridge 1
+  setkey' 0 (- 5) "phrygian"
+  setkey' 1 (- 2) "mixolydian"
+  setkey' 3 (- 5) "minor"
+  setF "refaceamp" 1
+  lt
+    $ nokc [0, 0, 0 ,1]
+    -- $ nokc [0, 0, 1]
+      [-2, -1, "-1 . ~@3 -3 -1 3", "-2 0"]
+    # sus "<0.4!2 [0.4 0.2] 1>"
+    |- note "<12>"
+  reface
+    $ nokc [3, 3, 1]
+      [ "-2 ~" + "[-3, 0, 2, 6]"
+      , "-1 ~" + "[-3, 0, 2, 4, 5]"
+      , "-1 ~" + "[-3, 0, 2, 4, 5]"
+      , "-2 0" + "[-3,0,2,6] [-3,-1,0,2,5]"
+      ]
+    # amp (0.3 |* "^refaceamp")
+    # octave 4
+  reface silence
+  -- setI "chordmask" "0*6"
+  setI "chordmask" "<[0 ~]!3 [0*2]>"
+  reface $ (# octave 4)
+    -- $ (nokc [3, 3, 0, 1] . fmap ("0*6" |+))
+    $ note "^chordmask"
+    |+ nokc [3, 3, 0, 1]
+      [ "-2" + "[-3, 0, 2, 6]"
+      , "-1" + "[-3, 0, 2, 4, 5]"
+      , "-1" + "[-3, 0, 2, 4, 5]"
+      , "-2 0" + "[-3,0,2,6] [-3,-1,0,2,5]"
+      ]
+    # amp (0.3 |* "^refaceamp")
+    -- # sus 0.1
+
+
+-- do
+--   reface
+--     $ nok 0 ("[2 1 . 0*2 . -3 -4 . 0]/4" |+ "[-3,0,2, 6 6 6 5]/2")
+--     # amp 0.3
+--     # octave 4
+
+
+oh $ fast 6 0
+hush
+
+-- do
+--   -- @name return
+--   mm silence
+--   setkey' 0 (-5 + 12) "major"
+--   lt $ nok 0 "[2 ~ 4 . 1 ~ 3 . 0 . 0@3 -3 0 1]/2"
+--   reface
+--     $ nok 0 ("[2 1 . 0]/2" |+ "[-3,0,2,6, 9 8]/2")
+--     # octave 3
+--     # amp 0.3
+
+-- rs
+--   $ nokc [3, 3, 0, 1]
+--   $ repeat
+--   $ accselect
+--   $ fmap (|- 7)
+--   $ ["6 7 4 2", byshuf (fast 2) $ "0*6" |+ irand 8, ""]
+
+
+-- setF "chordmask" $ "0!3 . 0*<1!3 3>"
+
+
+do
+  -- @name verse 2
+  setkey' 0 (- 5) "phrygian"
+  setkey' 1 (- 2) "mixolydian"
+  setkey' 3 (- 5) "minor"
+  setF "chordmask" $ "0!3 . 0*<1!3 3>"
+  setF "refaceamp" 1
+  reface silence
+  ht $ accselect ["~ . ~ 0 ~@4", antiswing "[~ 0 ~ . 0 ~ ~ . ~ 0 0]*2"]
+  mt $ accselect ["~ . ~ 0", "~ 0 . ~ 0"]
+  cc $ accselect ["~ . ~ [~ 0 ~]", "~ . ~ [~ 0 ~]"]
+  rc $ accselect ["~ . ~@5 0", "~ . ~@5 0"]
+  lt
+    $ nokc [0, 1, 3, 3]
+      [0, 0, "5 [4|6]" , "10 6"]
+    # sus "<0.5!2 1!2>"
+    |- note "<12!2 24!2>"
+
+do
+  -- @name verse 2 chords
+  setF "chordmask" $ "0!3 . 0*<1!3 3>"
+  reface
+    $ note "^chordmask"
+    |+ nokc [0, 1, 3, 3]
+      [ "0" + "[-3, 0, 2, 6]"
+      , "0" + "[[-3,-1,0,2,5] | [-3,-1,0,,5,7]]"
+      , "5 4" - 7 + "[-3,0,2,6]"
+      , "3 6" - 7 + "[-3,0,2,6]"
+      ]
+    # amp (0.3 |* "^refaceamp")
+    # octave 4
+    # sus 0.1
+
+
+
+do
+  -- @name strange bit
+  reface silence
+
+
+
+do
+  -- @name cue
+  lt
+    $ nokc [0, 0, 0 ,1]
+    -- $ nokc [0, 0, 1]
+      [-2, -1, "-1 . ~@3 -3 -1 3", "-2 0"]
+    # sus "<0.4!2 [0.4 0.2] 1>"
+    |- note "<12>"
+
+
+do
+  -- @name bridge 2 (end solo)
+  rc $ "0*6" # amp "[0.3 0.2 0.2]*2"
+  setkey' 0 (- 5) "phrygian"
+  setkey' 1 (- 2) "mixolydian"
+  setkey' 3 (- 5) "minor"
+  setF "refaceamp" 1
+  ht $ silence
+  mt $ silence
+  cc $ silence
+  lt
+    $ nokc [0, 0, 0 ,1]
+    -- $ nokc [0, 0, 1]
+      [-2, -1, "-1 . ~@3 -3 -1 3", "-2 0"]
+    # sus "<0.4!2 [0.4 0.2] 1>"
+    |- note "<12>"
+  reface
+    $ nokc [3, 3, 1]
+      [ "-2 ~" + "[-3, 0, 2, 6]"
+      , "-1 ~" + "[-3, 0, 2, 4, 5]"
+      , "-1 ~" + "[-3, 0, 2, 4, 5]"
+      , "-2 0" + "[-3,0,2,6] [-3,-1,0,2,5]"
+      ]
+    # amp (0.3 |* "^refaceamp")
+    # octave 4
+  setI "chordmask" "0*6"
+  -- setI "chordmask" "<[0 ~]!3 [0*2]>"
+  reface $ (# octave 4)
+    -- $ (nokc [3, 3, 0, 1] . fmap ("0*6" |+))
+    $ note "^chordmask"
+    |+ nokc [3, 3, 0, 1]
+      [ "-2" + "[-3, 0, 2, 6]"
+      , "-1" + "[-3, 0, 2, 4, 5]"
+      , "-1" + "[-3, 0, 2, 4, 5]"
+      , "-2 0" + "[-3,0,2,6] [-3,-1,0,2,5]"
+      ]
+    # amp 0.5
+    # sus 0.1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- do
+--   trbank 112
+--   setcps $ 160 / 120 / 2
+--   all $ slow 2 . swingBy (1/8) 6
+--   hush
+--   setN "steps" 0
+--   setN "steps" "[0 -2 . -4 -7 . -6 . -5 -3]/4"
+--   setN "steps" "<0 5 2 5>"
+--   setkey' 0 ("0" |+ 7) "<lydian major>"
+
+
+--   reface
+--     $ swingBy (-1/8) 6
+--     -- $ (note . (|+ k 0 "[-3,0,2, 6 6 6 5]/2" )) "^steps" 
+--     $ nok 0 (stack ["<[-7,~ -3@2,0,~ 2@2,6]!2 [7,-3,0,2,6]!2>", byacc (const silence) $ rarely (density 2) "[0 0? 0]*6" |+ irand 8 |+ 7])
+--     -- # amp 0.2
+--     -- # octave 4
+--     |- note "<0 5 2 5>"
+
+-- reface $ note "0*8"
+
+
+-- do
+--   -- lt $ nok 0 "[2 ~ 4 . 0 ~ 1]" |- note "^steps"
+--   ch
+--     $ fast 6
+--     $ "0*2"
+--     # amp ("0.3 0.1" |+ (rand / 10))
+--     # sus ("[1 0.1@5]/6" / 2)
+
+-- do
+--   -- @name dry
+--   bd "0 . ~@2 [~ 0]"
+--   sd "~ . 0"
+--   ch
+--     $ fast 6
+--     $ "0*2"
+--     # amp ("0.3 0.1" |+ (rand / 10))
+--     # sus ("[1 0.1@5]/6" |/ 2)
+--   setkey' 0 ("0" |+ 7) "major"
+--   reface silence
+--   lt silence
+
+
+-- do
+--   -- @name enter bass
+--   -- lt $ nok 0 "[2 ~ 4 . 1 ~ 3 . 0 . 0@3 -3 0 1]/2"
+--   -- lt $ nok 0 "[2 ~ 4 . 1 ~ 3 . 0 ~ 2. -1@3 -3 0 1]/2"
+--   setN "steps" "[0 -2 . -4 -7 . -6 . -5 -3]/4"
+--   lt
+--     $ (|+ note "^steps")
+--     $ nok 0 "[<2!4 2 -1 2 -1> ~ <4!7 0>]*2"      
+
+-- do
+--   -- @name enter keys
+--   reface
+--     $ swingBy (-1/8) 6
+--     $ (note . (|+ k 0 "[-3,0,2, 6 6 6 5]/2" )) "^steps" 
+--     # amp 0.4
+--     # octave 4
+
+
+
+-- -- oh $ fast 6 $ "~ [0!3 ~]" # amp (rev (run 6 / 10) |* 0.8 |* "<1 1 0>")
+
+-- setkey' 0 ("0" |+ 7) "major mixolydian"
+
+-- hush
+
+-- reface
+--   $ nok 0 ("[2 1 . 0*2 . -3 -4 . 0]/4" |+ "[-3,0,2, 6 6 6 5]/2")
+--   # amp 0.4
+--   # octave 4
+
+-- scaleList
+
+-- setkey' 0 ("0" |+ 7) "major <leadingWhole hexDorian>"
+
+-- setkey' 0 ("0" |+ 7) "major <egyptian lydian>"
+
+
+-- rc $ fast 2 $ "0*3" # amp "0.47 0.4 0.4"
+
+-- hush
+
+-- reface
+--   $ nok 0 ("[2 1 . 0*2 . -3 -4 . 0]/4" |+ "[-3,0,2, 6 6 6 5]/2")
+--   # amp 0.4
+--   # octave 4
+
+
+-- setF "trtuneoff" 0
+
+-- mt silence
+
+-- ht $ byacc (fast 3) $ nok 0 (fast (8/3) "0 1 2 8 5 7 1 2 3")
+
+-- mt $ nok 0 "[2 ~ 4 . 1 ~ 3 . 0 . 0@3 -3 0 1]/2" # note (irand 12)
+
+-- reface
+--   -- $ nok 0 ("[-2 -5 . -2]/4" |+ "[-3,0,2, 6 6 6 5]/2")
+--   -- $ nok 0 ("[-2 -5 . -2 [-3 -2 -5]]/4" |+ "[-3,0,2, 6 6 6 5]/4")
+--   # amp 0.4
+--   # octave 4
+
+-- reface silence
+
+-- ht $ nok 0 ((run 6) |+ irand 10)
+
+
+
+-- do
+--   -- @name I counterverse (intro)
+--   setN "steps" "[0 -2 . -4 -7 . -6 . -5 -3]/4"
+--   ch
+--     $ fast 6
+--     $ "0*2"
+--     # amp "0.4 0.2"
+--   reface
+--     $ swingBy (-1/8) 6
+--     $ (note . (|+ k 0 "[-3,0,2, 6 6 6 5]/2" )) "^steps" 
+--     # amp 0.4
+--     # octave 4
+--   ht
+--     $ swingBy (-1/8) 6
+--     $ (note . (|+ "^steps") . k 0 . byacc (const "~")  . (|+ 12) . fast 2)
+--           "[~@2 [7 6 4] | 3@2 4 5@2 0 | ~@3 7 6 7 4 3 4]"
+--   cc $ fast 2 $ "~@2 ~ 0 ~ 0" # amp ("~ 2.3 4.5" |/ 10)
+--   lt $ (note . (|+ "^steps") . k 0 . fast 2 . byacc (const "0 2@2 7 6 4")) "0 . 7 6 4"
+--   hc $ slow 2 $ "0 0 ~ 0 ~ ~ 0 0 ~ ~ 0 ~ 0 ~ ~ ~"
+--   reface silence
+
+-- do
+--   -- @name dry 1
+--   reface silence
+--   lt silence
+
+-- do
+--   -- @name return 1
+--   -- setkey' 0 ("0" |+ 7) "major"
+--   setkey' 1 ("0" |+ 7) "minor"
+--   setkey' 2 "0" "mixolydian major"
+--   setkey' 2 "0" "mixolydian lydian"
+--   lt $ nok 1 "[2 ~ 4 . 1 ~ 3 . 0 . 0@3 -3 0 1]/2"
+--   reface
+--     $ stack [
+--       nok 1 "[2 1 . 0]/2" |+ nok 2 "[-3,0,2,6,8]",
+--       (nok 2 . degradeBy (byacc (|-| 1) "1*24") . byacc (fast 2) . (|+ irand 12)) "0*24" |+ nok 1 "[2 1 . 0]/2" |+ note 12
+--     ]
+--     # octave 3
+
+
+-- hush
+
+
+
+
+
+-- --------------------------------------------------------------------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------------------------------------------------------------------

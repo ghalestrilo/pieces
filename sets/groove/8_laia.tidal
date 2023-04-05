@@ -3,7 +3,9 @@ do
   hush
   -- @name intro / sec A
   -- bongos first then reface, then phrase
+  -- trbank 123
   trbank 123
+  bank "mm" 123
   -- setcps $ 86 / 120
   setcps $ 145 / 120
   setF "den" 4
@@ -11,10 +13,10 @@ do
   all $ slow 4
   setkey' 2 "0" "major"
   setkey' 2 "2" "major"
+
   cc
     $ nok 2 ("[0@3 -3]*4" |+ 12 |- 1)
     # sus 0.15
-
   g2
     $ byacc (chop $ fast ("^den" |* 4) "[3|2]")
     -- <$> (# amp (range 0.38 0.5 rand))
@@ -26,7 +28,6 @@ do
       "0@3 ~ ~ ~ 0 0 ",
       "0!3 ~ ~ 0 ~ ~ "
    ]
-
   rc $ nok 2 ("[~@3 6 9@2 6 4 8@2 5 2@2 5 ~ 4@17]/2" |+ "^chr" |+ 7)
     # amp "0.5" |- note 5
     # sus "[0.2@7 0.7@9]/2"
@@ -39,11 +40,12 @@ do
 
 do
   -- hush
-  reface
+  mm
     $ (nok 2 . (|+ "^chr") . stack)
     [ struct "tftfftftftftftft" "[-6,0,2,4@7 3@9, 6]", fast 4 $ "0 ~ ~ 0" |+ "<0 -3>" |- 7]
-    # amp 0.3
-
+    # amp (range 0.2 0.3 rand)
+    # sus (segment 16 $ fast 32 $ rarely (const 1) 0.2)
+    -- # octave 6
 
 
 do
@@ -82,15 +84,17 @@ do
   setkey' 12 ("3 2"             |- 1) "major minor"
   setkey' 13 ("0 . -3 2"        |- 1) "dorian mixolydian"
   -- rc $ (cat . zipWith nok [10..]) ["[~ 2 0 -3 -1 0 1 ~ 2 ~@2 0@2 2 4 7]", "[~ 11 11 11 9 7 6 6@5 2 4 6 6]", "~ 7 6 2 4 5 6@2 6@4 7 6 5 3"," ~ 5 6 2 4 5 6 5@5 5 6 7 8"]
-  setF "refacesus" 0.24
+  setF "refacesus" 0.14
   setF "soloamp" 0
   mm
-    $ (# sus "^refacesus")
+    $ (|* sus "^refacesus")
+    $ (# octave 6)
     $ stack 
-    $ zipWith (flip (#)) (map amp [0.45, 0.5,"^soloamp"])
+    -- $ zipWith (flip (#)) (map amp [0.45, 0.5,"^soloamp"])
+    $ zipWith (flip (#)) (map amp (repeat "^mmamp"))
     $ (cat . zipWith nok [10..])
     <$> [
       take 4 $ repeat $ struct "[t@3 ~]@2tff[t@3 ~]@2tftftftft" "[-3,0,2,6]" |- 7
     , take 4 $ repeat $ fast 4 $ "0 ~ ~ 0" |+ "<0 -3>" |- 14
-    , byshuf (shuffle "[8|16]" . density "[2|4]") <$> ["[~ 2 0 -3 -1 0 1 ~ 2 ~@2 0@2 2 4 7]", "[~ 11 11 11 9 7 6 6@5 2 4 6 6]", "~ 7 6 2 4 5 6@2 6@4 7 6 5 3"," ~ 5 6 2 4 5 6 5@5 2 3 4 5"]
+    , byshuf (shuffle "[8|16]" . density "[2|4]") <$> ["[~ 2 0 -3 -1 0 1 ~ 2 ~@2 0@2 2 4 7]", "[~ [11|11*3] 11 11 9 7 6 6@5 2 4 6 6]", "~ 7 6 2 4 5 6@2 6@4 7 6 5 3"," ~ 5 6 2 4 5 6 5@5 2 3 4 5"]
     ]

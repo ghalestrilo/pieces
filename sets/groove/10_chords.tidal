@@ -27,10 +27,11 @@ do
   -- @section chords (mm)
   setI "base" "0"
   setI "chords" $ cat (("~ 0@7" |- cI0 "base"):[6, 5, 4]) |* (-1) 
+  
   mm
     $ ((1/8) <~)
     $ nok 3 ("^chords" |+ "[-3,0,2,6]")
-    # amp 0.1
+    # amp 0.2
 
 do
   cc $ fast 4 $ n "0*2" # amp (("6 5" / 12 |+ range (-0.1) 0.1 rand) |* cF 1 "volride")
@@ -47,7 +48,8 @@ do
   ch $ fast 8 $ "0*2" # amp "0.6 0.38"
   bd $ n "<[0@3 0]  [0@3 0@3 0@2] [0 0 . ~] [~ 0!2 ~ . ~ 0 ~@2]>*2"
   sd $ "[~ 0]*2"
-  oh $ fast 2 $ n "[~ 0]!3 [~ 0*[1|2|4]]"
+  
+  oh $ fast 2 $ n "[~ 0]!3 [~ 0*[1|2|4]]" # amp 0.5
 
 do
   -- original bass
@@ -58,6 +60,8 @@ do
 
 
 all $ byshuf (chop "1 [8|4|1]!3") . slow 2
+
+all $ byshuf (chop "1 [2|4|1]!3") . slow 2
 
 
 
@@ -80,7 +84,7 @@ do
     [ ("~ 0@7") |+ "[-3,0,2,6]"
       , "[ -3,0,2,6]"
       , "[ -3,0,2,6]"
-      ]
+      ] # amp 0.6
 
 do
   setF "volhats" 0.4
@@ -89,6 +93,7 @@ do
     |+ "-3 0 2 6"
     |+ irand 4
     |- 2
+
   reface
    $ jux (((1/16) <~) . shuffle (cI 1 "shufamt") . (|+ up 12))
    $ nokc [1,2,0]
@@ -125,3 +130,10 @@ do
 
 do
   hush
+
+
+  setcps (132/120/2)
+
+
+
+all $ slow 2 . byshuf (shuffle "^shuf") . byacc (chop "[2|4]" . (|* amp 0.3)) . (|- note 12)

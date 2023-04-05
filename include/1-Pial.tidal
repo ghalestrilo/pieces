@@ -1,0 +1,104 @@
+-- ------------------------------------------------- 
+
+do
+  -- Include 1 - Carlos Pial
+  trbank 114
+  setcps $ 110 / 120
+  all $ byshuf (shuffle "1 4@3" . chop "1 [1|2]*3")
+  setkey' 0 "d" "dorian"
+  setkey' 1 "d" "minor"
+  hush
+  -- bank "mm" 121
+  -- sd $ n "~ ~ 0 ~ . ~ 0" # amp "0.1 0.2"
+  -- sd $ n "~ ~ 0 ~ . ~ 0" # amp "0.1 0.2"
+  -- lt $ nok 0 "0 <~ 0> <~ 0> 0 ~ ~ 0 ~" # amp 0.5
+  setI "theme" $ "2 0 4 -3 . -1 4 1 3"
+  setI "solo" $ rarely (fast 2) "4*8" |+ irand 12
+  reface $ (nok 0 . gs 0 tracc) ["2 4 0 1 2 4 6 0", "^solo", ""] # amp 0.
+
+do
+  setF "cpamp" "0.2"
+  reface $ (nok 0 . gs tracc 0.4) ["6 -3 0 1 2 0 4 0", "^solo"] # sus 0.01 # octave 4
+    # amp "^cpamp"
+
+do
+  ch $ fast 2 $ n "0*2" # sus "0.05 0.2"
+  rs $ rarely (chop "[1 2]*4") $ n "0*8" # amp ("4 2 2 4 2 2 4 2" / 10)
+
+do
+  -- all $ timeLoop 2 . (12 <~)
+  bd $ n "0@3 0 . ~" # amp 0.41
+  sd $ n "~ 0 ~ 0 . ~ 0" # amp "0.2 0.3"
+
+do
+  reface
+    $ (gs tracc 0.01 . fmap (nokc [0,0,0,0, 0,0,0,0, 1,1,0,0, 0,0,0,0]))
+      [
+        [ "6 -3 0 1 2 0 4 0"
+        , "6 -3 0 1 2 0 4 0"
+        , "6 3 4 0 5 -3 3 -3"
+        , "4 0 2 0 3 0 4 0"
+        , "^theme"
+        , "^theme"
+        , "^theme"
+        , "^theme"
+        , "6 -3 0 1 2 0 4 0" - 2
+        , "6 -3 0 1 2 0 4 0" - 2
+        , "6 -3 0 1 2 0 4 0" - 4
+        , "6 -3 0 1 2 0 4 0" - 3
+        , "2 0 2 4 7 6 5 4"
+        , "2 0 2 4 3 2 1 0"
+        , "2 0 2 4 7 6 5 4"
+        , "-3 0 2 4 3 2 1 0"
+        ]
+      , repeat "^solo"
+      ] # sus 0.01
+      # amp 0.25
+      # octave 4
+
+  lt
+    $ nok 1 "<0!4 5 [3 4] 0!2>/2" +| note "0 <~ 0> <~ 0> 0 ~ ~ 0 ~"
+    # sus "0.3 0.2"
+    # sus "0.15 0.15"
+  -- lt $ nok 0 "<0!4 5 [3 4] 0!2>/2" +| note "0 ~@3 . 0" # amp 0.5
+
+reface silence
+
+do
+  setkey' 0 "d" "dorian"
+  setkey' 1 "d" "minor"
+  hush
+  setI "dens" 1
+  lt
+    $ slow "^dens" $ nokc [0,1,0,0] (fmap (+| fast "^dens" "[0@3 0@5]") [0,5,2,3])
+    # sus "0.4 0.2@2"
+    # amp 0.45
+  reface
+    $ slow "^dens" 
+    $ stack [
+      (nokc [0,1,0,0] . repeat . fast "^dens") "[6 -3 0 1 2@2 4@2]" # octave 4
+      , nokc [0,1,0,0] ["[-7,-3,0,2,4]", "[-3,0,2,4,6]" - 2, "[-7,-3,-1,0]" + 2,  "[-3,0,2,4,6]" - 4]
+      +| note (fast "^dens" "[0@3 0@5]") - note 12
+    ]
+    # sus 0.01
+
+
+do
+  ch $ fast 2 $ n "0*2" # sus "0.05 0.2"
+  sd $ byshuf (chop "1 2") $ "~ 0 ~ 0 ~ ~ 0 ~" # amp "0.1 0.2"
+
+
+do
+  rs $ rarely (chop "[1 2]*4") $ n "0*8" # amp ("[<4 5> 2@7]*2" / 10)
+  bd $ n "0@3 0 . ~" # amp 0.5
+
+do
+  hush
+  reface
+    $ slow "^dens" 
+    $ stack [
+      (nokc [0,1,0,0] . repeat . fast "^dens") "[6 -3 0 1 2@2 4@2]" # octave 4
+      , nokc [0,1,0,0] ["[-7,-3,0,2,4]", "[-3,0,2,4,6]" - 2, "[-7,-3,-1,0]" + 2,  "[-3,0,2,4,6]" - 4]
+      +| note (fast "^dens" "[0@3 0@5]") - note 12
+    ]
+    # sus 0.01

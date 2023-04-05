@@ -13,11 +13,14 @@ do
     ]
     # octave 4
     # sus 4
+    # sus 0.16
+    # amp 0.3
 
 
 do
   setI "phrase" "{16 14 11 0 ~     16 14 11 4 6 7 6 7 9 7 9 <11 10 11> ~   <16 15 16> 14 <11 10 11> <6 9 6> ~ }%8"
   mm
+    $ slow 1
     $ (note . stack)
       [ "^phrase" |+ 12
       , "{~@3 0'maj@2   ~@3 0'maj@3 2'maj@3 <0'maj 3'maj -3'min>@4   ~@3 <4'maj 5'maj -1'min>@2 }%8"
@@ -58,3 +61,5 @@ do
 do
   -- straight
   bd $ "0*2 . ~@3 0" # sus 0.1 # amp 0.1
+
+hush

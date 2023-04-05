@@ -1,0 +1,109 @@
+-- ---------------------------------------------------------------------------------
+
+-- 2 : Krishna
+-- am, f#m, am, f#m, C, B, am
+
+do
+  hush
+  setcps $ 136 / 120
+  setcps $ 137 / 120
+  -- setkey' 0 5 "phrygian"
+  setkey' 0 ("b") "phrygian"
+  -- bank "mm" 120
+  trbank 111
+  all
+    $ slow 2
+    . byshuf (shuffle "[1 8@3]*2")
+    . byacc (chop "[1 [2|4]@3]*2")
+
+do
+  -- @name intro
+  bd $ "0*2 ~"
+  sd $ "~ 0"
+  lt $ nok 0 "0!5 0*2 0!2" |+ note 12
+  lt $ nok 0 "0!5 0*2 0!2"
+  ch $ fast 4 $ "0 0*<1 1 [1|2|3] 1>" # amp ("<4 7> 3" / 10)
+
+do
+  -- @name intro 2 chords
+  reface
+    $ note ("a" |+ scale "minor" "[-3,0,2,6,8]")
+    +| note "0*8"
+    # sus 0.05
+    # octave 3
+    # amp ("[2 2.7 5 2.7]*2" / 9)
+
+do
+  -- @name chords + base
+  reface
+    $ note "[a'min7@3 fs'min7@5 . a'min7@3 fs'min7@5 . c'maj7 b'min7 . a'min7 ]/8"
+    +| note "0*8"
+    -- # sus 0.05
+    # sus 0.2
+    # octave 3
+    # amp ("[2 2.7 5 2.7]*2" / 9)
+
+  lt
+    $ note "[a@3 fs@5 . a@3 fs@5 . c b . a ]/8"
+    +| note "0!5 0*2 0!2"
+    -- + note 12
+  rs $ "~ ~ ~ [~ 0]"
+  hc $ "~ ~ 0 ~"
+  ht $ nok 0 ("3 0 ~ ~")
+
+
+do
+  -- @name verse 2: chords + base
+  reface
+    $ note "[a'min7@3 fs'min7@5 . a'min7@3 fs'min7@5 . c'maj7 b'min7 . a'min7 ]/8"
+    -- +| note "0*8"
+    -- # sus 0.05
+    # octave 3
+    # amp 0.5
+  lt
+    $ note "[a@3 fs@5 . a@3 b@5 . bs b . a ]/8"
+    +| note "0!4 . ~ ~ ~ 5"
+    -- + note 12
+  rs $ "~ ~ ~ [~ 0]"
+  hc $ "~ ~ 0 ~"
+  ht $ nok 0 ("3 0 ~ ~")
+
+do
+  -- @name verse 3 - guitars + bass
+  reface silence
+
+
+-- do
+--   mm silence
+--   reface silence
+--   lt
+--     -- $ note "[a@3 fs@5 . a@3 fs@5 . c b . a ]/8"
+--     $ note ("a" +| "[0@3 [-3 9]@5 . 0@3 [-3 9]@5 . 3 2 . 0 ]/8")
+--     +| note "0!5 0*2 0!2"
+
+--   lt $ note "0!5 0*2 0!2"
+
+do
+  -- @name wrong base but fun
+  lt
+    $ nok 0 "[a@3 fs@5 . a@3 fs@5 . c b . a ]/8"
+    +| note "0!5 0*2 0!2"
+    + note 13
+
+do
+  -- @name fim do teclado
+  reface
+    $ note "[ a'min7@3 fs'min7@5 . a'min7@3 fs'min7@5 . c'maj7 b'min7 . a'min7 ]/8"
+    # octave 2
+    # amp "0.4"
+ 
+do
+  reface silence
+
+
+
+
+lt $ note "0!5 0*2 0!2" + note  "a"
+
+
+

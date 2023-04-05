@@ -3,19 +3,20 @@
 do
   -- @section setup
   hush
+  all id
   setkey "c" "dorian"
   setkey' 0 "c" "dorian"
   setkey' 1 "c" "minor"
   setkey' 2 "ds" "major"
   setkey' 3 "c" "[dorian minor]/8"
-  setcps (148/120)
+  setcps (148/120/2)
   -- all $ (# bus' 0.7 0.7)
   bank "mc" 85
   bank "mm" 25
   trbank 5
   -- mamps $ repeat 0
   -- setcps (164/120/2)
-  setcps (95/120)
+  setcps (94/120)
   setcps (90/120)
 
 do
@@ -59,8 +60,7 @@ do
 
 do
   -- @section intro 2
-  mm $ nok 2 "[ [-7@3 -5 . -10 ~@3]/2, [-9 -8 -11 -4 . -5 -10 -8 -3]/2 \
-             \, 9@2 5 4]"
+  mm $ nok 2 "[ [-7@3 -5 . -10 ~@3]/2, [-9 -8 -11 -4 . -5 -10 -8 -3]/2, 9@2 5 4]"
      # amp 0.2
      # octave 6
 
@@ -70,6 +70,8 @@ do
   bd $ slow 2 "0 ~ ~ 0 0 ~ ~ ~ ~ ~ 0 ~ 0 ~ ~ ~"
   hc $ "[~ ~ ~ 0 ~ ~ 0 ~]/2" # amp 0.5
   rs $ rarely (chop "1 8@3" . (# amp 0.2)) "[~ . ~ . ~ . 0 0 ~ 0*2 0 ~ 0 0]/4"
+
+hush
 
 -- do
 --   bd $ "0 <0 ~> . ~ <0 ~> <~ 0> ~" # sus 0.1
@@ -83,6 +85,7 @@ do
   -- mamps [0,0.3,0.3]
   -- mamp 2 $ shuffle 2 ("3 2 3 2 1 3 2 1 3 1 2 1 3 2 1" |/ 10) |+ range 0.05 0.1 rand
   setI "gtbass" $ "[0@2 [-2 ~] [-1 ~] 0 2 6 4@4 5 2@2 1 2]/2"
+  setI "gtbass" $ "[0@3 0 7 [0 ~] [0 ~] ~. -2 -1]/2"
   setI "basspos" (-2)
   lt $ nok 1 (slow 2 $ "^gtbass" |+ "^basspos" |+ 7)
     # sus "1 . <0.2 1>"
@@ -153,6 +156,8 @@ do
     # octave 4
     # amp 0.3
 
+
+
 do
   -- @section full
   setkey' 3 "c" "[dorian minor]/8"
@@ -171,11 +176,14 @@ do
   bd $ slow "^drumslow"  "0 <0 [~ 0]> . ~ <0 ~> <~ 0> ~"
   ch $ slow "^drumslow" $ fast 2 $ "0 0*<2 1!3> 0!2"
     # sus ("4 . 10 4" |/ 10)
+    # sus ("4 . 6 4" |/ 10)
     # amp ("[0.5 0.4]*2" |* 0.8)
   sd $ slow "^drumslow" "~ 0"
   lt
     $ nok 1 (slow 2 $ "^gtbass" |+ "^basspos" |+ 7)
     # sus "1"
+
+
 
 
 do
@@ -203,10 +211,10 @@ do
     $ nok 1 (slow 2 $ "^gtbass" |+ "^basspos" |+ 7)
     #sus ("<4!3 2>" |/ 10)
     #amp ("<4.2!3 5>" |/ 10)
-  reface
-    $ nok 1 "^stairs2" # amp 0.34
-    #octave "[4]/8"
-    #sus 3
+  -- reface
+  --   $ nok 1 "^stairs2" # amp 0.34
+  --   #octave "[4]/8"
+  --   #sus 3
   mm
     $ nok 1 "^stairs" # amp 0.1
     #octave "[6 5]/8"
@@ -227,9 +235,11 @@ do
 
 bd $ "0 ~ ~ 0"
 
-  mm silence
+sd $ n "~ 2" # amp 0.5
 
+ch $ fast 4 $ n "0*2" # amp "0.5 0.4"
 
+rc $ fast 2 $ n "0*2" # amp "0.5 0.4"
 
 -- do
 --   setF "drumslow" 1
@@ -238,25 +248,49 @@ bd $ "0 ~ ~ 0"
 do
   -- @name "double tempo"
   setF "drumslow" 2
-  setcps (110/120)
+  setF "drumslow" 1
+  -- setcps (110/120)
+  
   bd
     $ slow "^drumslow"  "[0@3 0 . ~ [~ 0] . [~ 0] [~ 0] . ~ [~ 0]]/2"
     # sus 0.1
     # amp 0.4
+
+
   ch $ slow "^drumslow" $ fast 4
     -- $ sometimes (shuffle 2)
     -- $ rarely (chop 2)
     $ "0*2 . 0*2 0" # sus ("7 4 5 6" |/ 12)
     -- $ "0*2" # sus ("7 4" |/ 10)
     # amp ("0.8 0.1" |* 0.6)
+
   sd $ slow "^drumslow" "~ 0"
   rc $ slow ("^drumslow" * 2) $ degradeBy "<1 0>" $ "~ . ~@3 0" # sus 1 # amp 0.4
   cc $ slow ("^drumslow" * 2) $ degradeBy "<0 1>" $ "0" # sus 1 # amp 0.4
   rs $ rarely (chop "1 8@3" . (# amp 0.2)) "[~ . ~ . ~ . ~ . ~ . ~ . ~ . 0 0 ~ 0*2 0 ~ 0 0]/8"
 
+
 do
   setI "shuf" "1 8*3"
-  all $ byshuf (shuffle "^shuf") . byacc (chop "[16|8|4]" . (|* amp 0.3))
+  -- all $ byshuf (shuffle "^shuf") . byacc (chop "[16|8|4]" . (|* amp 0.3))
+  all $ byshuf (shuffle "^shuf") . byacc (chop "[2|4]" . (|* amp 0.3))
 
 
 hush
+
+ht $ slow 2 $ nok 1 "11 ~ 10 ~ 7 8 6 ~ . 1" # amp 0.5
+
+
+bd $ "0 [~|0] <~ 0> [~|0] ~ ~ ~ 0"
+
+
+lt $ nok 1 ("[0 ~ ~ 0 ~ ~ 0 ~ . 0 ~ 0 ~ 0 ~ ~ ~]/2" |+ "<0 3 0 -1 0>/4") # amp 0.5
+
+lt $ nok 1 ("[0 ~ ~ 0 ~ ~ 0 ~ . 0 ~ 0 ~ 0 ~ ~ ~]/2" |+ "<3 3 0 2>/4") # amp 0.5
+
+
+lt $ nok 1 ("[0 ~ ~ 0 ~ ~ 0 ~ . 0 ~ 0 ~ 0 ~ ~ ~]/2" |+ "<3 2>/4") # amp 0.5
+
+nok 1
+
+lt $ nok 1 "[0 ~ ~ [7|0] ~ ~ 0 ~ . 2 ~ 3 ~ 5 ~ ~ ~]/2" # amp 0.5
