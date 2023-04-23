@@ -1,23 +1,16 @@
--- ------------------------------------------------- ALVENARIA
+Include 3 - Duo Alvenaria
 
 let ely npat = p "ely" $ n (npat |- 12) # s "loopback" # midichan 15 # octave 1 # cut 0
     elyonce npat = once $ n (npat |- 12) # s "loopback" # midichan 15 # octave 1 # cut 0
 
--- in ely $ "[0 1 2 3]/2"
--- _translateEventsToMIDICC' modifier array name valueGetter idx pat = ccv (modifier (fmap valueGetter $ filterJust $ M.lookup name <$> pat)) # ccn (array!!idx)
--- fmap valueGetter $ filterJust $ M.lookup name <$> pat
-
-
-
-
 do
-  -- @name Alvenaria
+  -- @name intro
   hush
   all $ slow 4
   rc $ fast 2 $ n "0*4" # amp ("7 6 6 6" / 10)
   setcps $ 125 / 120
   trbank 122
-  setkey' 0 "f" "mixolydian" 
+  setkey' 0 "f" "mixolydian"
   setI "chord" $ "[-3,0,2,[5|6],8]"
   setI "phrase" $ "[0 [0? ~] ~ 0@2 0 ~ 0@2 0 ~ 0 ~ ~ ~ ~]*2"
   setF "refaceamp" 0.3
@@ -26,8 +19,8 @@ do
     # sus 0.1
 
 do
-  -- @name verse 1
-  ely $ 0.12 <~ "2*2"
+  -- @name intro b
+  ely $ 0.12 <~ "[2@15 ~]*2"
   all $ slow 4 . (|* amp 0.5)
   bd $ (n . stack) ["^phrase", "[0 ~ [~@3 0] [0 0*3]]*2"]
   sd $ n "^phrase"
@@ -38,10 +31,10 @@ do
   -- ht $ (note . neg . k 0) ("^phrase" |+ fast 2 "0 5 7 5 8 6 0 2 . 6 4 6 4 0 5 3 5" |+ 4) # amp 0.5
 
 do
-  -- @name verse 1 
+  -- @name verse 1
   -- pandeiro casa com baixo (acentuacao baiao)
-  ely $ "4"
-  setF "refaceamp" 0.5
+  ely $ "[4@63 ~]"
+  setF "refaceamp" 0.6
   reface silence
   all $ slow 4
       . byshuf (chop $ segment 8 $ irand 4 |+ 2)
@@ -59,37 +52,35 @@ do
   cc $ "[~ ~ 0 ~ ~ ~ ~ ~]*2"
   -- setseq $ randcat [0,1,2,3]
   -- lt $ nok 0 "0 7? 14? 4 ~ 0 ~ 4 ~ ~ -3 ~ ~ [4|-1] ~ 0 0 ~ ~ 4 ~ ~ -3 ~ ~ 4 ~ ~ 0 ~ ~ ~"
-  lt $ nok 0 "[0 ~ ~ ~    ~ 1 ~ ~    -1 ~ <~ -3> ~   <~ -3> <3 ~> ~ ~]*2"
+  lt $ nok 0 "[0 ~ ~ ~    ~ 1 ~ ~    -1 ~ <~ -3> ~   <~ -3> <3 ~> ~ ~]*2" # sus 0.2
   -- ht $ (nok 0) $ fast 2 "0 5 7 5 8 6 0 2 . 6 4 6 4 0 5 3 5"
   -- reface $ nok 0 ("[0 ~ ~ 0 ~ ~ ~ 0 . ~ ~ ~ 0 ~ ~ ~ ~]*2"  |+ "^chord")
   --   # octave 4 # amp 0.4
   oh $ n "0*8" # amp 0.2
 
+hush
+
 do
   -- @chords
   -- ely $ (1/2) <~ "5"
-  ely $ (1/2) <~ "5"
+  ely $ (1/2) <~ "5@63 ~"
   setI "chord" $ "[-3,0,2,6 5,8]"
-  setF "refaceamp" "0.5"
+  setF "refaceamp" "0.55"
   reface $ (note . k 0) ("<0 -1>@3 1@4 0@4 -3@5"  |+ "^chord") |+ note "0@3 1@3 0@2 . 0"
     # octave 4 # amp "^refaceamp"
 
-reface silence
-
-ely silence
-
 do
-  -- @name house decay
-  ely $ (1/2) <~ "6"
+  -- @name kick
+  ely $ (1/2) <~ "6@63 ~"
   hc $ fast 4 "~ 0*2" # amp 0.5
   bd $ fast 4 "~ 0*2" # amp 0.45
   hc $ "0*8" # amp 0.7
 
 do
   -- @name quiet (base original pandeiro)
-  ely $ (1/2) <~ "7/2"
+  ely $ (1/2) <~ "[7@63 ~]/2"
   setkey' 0 "f" "mixolydian"
-  setF "refaceamp" "0.4"
+  setF "refaceamp" "0.5"
   setI "chord" $ stack["[-3,6]", "[0,2]" |+ sew "[tttttffttffttttt]*2" (almostNever (const 1) "0*16") "-1"] |+ "[3 0]"
   setI "bes" $ "0"
   -- ht $ (nok 0) $ fast 2 "1 5 7 5 8 6 0 2 . 6 4 6 4 1 5 3 5"
@@ -105,26 +96,25 @@ do
     # amp ("5 3 4 4.5" |/ 10)
     # sus (almostNever (const 0.4) $ segment 8 0.3)
 
-
 do
   -- @name careta (solo de pandeiro)
-  ely $ (1/2) <~ "8"
-  ely $ (1/2) <~ "9"
+  ely $ (1/2) <~ "8@63 ~"
+  ely $ (1/2) <~ "9@63 ~"
   setI "bes" $ "<1 -1>"
   setF "refacebase" ""
 
 do
   -- @name glitches
-  ely $ (1/2) <~ "10"
+  ely $ (1/2) <~ "10@63 ~"
   setF "refacebase" "[0@3 0@5]*2"
   all $ slow 4
-    . byshuf (degradeBy 1) 
+    . byshuf (degradeBy 1)
     . byacc (rev . fast 4)
   setI "bes" $ "0"
-  setF "refaceamp" "0.5"
+  setF "refaceamp" "0.6"
   setkey' 0 ("f" |- 5) "mixolydian"
   setI "chord" $ "[-3,2,6,8,12 11@3]"
-  setF "refacesus" "0.2"
+  setF "refacesus" "0.2 0.5@3"
   reface
     $ nok 0 ("^refacebase"  |+ "^chord" |+ "^bes")
     # octave 4 # amp 0.4 # sus "^refacesus"
@@ -136,31 +126,31 @@ do
 do
   -- @name solo drop
   all $ slow 4
-    . byshuf (degradeBy "0 1@8 0") 
+    . byshuf (degradeBy "0 1@8 0")
     . byacc (rev . fast 4)
   bd $ fast 4 "~ 0*2" # amp 0.45
 
 
 do
-  ely $ (1/2) <~ "11"
+  ely $ (1/2) <~ "11@63 ~"
 
+hush
 
 do
   -- glitch 2
-  ely $ (1/2) <~ "12"
+  ely $ (1/2) <~ "12@63 ~"
   setkey' 0 "f" "mixolydian"
   lt $ nok 0 "[0 ~ ~ ~    ~ 1 ~ ~    3 ~ <~ 2> ~   <~ 3> <5 ~> ~ ~]*2" # sus 0.2
 
 do
-  ely $ "13*2"
-  ely $ "14*2"
-  ely $ "15*2"
-  ely $ "16*2"
+  ely $ "[13@53 ~]*2"
+  ely $ "[14@53 ~]*2"
+  ely $ "[15@53 ~]*2"
+  ely $ "[16@53 ~]*2"
 
 do
   -- @name ending - esperar ely terminar e depois mariano
   ely ""
   elyonce 16
 
-  hush
-
+hush

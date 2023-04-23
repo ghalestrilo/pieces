@@ -1,4 +1,7 @@
-
+let reface = keys
+    lt = bass
+    ht = lead2
+    mm = lead1 
 
 do
   -- @name ASTRO REPRISE
@@ -29,8 +32,8 @@ do
   reface
     $ note
     $ fast 2
-    $ (cat)
-    (fmap (k 0)
+    $ cat
+    $ (fmap (k 0)
       [ "0@5 0 ~@2" |+ 9
       , "0@5 0 ~@2" |+ 9
       , "8@5 7 ~@2"
@@ -45,12 +48,12 @@ do
 do
   -- @name drums
   ch $ fast 8
-    $ sometimes (chop "2 1") $ n "0*2"
+    $ byshuf (chop "2 1") $ n "0*2"
     # amp "<0.42 0.33>"
 
 do
   -- @name preface
-  mm $ fast 2 $ (note . cat)
+  pads $ fast 2 $ (note . cat)
     ([ k 2 $ "2 4 5 -5 4 -7 4 5" |+ 2
     , k 2 $ "2 4 5 -5 4 -7 1 2" |+ 2
     , k 1 $ "2 3 4 -5 3 -7 2 4" |+ 2
@@ -69,8 +72,8 @@ do
     $ cat [
       fast 4 
       $ nokc [5,5,6,0]
-        [ "[-3,0]@5 [-3,0] ~@2" |+ 7
-        , "[-3,0]@5 [-3,0] ~@2" |+ 7
+        [ "[2,7]@5 [4,7] ~@2"
+        , "[2,7]@5 [4,7] ~@2"
         , "[0,2,5]@5 [1,2,4] ~@2"
         , "[1,2,5]@5 [-1,2,4] ~@2"
         ]
@@ -104,12 +107,11 @@ do
     $ n "0*<3 1> 0"
     # amp "<0.42 0.33>"
   setF "plink" 0
-  lt
-    $ nok 0 ("0(3,8) . ~@2 0@3 0@3" |- 7)
-    -- # octave 3
-    # amp 0.2
+  bass
+    $ nok 0 "0(3,8) . ~@2 0@3 <0 -3>@3"
+    # octave 4
     # sus 0.2
-  mm
+  keys
     $ fast 2
     $ (note . cat . fmap (+| "0@5 0 ~@2"))
     [ k 0 $ "[-2,0,2,7]" |+ 2
@@ -117,20 +119,21 @@ do
     , k 0 $ "[0,2,3 4,7 5]" |+ 1
     , k 1 $ "[0,2,5 4,7 6]" |- 5
     ]
-    -- # octave 5
+    # octave 5
     # amp 0.6
   -- htoff (-3)
   -- htoff 0
-  ht
-    -- $ sometimesBy "^plink" (# (octave (5 |+ irand 3) # sus 4))
-    -- $ (note . cat . fmap (k 0) . fmap (rarely (|+ ("[1 0@3]*4" |* (irand 8) |- 4))))
+  lead2
     $ fast 2
-    $ ((|+ note 13) . nokc [0,0,3])
+    $ nokc [0,0,3]
     -- $ nokc [0,0,3]
     [ "2 4 5 2 4 0 4 5"
     , "6 8 9 6 8 -4 -2 -1"
     , "1 2 3 1 2 -2 2 4"
     ]
+    # octave 5
+
+setF "dawlatency" 0
 
     -- # sus 1.4
     -- # sus 0.12
@@ -152,7 +155,8 @@ do
   bd $ n "0  ~ ~ 0? ~@4. [~ 0] 0 ~ [~ 0]"
   -- d3 $ fast 2 $ n "~ 0 0 ~"
   ht silence
-  mt
+  lead1 silence
+  lead2
     $ fast 2
     $ (|+ note 12)
     -- $ sometimesBy "^plink" (# (octave (5 |+ irand 3) # sus 4))
@@ -168,7 +172,8 @@ do
     ])
     # sus 0.2
     # amp 0.4
-  lt
+    # octave 4
+  bass
     $ fast 2
     $ (note . (|- 12) . cat)
       ([ k 0 "0(3,8)"

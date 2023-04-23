@@ -1,28 +1,13 @@
--- Include 1:AYLA
+Include 4 - Ayla Gresta
+
 let antiswing = swingBy (-1/8) 6
-    
-let accselect list = select tracc $ list ++ [""]
 
-
-{-| Summary
-- intro
-- verse 1
-- bridge 1
-- verse 2
-  -
-- void
-- bridge 1:
-  - reface0*6
--}
+let accselect list = select tracc $ list ++ [last list]
 
 hush
 
-
-mm $ nok 0 "0 2 4 6"
-
-
--- Include 1:AYLA
 do
+  -- @name intro
   trbank 112
   setcps $ 160 / 120 / 2
   all $ slow 2 . swingBy (1/8) 6 . byshuf (shuffle "1 6@5" . byacc (chop "1 [2]!5"))
@@ -33,6 +18,7 @@ do
   -- setkey' 0 ("0" |+ 7) "<lydian major>"
   setkey' 0 ("0" - 5) "major mixolydian"
 
+hush
 
 do
   -- @name dry
@@ -60,7 +46,6 @@ do
   setkey' 0 (- 5) "phrygian"
   setkey' 1 (- 2) "mixolydian"
   setkey' 3 (- 5) "minor"
-  setF "refaceamp" 1
   lt silence
   reface silence
   lt
@@ -68,6 +53,10 @@ do
       [0, 0, "5 [4|6]" , "10 6"]
     # sus "<0.5!2 1!2>"
     |- note "<12!2 24!2>"
+
+do
+  -- @name keys
+  setF "refaceamp" 1
   reface
     $ nokc [0, 1, 3, 3]
       [ "0 ~" + "[-3, 0, 2, 6]"
@@ -184,6 +173,7 @@ do
 do
   -- @name strange bit
   reface silence
+  lt silence
 
 
 
@@ -236,7 +226,7 @@ do
     # amp 0.5
     # sus 0.1
 
-
+hush
 
 
 
