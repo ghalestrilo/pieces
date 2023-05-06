@@ -2,20 +2,25 @@ do
   -- @name steal
   hush
   trbank 2
-  all $ swingBy (1/12) 8 . byshuf (shuffle 8)
+  all
+    $ swingBy (1/12) 8
+    . byacc (chop "[1 2@3]*2")
+    . byshuf (shuffle "[1 8@3]*2")
+    . byacc (chop "[1 4@3]*2")
   setcps (86/120)
   setkey' 0 (-8) "lydian"
   setkey' 1 ((-8) - 5) "mixolydian"
   bd $ n "0"
-  sd $ n "~ 0"
-  oh $ sometimes (chop 2) $ degrade (n "0*16") # amp (range 0.1 0.4 $ rand)
+  sd $ stack ["~ 0", sometimes (chop 2) $ (n "[~ 0]*4") # amp (range 0.09 0.15 $ rand)]
+  -- oh $ 
+  -- oh $ sometimes (chop 2) $ degrade (n "0*16") # amp (range 0.1 0.4 $ rand)
   -- oh $ degradeBy $ rarely (chop "[2 1]*2") $ (n . press) "0*4" # amp 0.4
   ch $ fast 2 $ n "0*2" # amp ("0.5 0.4" |* 0.85)
   bd $ n "[~ 0 0 ~ . ~ ~ 0 ~ . 0 ~ ~ ~ . ~ ~ 0 0]/2"
   -- rs $ n "0*[1|1|2] 0!2 0*2" # amp 0.4
 
 do
-  lt
+  bass
     $ slow 2
     $ cat [
       nok 0 "0@3 0@3 0!2 . ~",
@@ -23,7 +28,8 @@ do
       nok 0 $ "0@3 0@3 0!2 . ~ ~ 0@2 ~ 0 2 4" |- 1,
       nok 1 $ "5@3 5 . 7 2"
     ]
-  mm $ (slow 2)
+    # octave 4
+  keys $ (slow 2)
     $ cat [
       nok 0 "[-3,0,2,4,6]",
       nok 0 "[-3,0,3,6] [-3,0,3,7]",
@@ -35,3 +41,5 @@ do
     ]
     # amp 0.5
 
+
+hush 

@@ -11,14 +11,12 @@ do
   -- @name setup
   setkey' 0 ("f" |- 11) "lydian"
   setkey' 1 ("fs" |- 11) "phrygian"
-  setkey' 4 ("fs" |- 11) "locrian"
   setkey' 2 ((1/4) <~ "[f@3 fs]/4" |- 11) ((1/4) <~ "[lydian@3 minor]/4")
   setkey' 3 "c" "lydian" 
+  setkey' 4 ("fs" |- 11) "locrian"
+  setkey' 5 ("f" |- 7) "mixolydian"
   bank "mc" 91
   bank "lead" 31
-  -- all $ (# (orbit 0 # room 0.1))
-  -- all id
-  -- setcps (93/60/2)
   setcps (98/60/2)
   trbank 10
 
@@ -26,13 +24,14 @@ do
   -- @env rec
   all id
 
+
 do
+  let mphrases = ((|+ 5) <$> ["[-3 0] 0!2 0*2", "0 [0*2]!3", "0 [0*2]!2 0", "0!4", "1!2 -1!2"] :: [Pattern Int])
   -- @name intro
-  mphrases = ((|+ 5) <$> ["[-3 0] 0!2 0*2", "0 [0*2]!3", "0 [0*2]!2 0", "0!4", "1!2 -1!2"] :: [Pattern Int])
   setI "m1" $ randcat mphrases
   setI "m2" $ randcat mphrases
-  mt $ (|+ note 4) $ nok 0 "^m1" # sus 0.05 # amp 0.1
-  ht $ (|+ note 4) $ nok 0 "^m2" # sus 0.05 # amp 0.1
+  -- lead1 $ nok 0 "^m1" # sus 0.05 # amp 0.1 # octave 6
+  lead2 $ nok 0 "^m2" # sus 0.05 # amp 0.1 # octave 6
 
 
 -- trm 3 $ trn $ (|- 12) $ k 2 $ "[7 [7 ~@2]*3 [7 ~@3]!2 3 4 6 [~ 7@3|7]@4 0 [2 ~] [3 ~] [6 ~] [5 ~] . 4 3 2 4 [[0,-3] ~@2 [-1,-4] ~@2]@3 [0,-3]@5 3 4 6 ~]/8"
@@ -42,7 +41,7 @@ all f4
 -- melancode
 
 do
-  setF "pianosus" $ (1/4) <~ "[8 3]" |* "0.5 0.18" |* 0.8
+  setF "pianosus" $ (1/4) <~ "[8 3]" |* "0.5 0.18" |* 0.85
   -- setF "pianosus" $ (1/4) <~ "[8 3]" |* "0.5 0.18" |* 0.89
   let index = "0@3 1"
   keys
@@ -59,7 +58,7 @@ do
 do
   -- @name tinks
   setI "vmel" $ ("[6@4 5@3 3@4 [-3,-1,3]@4 [-3,-1,2]@17]/8" |+ 10)
-  lead $ nok 2 "^vmel" # amp "[1.3@11 0.7@21]/8"
+  lead1 $ nok 2 "^vmel" # amp "[1.3@11 0.7@21]/8"
   -- rs $ nok 0 $ "[6@4 5@3 3@4 3@4 2@17]/8" |+ 10
   -- cc $ nok 0 $ "[~@4 ~@3 ~@4 -1@4 -1@17]/8" |+ 10
   -- seconds
@@ -75,10 +74,13 @@ do
   bd $ n "^kicks" # amp ("^kickgain" |* 0.5)
   sd "[~ 20]"
   ch $ fast 2 $ n "5*2" # amp "0.5 0.1"
-  oh $ degradeBy "0 . 1 0@7" $ stack ["<[~ 20] [~ [21*3] ~@2 . 20] ~ ~>", degrade "0*8" # amp (range 0.3 0.5 rand)]
+  -- hc $ degradeBy "0 . 1 0@7" $ stack ["<[~ 20] [~ [21*3] ~@2 . 20] ~ ~>", degrade "0*8" # amp (range 0.3 0.5 rand)]
+  hc silence
   setI "lead" $ "[0 9 5 6 1 2 4 0@2 9 5 6 1 2 4 -1]/4"
   -- lt $ nok 0 ("^lead" |+ 7) |+ note "^leadoffset"
-  bass $ nok 0 "^lead"
+  bass $ nok 0 "^lead" # octave 4 # sus 0.2
+
+
 
 hush
 
@@ -93,16 +95,21 @@ lead silence
 
 hush
 
+all $ lock 1 0
+
+all id
+
 do
   -- @name theme
   -- @colors lead:green
   -- bank "lead" 32
   setF "leadgain" 0.6
-  lead
+  lead1
     $ (# amp "^leadgain")
     $ nok 0
-    $ "[7 [7 ~@2]*3 [7 ~@3]!2 3 4 6 [~ 7@3|7]@4 0 [2 ~] [3 ~] [6 ~] [5 ~] . 4 3 2 4 [[0,-3] ~@2 [-1,-4] ~@2]@3 [0,-3]@5 3 4 6 ~]/8"
-    |+ 9
+    ("[7 [7 ~@2]*3 [7 ~@3]!2 3 4 6 [~ 7@3|7]@4 0 [2 ~] [3 ~] [6 ~] [5 ~] . 4 3 2 4 [[0,-3] ~@2 [-1,-4] ~@2]@3 [0,-3]@5 3 4 6 ~]/8" |+ 2)
+    # octave 6
+    # amp 0.6
   setI "lead" $ slow 8 "0 . 1 2 4 -2 . ~@3 -1 . ~@3 0 . ~ . 0 ~ ~ -1 ~ ~ 0 ~ . ~@3 6 . ~ 4 5 2"
 
 kcat = cat . (zipWith nok)
@@ -120,13 +127,14 @@ keys silence
 --     |+ 9
 
 do
-  -- maybe another mc voice
+  -- @name alt base
   setF "keysgain" 0.45
-  -- setF "keysgain" 0.68
   setF "keyssus" 4
+  -- all $ lock 2 5
+  -- all id
   keys
     $ (0.27 <~)
-    $ (note . slow 2 . cat)
+    $ (slow 2 . cat . cmap sus [3,3,3,1.2] . fmap note)
       [ strum 38 $ k 0 $ "[-3,0,2,6]" |- 2
       , strum 38 $ k 0 $ "[-3,0,2,6]" |- 1
       , strum 38 $ k 1 $ "[-3,0,2,6]"
@@ -134,7 +142,7 @@ do
       ]
     # amp "^keysgain"
     # octave 5
-    # sus ("[1@3 0.3]/4" |* 3)
+    -- # sus ("<1!3 0.3>" |* 1)
   bass
     $ ((1/4) <~)
     $ slow 2
@@ -146,13 +154,27 @@ do
     , "0@2 2 4 6 5 3 -1"
     ]
     # sus "1 0.2@3"
+    # octave 4
 
 
 do
   lead silence
- 
+
 do
-  lead
+  all $ lock 2 5.75
+  all id
+  pads
+    $ ((1/4) <~)
+    $ slow 2
+    $ (cat . zipWith nok [0,0,5,0])
+    [ "[0, 2, ~@3 6@3 5 ~, ~@3 2@3 4 ~]"
+    , "[0, 2, ~@3 6@3 5 ~, ~@3 2@3 4 ~]" + 1
+    , "[0, 2, ~@3 6@3 7 ~, ~@3 2@3 3 ~]"
+    , "[0 -1, 2 1, 2@2 [3 ~] [4 ~] 3@2 [2 ~] [1 ~], 0@2 [-1 ~] [-2 ~] -3@2 [-2 ~] [-1 ~]]" + 2
+    ]
+
+do
+  lead1
     $ (# amp "^leadgain")
     $ nok 0
     $ "[7 [7 ~@2]*3 [7 ~@3]!2 3 4 6 [~ 7@3|7]@4 0 2 3 6 5 . 4 3 2 4 [[0,-3] ~@2 [-1,-4] ~@2]@3 [0,-3]@5 3 4 6 ~]/8"
@@ -160,6 +182,15 @@ do
 
 
 do
-  lead silence
+  lead2 $ nok 0 "^m2" # sus 0.05 # amp 0.1 # octave 6
+
+do
+  keys silence
+  lead2 silence
+  bass silence
+  all $ lock 2 5.75
+  all $ lock 1 (-1/4) . byshuf (shuffle "1 8@3")
+  -- all $ lock 0.5 5.5
+  all id
 
 hush

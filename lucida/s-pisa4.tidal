@@ -23,17 +23,17 @@
 
 do
   -- @setup
+  hush
   let den = 17 / 2
   setcps (173 / 120 / 2)
-  fb 0 2
+  -- fb 0 2
   setI "toffset" $ slow den "0 1"
   setI "4ths" "{0 1 2 [3, ~ 2@2, ~@2 1]@3  [3, ~ 2@2, ~@2 1]@3  [3, ~ 2@@7, ~@2 1@6, ~@3 0@5, ~@4 1@4, ~@5 2@3, ~@6 3@2, ~@7 2]@8}%8"
   setI "4thsbase" "{0@6 2@3 1@8 -2@6 -1@3 0@8 }%8"
-  setkey "c" "lydian"
-  setkey (slow den "c f") (slow den "minor lydian")
-  fs 0 $
-    t ("^4ths" |* 3 |+ "^4thsbase" |+ ("^toffset" |* (-3)))
-      # octave 3
+  setkey' 0 "c" "lydian"
+  setkey' 0 (slow den "c f") (slow den "minor lydian")
+  keys $ nok 0 ("^4ths" |* 3 |+ "^4thsbase" |+ ("^toffset" |* (-3)))
+      # octave 4
       # amp (range 0.5 0.63 rand)
 
 
@@ -41,21 +41,17 @@ do
   -- @section drums
   -- fbs [34, 35, 36, 37]
   -- fss [...]
-  fb 1 35
-  fs 1 $
+  bd $
     n "0 . <0*2 [0 [0|0*2] 0 0 | 0 0 [0|0*2] 0]>"
       # sus 0.02
       # amp 0.7
-  fb 2 36
-  fs 2 $
+  sd $
     slow 2 $
       n "~ 0 ~ 0 ~ ~ 0 ~ . 0(3,8)"
         # amp 0.5
-  fb 3 34
-  fs 3 $ fast 2 $ n "0 ~ . 0" |* sus "0.02 . 4"
+  ch $ fast 2 $ n "0 ~ . 0" |* sus "0.02 . 4"
   fs 3 $ fast 2 $ n "0*2" |* sus 0.02
-  fb 4 37
-  fs 4 $ fast 2 $ chop "1 [1|2] [1!2] 1" $ n ("0 0 0 0" |+ "<7 3>") # octave 7
+  bass $ fast 2 $ chop "1 [1|2] [1!2] 1" $ nok 0 ("0 0 0 0" |+ "<7 3>") # octave 3
 
 fs 4 silence
 

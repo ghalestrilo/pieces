@@ -20,7 +20,7 @@ do
     # amp 0.45
   sd $ n "[~ 0 . ~@3 0 . ~ 0 ~@2 0@4 . ~ 0]/4" # amp "0.3 0.4"
   oh $ degradeBy "0 . 1 0@7" $ stack ["<[~ ~] [~ [0*3] ~@2 . ~ ]>", degrade $ "0*8" ] # amp (range 0.4 0.5 rand)
-  mt $ nok 1 (cI_ "phrase")
+  lead1 $ nok 1 (cI_ "phrase") # octave 4
   lt $ nok 1 $ slow 2 ("[0@3 7 . <[0 ~ 0 ~@2 7@3] [0@2 0@3 7@3]>]" |+ "[0!3 1]/2")
   setI "phrase" $ slow 2 (cat
     [ "2@3 0 . 2 3 [2 . [[3 2]|~]] 0"
@@ -61,15 +61,15 @@ do
   all $ swingBy 0.1 8
 
 do
-  setF "refaceamp" 0.8
+  setF "refaceamp" 0.4
   setF "mmamp" 0.9
-  setF "mmamp" 0
-  setF "refaceamp" 0
-  reface
-    $ slow 2
+  -- setF "mmamp" 0
+  -- setF "refaceamp" 0
+  keys
+    -- $ slow 2
     $ (# octave 4)
     $ (# amp "^refaceamp")
     $ (note . cat)
-      [ k 1 ("0" |+ "[-7,-3,-1,2,6]")
-      , k 0 (cat ["~@5 0@3" |+ "<[-6,2] [-6,0,2,4]>", "~"])
+      [ k 1 ("[0]/2" |+ "[-7,-3,-1,2,6]")
+      , k 0 (slow 2 $ "~@5 0@3" |+ "<[0,-6,2] [-6,0,2,4]>")
       ]

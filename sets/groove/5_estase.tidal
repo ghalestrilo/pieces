@@ -5,22 +5,24 @@ do
   trbank 4
   setkey' 0 0 "chromatic"
   setkey' 1 (-1) "minor"
-  all $ swingBy (1/24) 4
+  -- all $ swingBy (1/24) 4
+  all $ swingBy (1/12) 4
 
 do
   -- @name intro
   hush
   ch $ fast 2 $ "0*2" # amp "0.45 0.4"
-  rs $ n "~ 0" # amp 0.5
+  rs $ "~ 0" # amp 0.5
 
 do
   mt
     $ note "[0@3 0@3 0@2. ~]/4"
     # ctrl "[100@3 -100@5 . ~]/4"
     # sus "[100@3 100@3 10@2 . ~]/4"
+  mt silence
 
 do
-  reface $ nok 0 "{ 14 10 7 5 4 \
+  keys $ nok 0 "{ 14 10 7 5 4 \
     \ 14 10 7 5 4 \
     \ 14 10 7 \
     \ 15 11 8 \
@@ -35,44 +37,46 @@ do
     \ 14 10 7 5 4 \
     \ 6 4 1 -2 -6 \
     \ }%8"
-    # sustainpedal 1
-    # amp (range 0.5 0.7 rand)
-    # sus 4
+    -- # sustainpedal 1
+    # amp (range 0.5 0.7 rand |* 0.55)
+    # sus 1
     # octave 4
 
 do
-  lt
-    $ note "[0@3 0@3 0@2 . 0(3,8) ~]/4"
-    # ctrl "[100@3 -100@5 . 0]/4"
-    # sus "[100@3 100@3 100@2 . 100]/4"
+  bass
+    $ nok 0 "[0@3 0@3 ~@2 . ~@2 0(3,8)@8 ~@6]/4"
+    -- # ctrl "[100@3 -100@5 . 0]/4"
+    -- # sus "[100@3 100@3 100@2 . 100]/4"
+    # octave 3
 
 do
-  mm
+  lead2
     $ (0.5 <~)
-    $ every 4 (# amp 0.8)
+    $ every 4 (# amp 0.2)
     $ nok 1 "[0,4,7]"
     # sus 0.1
     # amp 0
+    # octave 7
 
-
+hush
 
 -- TODO: Gradually distort
 
 do
-  -- piano silence
-  mm
+  hush
+  pads
     $ slow 4
     $ note "0'maj -3'min . -1'min7"
     # octave 4
-  ht $ nok 0 ("[0(3,8) . -3(3,8) . -1@3 -1@3 -1 2 . [[~@2 6 9 . ~]|~|[~@2 2 1]|[~@4 2 -1 2 4]]]/4" |- 12)
-
+  bass
+    $ nok 0
+      ("[0(3,8) . -3(3,8) . -1@3 -1@3 -1 2 . [[~@2 6 9 . ~] | ~ | [~@2 2 1] | [~@4 2 -1 2 4]] ]/4" |- 12)
     # sus 0.3
-
-  -- reface silence
+  -- keys silence
   -- mt
-  reface
+  keys
     $ (# amp (range 0.6 0.8 rand))
-    $ (# sus 2)
+    $ (# sus 1)
     $ (# octave 4)
     $ (# amp 0.8)
     $ (# ctrl 0.7)
@@ -89,6 +93,23 @@ do
      \ 6 5 3 1 -1 \
      \ }%8"
 
+hush
+
+let (##) a b = (# a) b
+in keys
+    $ amp (range 0.6 0.8 rand)
+    ## (nok 1)
+    $ (|+ "1")
+    "{ 9 8 6 4 3 \
+     \ 9 8 6 4 3 \
+     \ 9 8 6 \
+     \ 11 10 8 \
+     \ 10 9 6 4 3 \
+     \ 2 3 4 8 6 \
+     \ 10 9 6 4 3 \
+     \ 10 9 6 4 3 \
+     \ 6 5 3 1 -1 \
+     \ }%8"
 
 do
   -- hush
@@ -96,4 +117,46 @@ do
   sd $ n "~ 2" # amp 0.45
   bd $ n "<[0 0] [~ ~ 0 ~]> . ~@3 0" # amp 0.6
   --  bd $ degrade $ n "~@7 0" # amp 0.45 # note 12
-  oh $ degradeBy 0.2 $ fast 4 $ n "~ 0*<3 1!3>" # amp (range 0.2 0.5 $ rand)
+  sd $ stack
+    [ n "~ 2" # amp 0.45
+    , degradeBy 0.2 $ fast 4 $ n "~ 0*<3 1!3>" # amp (range 0.15 0.25 $ rand)
+    ]
+  -- rs $ 
+  rs silence
+
+
+hush
+
+
+
+
+import System.Directory (getDirectoryContents)
+
+let synthBankDir = "/Library/Audio/Presets/u-he/Diva/MIDI Programs"
+    synthBanks = getDirectoryContents "/Library/Audio/Presets/u-he/Diva/MIDI Programs"
+in synthBanks
+
+  do str <- synthBanks
+
+    --  mapM_ (putStrLn . (!!0) . reverse . filter ((>= 1) . length) . words) str
+
+
+getDirectoryContents "/Library/Audio/Presets/u-he/Diva/MIDI Programs"
+
+
+
+let a = [".","..","astro_2 keys.h2p","astro_2 lead1.h2p","astro_2 pads.h2p","chroma bass.h2p","Midi.Bank.Cache.txt"]
+    b = getDirectoryContents "/Library/Audio/Presets/u-he/Diva/MIDI Programs"
+    instruments = ["keys"]
+    -- treatName = map reverse . filter ((>= 2) . length) . map words
+    ignoreDotAndParent = drop 2
+    -- treatName = map reverse . filter ((>= 2) . length . fst) . zipWith [0..] . map words . ignoreDotAndParent
+    treatName = zipWith [0..] . map words . ignoreDotAndParent
+    -- setbank (name:bank:rest) = name ++ " " ++ bank
+    setbank = id
+    loadbank songname instrument = a
+    loadbanks songname = map (loadbank songname) ["keys"]
+in loadbanks "astro_2"
+
+
+take 10 $ drop 2 [1..]

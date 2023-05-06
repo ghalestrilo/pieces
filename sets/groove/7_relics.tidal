@@ -1,13 +1,13 @@
 do
   setcps $ 86 / 120
   trbank 6
-  bank "mm" 23
+  bank "keys" 23
   all id
   hush
   setF "drumslow" 1
   setkey' 0 0 "major"
   setkey' 1 0 "chromatic"
-  reface $ (stack . zipWith nok [0,0,1])
+  keys $ (stack . zipWith nok [0,0,1])
     [ slow 2 ("6@2 6@3 6@2 6@4  6@3 6@2" |+ "[0,5]@7 [-1,5]@9")
     , fast 2 ("0 ~ ~ 0" |- "<0 3>")
     ]
@@ -19,19 +19,18 @@ do
 
 do
   setI "phrase" "{16 14 11 0 ~     16 14 11 4 6 7 6 7 9 7 9 <11 10 11> ~   <16 15 16> 14 <11 10 11> <6 9 6> ~ }%8"
-  mm
-    $ slow 1
+  lead1
     $ (note . stack)
       [ "^phrase" |+ 12
       , "{~@3 0'maj@2   ~@3 0'maj@3 2'maj@3 <0'maj 3'maj -3'min>@4   ~@3 <4'maj 5'maj -1'min>@2 }%8"
       ]
-    -- # sus 4
     # octave 3
+    # amp 0.3
 
 do
   ch $ slow "^drumslow" $ fast 8
     $ "0"
-    # amp (range 0.3 0.45 rand)
+    # amp (range 0.2 0.45 rand)
     # sus (sometimesBy 0.9 (const "0.1") 1)
 
 do
@@ -46,20 +45,32 @@ do
 
 do
   -- @name plinks
-  ht
+  lead2
     $ off 3 id
     $ fast (4 |+ (range (-1) 1 $ slow 4 sine))
     $ nok 0 (run 4 |- 2 |+ ("0/4" |+ irand 4) |+ "<0 2 4 6>")
+    # amp 0.1
+    # octave 7
 
 do
   -- @name drone
-  lt
+  bass
     $ nok 0 ("{0@3 0@3 0@4 0@4}%4" |- 12 |+ (irand 7))
     # sus 1
-    # amp 1
+    # amp 0.3
 
 do
   -- straight
-  bd $ "0*2 . ~@3 0" # sus 0.1 # amp 0.1
+  bd $ "0*2 . ~@3 0" # sus 0.1 # amp 0.5
+  lead2 silence
+
+do
+  bd silence
+  bass silence
+  ch silence
+  sd silence
+  oh silence
+
+
 
 hush

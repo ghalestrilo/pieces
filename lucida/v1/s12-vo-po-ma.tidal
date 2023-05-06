@@ -5,20 +5,23 @@
 
 do
   -- @setup
-  setkey "c" "major"
+  setkey' 0 "c" "major"
   setkey' 1 "e" "mixolydian"
   setkey' 2 "c" "mixolydian"
   setkey' 3 "ds" "lydian"
   setcps (105/120/2)
-  all (# bus' 0.3 0.3)
+  -- all (# bus' 0.3 0.3)
   bank "mc" 27
   bank "mm" 11
-  all (# bus' 0.3 0.3)
+  -- all (# bus' 0.3 0.3)
+  all id
+  hush
 
 let piano = p "piano" ## [s "superpiano" # velocity 0.22 # gain 1.8 # octave 4 # legato 2 # lpf 1700]
     voice = p "vibe" ## [s "supervibe" # modamp 0 # sus 4 # velocity 0.3 # sus 2 # gain 0.6 # lpf 2000]
     bes = p "bes" ## [s "[tb:0,tb:1]" # octave 3 # gain 0.7 # lpf 350]
-    cadence' f rts pts = cat $ zipWith (\(tt, rr) pp -> tt (f pp |+ rr)) rts pts
+
+let cadence' f rts pts = cat $ zipWith (\(tt, rr) pp -> tt (f pp |+ rr)) rts pts
     cadence = cadence' id
     roots = [ (t, 0), (t, 1), (t, 2),    (t' 1, 0)
             , (t, 3), (t, 5), (t' 2, 4), (t' 2, 4)
@@ -57,24 +60,34 @@ do
 
 -- Vou Pro Mar
 do
-  piano $ t . fast 2 . cat
-    $ l ("0@3 0 . ~" |+ "[-5,0,4,7]")
-        ("~ 1 ~@2"   |+ "[-5,0,4,7]")
-        ("0@3 0 . ~" |+ "[-5,0,4,7]")
-        ("~ 3 ~@2"   |+ "[-5,0,4,7]")
-        ("2@3 2 . ~" |+ "[-5,0,4,7]")
-        ("~ 5 ~@2"   |+ "[-5,0,4,7]")
-        ("1@3 1 . ~" |+ "[-5,0,4,7]")
-        ("~ 1 ~@2"   |+ "[-4,2,4,6]")
+  keys $ (nok 0 . fast 2 . cat)
+        [ ("0@3 0 . ~" |+ "[-5,0,4,7]")
+        , ("~ 1 ~@2"   |+ "[-5,0,4,7]")
+        , ("0@3 0 . ~" |+ "[-5,0,4,7]")
+        , ("~ 3 ~@2"   |+ "[-5,0,4,7]")
+        , ("2@3 2 . ~" |+ "[-5,0,4,7]")
+        , ("~ 5 ~@2"   |+ "[-5,0,4,7]")
+        , ("1@3 1 . ~" |+ "[-5,0,4,7]")
+        , ("~ 1 ~@2"   |+ "[-4,2,4,6]")
+        ]
+        # octave 4
+        # amp "0.4"
+        -- |* sus "[1@5 2@3]*2"
+  lead1
+    $ (# octave 4)
+    $ (nok 0 . fast 2 . cat)
+        [ "~"
+        , "7 . 5 4"
+        , "~ 0 2 4"
+        , "7@3 6@3 5@2"
+        , "4@3 2@3 2@2"
+        , "0 1"
+        , "2"
+        , "4 . -3 0"
+        ]
 
-  mm $ (# octave 4) $ t . fast 2 . cat
-    $ l "~" "7 . 5 4"
-        "~ 0 2 4" "7@3 6@3 5@2"
-        "4@3 2@3 2@2" "0 1"
-        "2" "4 . -3 0"
 
-
-
+hush
 
 do
   piano silence
@@ -87,7 +100,8 @@ do
         ("~ 5 ~@2"   |+ "[-5,0,4,7]")
         ("1@3 1 . ~" |+ "[-5,0,4,7]")
         ("~ 1 ~@2"   |+ "[-4,2,4,6]")
-
+  bd $ fast 4 $ n 0
+  lt $ t "0 ~ 0 -3"
   mc [ fast 4 $ n 0
      , fast 2 $ t "0 ~ 0 -3"
      , n "0(3,8) . ~ 0!2 ~" # velocity 1
@@ -113,13 +127,13 @@ do
      , n "[ [[~ 0]*2] [~ . 0*2]!3 \
          \| [~ 0]*2 . [~ . 0*2] . ~ 0 . 0 0*2]"
      ]
-  mm $ fast 2 $ stack
+  keys $ fast 2 $ stack
     [ "<[0@3 0 . ~] [~ 0 ~@2]>" |+
       (cadence roots . map (|- 7))
       chords
-    , cadence roots $ map ((|- 14) . (+| "[0 ~]*2"))
-      bassline
     ]
+  bass $ f2 $ cadence roots $ map ((|- 14) . (+| "[0 ~]*2"))
+      bassline
 
 do
   hush

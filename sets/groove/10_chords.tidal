@@ -27,18 +27,18 @@ do
   -- @section chords (mm)
   setI "base" "0"
   setI "chords" $ cat (("~ 0@7" |- cI0 "base"):[6, 5, 4]) |* (-1) 
-  
-  mm
+  pads
     $ ((1/8) <~)
     $ nok 3 ("^chords" |+ "[-3,0,2,6]")
     # amp 0.2
 
 do
-  cc $ fast 4 $ n "0*2" # amp (("6 5" / 12 |+ range (-0.1) 0.1 rand) |* cF 1 "volride")
+  cc silence
+  rc $ fast 4 $ n "0*2" # amp (("6 5" / 12 |+ range (-0.1) 0.1 rand) |* cF 1 "volride")
 
 do
   -- @section reface
-  reface
+  keys
     $ ((1/8) <~)
     $ nok 3 ("^chords" |+| "0@12 0@4" |+ "<[-3,0,1,6] [0,6,8,11] [0,4,6,9] [0,2,4,6 5]>")
     # amp 0.3
@@ -49,14 +49,14 @@ do
   bd $ n "<[0@3 0]  [0@3 0@3 0@2] [0 0 . ~] [~ 0!2 ~ . ~ 0 ~@2]>*2"
   sd $ "[~ 0]*2"
   
-  oh $ fast 2 $ n "[~ 0]!3 [~ 0*[1|2|4]]" # amp 0.5
+  -- oh $ fast 2 $ n "[~ 0]!3 [~ 0*[1|2|4]]" # amp 0.5
 
 do
   -- original bass
-  lt
-    $ (|+ note "^ltoffset")
+  bass
     $ nok 3 "2 -2 ~ 1 . ~@2 0 1 . [1 2@7]@2 0 -2  . 1 [0 ~ 1 ~]"
     # amp 0.4
+    # octave 4
 
 
 all $ byshuf (chop "1 [8|4|1]!3") . slow 2
@@ -67,18 +67,19 @@ all $ byshuf (chop "1 [2|4|1]!3") . slow 2
 
 do
   -- @section flip
-  setN "bassnotes" $ "[0 | [0 ~]!2 ~ [0 ~] | [0 ~]!2 | 0@3 0]@4 6 7 4 2 . <[0 ~ 0@2 7 0 ~@2] [0@2 3@3 7@3] [0 ~ 0@3 1@3]>"
-  lt
-    $ (|+ note "^ltoffset")
+  setN "bassnotes"
+    $ "[0 | [0 ~]!2 ~ [0 ~] | [0 ~]!2 | 0@3 0]@4 6 7 4 2 . <[0 ~ 0@2 7 0 ~@2] [0@2 3@3 7@3] [0 ~ 0@3 1@3]>"
+  bass
     $ nokc [1,2,3] ["^bassnotes", "^bassnotes", "^bassnotes"]
     # sus 1
     # sus "1 0.3"
-  reface silence
-  mm silence
+    # octave 4
+  keys silence
+  pads silence
 
 do
   -- @section flipchords
-  mm
+  pads
     $ ((1/8) <~)
     $ nokc [1,2,3] 
     [ ("~ 0@7") |+ "[-3,0,2,6]"
@@ -93,10 +94,9 @@ do
     |+ "-3 0 2 6"
     |+ irand 4
     |- 2
-
-  reface
+  keys
    $ jux (((1/16) <~) . shuffle (cI 1 "shufamt") . (|+ up 12))
-   $ nokc [1,2,0]
+   $ nokc [1,2,3]
      [ "^arps"
      , "^arps"
      , "^arps"
@@ -114,11 +114,12 @@ do
   -- @section hold
   ch $ fast 8 $ "0*2" # amp "0.55 0.45"
   bd $ fast 2 $ "0 0 . ~@3 0"
-  lt
+  bass
     $ (|+ note "^ltoffset")
     $ fast 4
     $ note ("0?*4")
     # sus 0.2
+    # octave 4
 
 do
   -- @section outro

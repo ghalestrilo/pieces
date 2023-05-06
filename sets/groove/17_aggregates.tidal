@@ -7,8 +7,7 @@ do
   bank "mm" 120
   trbank 19
   all $ slow 2
-
-  mm
+  keys
     $ slow 3
     -- $ (note . (|- 2) . scale "chromatic" . stack)
     $ (note . (|- 1) . (|- 2) . scale "chromatic" . stack)
@@ -24,12 +23,8 @@ do
   -- mm $ note "{2 0 2 0 3 2 0}%8" + note 3 # sus 3
   bd $ "0*2 ~"
   sd $ "~ 0"
-  lt $ nok 0 "0!5 0*2 0!2" |+ note 12
-  lt $ nok 0 "0!5 0*2 0!2"
-  -- lt $ nok 0 ("0!5 0*2 0!2" |- "<0 5 3 4>/2")
-  -- lt $ nok 0 "0!7 ~"
-  -- lt $ nok 0 (run 8) |+ note 12
-  ch $ fast 4 $ "0 0*<1 1 [1|2|3] 1>" # amp ("<4 7> 3" / 10)
+  bass $ nok 0 "0!5 0*2 0!2" # octave 2 # sus 0.1 # amp 0.3
+  ch $ fast 4 $ "0 0*<1 1 [1|2|3] 1>" # amp ("<4 7> 3" / 11)
 
 do
   -- @name fx
@@ -39,17 +34,20 @@ do
 
 do
   -- @name arr 2
-  mm
+  -- pads
+  lead1
     $ slow 4
     $ (nok 0 . stack)
     [ "{ -3 -1  0  2  0@4 1  -2 -4@3 4 2@3 }%4"
     , "{ -4 -3 -2 -1  0@4 1@9 }%4" |- 7 |+ "[-7,0,2,6]"
     ]
+    # octave 5
+    # amp 0.6
 
 do
   -- @name ending
   bd $ "0*<2!3 4> ~"
-  mm $ stack [
+  keys $ stack [
     slow 3
     $ (note . (|- 1) . (|- 2) . scale "chromatic" . stack)
       [ "{2 0 2 0 3 2 0@7}%4" |+ 5
@@ -59,7 +57,7 @@ do
       $ degradeBy 1
       $ ((|- note 12) . nok 0 . stack)
       [ "{ -3 -1  0  2  0@4 1  -2 -4@3 4 2@3 }%4"
-      -- , "{ -4 -3 -2 -1  0@4 1@9 }%4" |- 7 |+ "[-7,0,2,6]"
+      , "{ -4 -3 -2 -1  0@4 1@9 }%4" |- 7 |+ "[-7,0,2,6]"
       ]
     ]
     # amp 0.7

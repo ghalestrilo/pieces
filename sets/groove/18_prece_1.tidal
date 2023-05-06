@@ -10,6 +10,7 @@ do
   bank "mm" 20
   all id
 
+
 hush
 
 do
@@ -38,7 +39,7 @@ do
   -- lt $ nok 0 "0*8"
   bass $ nok 0 "0*8" # octave 4 # sus 0.2
   lead2 $ nok 0 (cI_ "phrase") # octave 4
-  lead $ nok 0 (cI_ "melody") # sus 0.1
+  lead1 $ nok 0 (cI_ "melody") # sus 0.1 # octave 4
   bd $ fast 4 0
   ch $ fast 4 $ n "0 0" # amp "0.4 0.2"
   pads
@@ -90,8 +91,6 @@ do
     , fast 8 $ s "bhh:2*2" # gain "0.6 0.4" # orbit 1 # pan 1
     ]
 
-reface = p "test"
-
 do
   -- @section drums
   -- once $ s "br:1" # gain 0.7
@@ -109,7 +108,8 @@ do
   ch $ fast 4
       $ rarely (chop "1 2")
       $ chop 2 $ "0*2" # amp "0.5 0.3"
-  oh $ fast 4 $ "0*2" # amp "0.5 0.3"
+  rc $ fast 2 $ "0*2" # amp "0.5 0.3"
+  rc $ fast 2 $ "0*2" # amp 0.4
   sd $ "[~ 0]"
 
 
