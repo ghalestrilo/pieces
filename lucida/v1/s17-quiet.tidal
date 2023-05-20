@@ -27,7 +27,7 @@ do
     ]
 
 do
-  piano $ (note . (|- 1) . stack) $ every 4 (sharp 4 . sharp 11) . onkey 0 . (|- "<2 [3 -3] -3 -3>")
+  keys $ (note . (|- 1) . stack) $ every 4 (sharp 4 . sharp 11) . onkey 0 . (|- "<2 [3 -3] -3 -3>")
     <$> voicings "bossa" [ "<0 <4 -3>>*2", "<[6,9,11] [6,9,12]>/2" ]
 
 do

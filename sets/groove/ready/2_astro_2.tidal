@@ -7,34 +7,31 @@ do
   -- @name ASTRO REPRISE
   hush 
 
-dawbank "keys" 0
-
-
--- x   x   x   x  
-
--- x   x   x   x  
--- x  xx  xx  xx  x
+-- dawbank "keys" 0
 
 all
   $ swingBy (1/8) 8
   . byshuf (shuffle "^shuf")
   . byacc (chop "[16|8|4]" . (|* amp 0.3))
+  -- . (inside 2 . whenmod 8 7) (lock (1/4) 1.5)
+  -- . (inside 2 . whenmod 8 7) (lock (1/8) 1.5)
+  -- . (inside 2 . whenmod 8 7) (lock (1/8) 0.25)
+  . (inside 2 . whenmod 8 6) (lock (1/2) 3.5)
+  -- . (# sus 0.15)
+  -- . lock 2 0
+  -- . lock 0.25 3.5
+  -- . lock 0.25 0
+  -- . (# amp 0.25)
 
-
-resetCycles
-
-lock n offset = timeLoop n . (offset <~)
-
-setF "dawlatency" 0
+let loadbanks songname = mapM_ (loadSynthPreset songname) dawchans
+in loadbanks "astro_2"
 
 do
-  -- @name intro set
-  hush
-  dawbank "keys" 0
-  dawbank "lead1" 1
+  -- hush
+  loadbanks "astro_2"
   trbank 1
   setI "shuf" "1"
-  all $ swingBy (1/12) 8 . byshuf (shuffle "^shuf") . byacc (chop "[16|8|4]" . (|* amp 0.3))
+  all $ swingBy (1/10) 8 . byshuf (shuffle "^shuf") . byacc (chop "[16|8|4]" . (|* amp 0.3))
   setcps (93/120/2)
   -- setcps (86/120/2)
   htoff 1
@@ -119,7 +116,7 @@ do
       ]
       ++ fmap (k 0) ["0@3 0 ~@2 0@2", "~@2 0 ~@2 0 ~@2", "0@3 0 ~@2 0@2", "0 -0 0 ~"]
     )
-    # sus 1
+    # sus 0.2
 
 
 do
@@ -196,9 +193,6 @@ do
     # sus 0.2
     # amp 0.8
     # octave 4
-
-  hush
-
   bass
     $ fast 2
     $ (note . (|- 12) . cat)
@@ -211,8 +205,6 @@ do
     # amp 0.3
 
 
-all $ id
-
 do
   -- @name steal
   hush
@@ -221,7 +213,6 @@ do
   oh $ sometimes (chop 2) $ degrade (n "0*16") # amp (range 0.01 0.05 $ rand)
   ch $ fast 8 $ n "0*2" # amp "0.1 0.01"
   rs $ fast 2 $ n "0*[1|1|2] 0!2 0*2" # amp 0.1
-
   lead1 $ fast 2
     $ stack [
       (note . cat)
@@ -249,7 +240,6 @@ do
       ])
       # sus 0.18
       # octave 4
-
   bass
     $ note
     $ (|- 12)
@@ -261,50 +251,33 @@ do
       , k 1 "~@2 0 ~@2 4 ~@2"
       ]
     )
-
-
--- x - - - x - - - x - - - x - - -
--- - - 0 - - - 0 - - - 0 - 0 - - -
-
-  -- bass:
-  -- - release ~0
-  -- - attack ~0
-  -- LPF
-
-  press
-
-  timeloop
-
-  swing, sincope, anacruse
-
   cc $ n "[~ 0]*2"
   -- hc $ fast 2 "~ <0*2 ~>"
   hc $ f2 "~@7 0"
   rc $ fast 4 $ n "0*2" # amp "0.45 0.42"
 
 
+hush
+
 do
-  -- @name closing hold
+  -- @name post-steal
   -- reface $ nok 0 "[-3,0,2,6,9]" +| note "0 ~ ~ 0 ~ ~ 0@4 -1 ~ 0 ~ ~ ~" # amp 0.5 # octave 4
-  reface silence
   keys
     $ fast 2
     $ (note . cat . fmap (+| "0@5 0 ~@2"))
     [ k 0 $ "[-2,0,2,7]" |+ 2
     , k 0 $ "[-3,0,4,7]" |+ 2
     , k 0 $ "[0,2,3 4,7 5]" |+ 1
-    , k 1 $ "[0,2,5 4,7 6]" |- 5
+    , k 1 $ "[0,2 3,5 4,7 6]" |- 5
     ] # amp 0.4 # octave 5
-  bass $ nok 0 "0" +| note "0 ~ ~ 0 ~ ~ 0@4 -1 ~ 0 ~ ~ ~" # amp 0.8 # octave 4
-  bd $ "0 ~ ~ ~ 0 ~ 0 ~ ~ ~ 0 ~ 0 ~ ~ ~" # amp 0.48
-  -- sd $ "~ ~ ~ 0 ~ ~ ~ ~ ~ 0 ~ ~ ~ ~ ~ 0"
-  rc $ fast 4 $ n "0*2" # amp "0.45 0.42"
-  ch $ fast 4
-    $ n "0 0 0*2 0"
-    # amp "<0.42 0.33>"
-    # sus (rarely (const "6 0.5@3") 0.5 |/ 10)
-  setI "shuf" "[1 [8|16]!3]*2"
-  ht silence
+  keys . f2
+    $ ((1 / 8) <~)
+    $ nokc [0,0,0,1]
+    [ "-1@2 1 2 -3@2 1 2"
+    , "-1@2 1 2 -3@2 1 2"
+    , "1@2 2 3 1@2 2 3"
+    , "0@2 1 2 -1@2 1 2"
+    ]
   lead2
     $ fast 2
     $ (# octave 5)
@@ -321,6 +294,19 @@ do
     # amp 0.7
 
 do
+  -- @name closing hold
+  bass $ nok 0 "0" +| note "0 ~ ~ 0 ~ ~ 0@4 -1 ~ 0 ~ ~ ~" # amp 0.8 # octave 4
+  bd $ "0 ~ ~ ~ 0 ~ 0 ~ ~ ~ 0 ~ 0 ~ ~ ~" # amp 0.48
+  sd $ "~ ~ ~ 0 ~ ~ ~ ~ ~ 0 ~ ~ ~ ~ ~ 0"
+  rc $ fast 4 $ n "0*2" # amp "0.45 0.42"
+  ch $ fast 4
+    $ n "0 0 0*2 0"
+    # amp "<0.42 0.33>"
+    # sus (rarely (const "6 0.5@3") 0.5 |/ 10)
+  setI "shuf" "[1 [8|16]!3]*2"
+  ht silence
+
+do
   ch silence
   bd silence
   sd silence
@@ -329,35 +315,8 @@ do
   rc silence
   rs silence
 
-hush
 
-bd $ slow 1 $ n "0 ~ ~ ~ ~ 0 ~ ~"
-
-lt
-  -- $ fast 2
-  $ nok 0 ("0(3,8) . ~@2 0 ~@2 0 ~@2" |+ "0" |- 7)
-
-lt
-  -- $ fast 2
-  $ nok 0 ("0(3,8) . ~@2 0 ~@2 0 ~@2" |+ "0" |- 7)
-    $ cat
-      ([ k 0 "0(3,8)"
-      , k 0 "[~@2 0 ~@2 0 ~@2 | [0 ~] [-3 ~] [0 ~] ~]"
-      , k 0 $ "0(3,8)" |+ 1
-      , k 1 "~@2 0 ~@2 4 ~@2"
-      ]
-    )
-
-
-
-
-  keys
-    $ fast 2
-    $ (note . cat . fmap (+| "0@5 0 ~@2"))
-    [ k 0 $ "[-2,0,2,7]" |+ 2
-    , k 0 $ "[-3,0,4,7]" |+ 2
-    , k 0 $ "[0,2,4 3,7 5]" |+ 1
-    , k 1 $ "[0,2,4 6,7 6]" |- 5
-    ]
-    # octave 5
-    # amp 0.4
+all
+  $ swingBy (1/8) 8
+  . byshuf (shuffle "^shuf")
+  . byacc (chop "[16|8|4]" . (|* amp 0.3))

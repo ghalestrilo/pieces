@@ -1,6 +1,7 @@
 do
   -- @setup
   setcps (88/120)
+  setcps (89/120)
   setkey' 0 (-3) "lydian"
   setkey' 1 (-3) "lydian"
   -- all $ (|* speed 0.8)
@@ -14,7 +15,8 @@ do
   all $ swingBy (1/12) 4
   all $ swingBy (1/24) 4
   all id
-  trbank 11
+  -- trbank 11
+  loadbanks "sino"
   ch $ fast 2 $ "0*2" # amp "0.5 0.43"
   bd $ "<[13!2 [~@3 13]@2] [~ 13 ~@1.5 13@0.5] [13!2 ~ [~ 13]]>" # amp 0.5
   rs $ "~ 0"
@@ -22,7 +24,7 @@ do
     $ f2
     $ (nok 0 . cat) ["9 0", "2 3 4 5", "6 0", "2 3 4 5", "8 6 4 2"]
     # amp 0.3
-    # octave 4
+    # octave 5
   -- lead1 $ fast 2  $ nok 0 $ cat ["9 0", "2 3 4 5", "6 0", "2 3 4 5", "8 6 4 2"]
 
 do
@@ -31,7 +33,8 @@ do
     $ stack 
     $ cmap amp [0.2, 0.5]
     $ [degrade $ "0*4 . ~ 0!3", "[~ 20]"]
-  hc
+
+  cc
     $ degradeBy "0 . 1 0@7"
     -- $ stack ["<[~ ~] [~ [0*3] ~@2 . ~ ]>", degrade $ "0*8" ]
     $ "<~ [~ 0 ~@2 . ~ ]>"
@@ -58,7 +61,7 @@ do
 do
   -- reface
   bd $ "<[13!2 [~@3 13]@2] [~ 13 ~@1.5 13@0.5] [13!2 ~ [~ 13]]>" # amp 0.55
-  sd $ "[~ 20]" # amp 0.6
+  sd $ stack ["[~ 20]" # amp 0.6, degradeBy 0.3 $ f4 $ chop "<1 [1|2] 1 1>" $ press $ "0" # amp (range 0.1 0.2 rand)]
   ch silence
   rc $ "0*4"
   bass
@@ -69,9 +72,9 @@ do
       , "0", "7!2 6!2"
       , "~ 5 4 2", "4 5 6 1"
       ]
-    # sus ("<<1!2 0.3> 0.3>" |* 0.6)
+    # sus ("[<1!2 0.1> 0.1!3]/2" |* 0.6)
     # amp 0.42
-    # octave 3
+    # octave 4
   keys
     $ fast 2
     $ (tonal (-3) "chromatic" . cat)
@@ -85,7 +88,7 @@ do
     $ f2
     $ (nok 0 . cat) ["9 0", "2 3 4 5", "6 0", "2 3 4 5", "8 6 4 2"]
     # amp 0.3
-
+    # sus 0.1
 
 do
   all $ whenmod 2 1 $ sometimesBy "0 1" (shuffle 8 . chop 2)
@@ -95,12 +98,8 @@ do
 
 do
   all
-    $ byshuf (shuffle "1 8@3" . chop (segment 8 $ (irand 32)))
-
-hush
-
-
-
+    $ byshuf (shuffle "1 8@3" . chop (segment 8 $ (irand 4)))
+    -- . lock 0.5 2
 
 setkey' 9 ("d") "lydian"
 
@@ -111,6 +110,4 @@ keys $ nok 9
   ])
   # octave 4
 
-
 bass $ slow 2 $ nok 9 (cat ["0 ~ 0 -1 . ~ -1@3", "0 ~ 0 -1 . ~ -1@3", "0 ~ 0 -1 . ~ -1@3", "-2@3 -1@5"] |- 7 - 2)
-

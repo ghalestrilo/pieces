@@ -14,7 +14,6 @@ do
   all $ slow 4
   setkey' 2 "0" "major"
   setkey' 2 "2" "major"
-
   cc
     $ nok 2 ("[0@3 -3]*4" |+ 12 |- 1)
     # sus 0.15

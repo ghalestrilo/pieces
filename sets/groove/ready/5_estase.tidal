@@ -1,0 +1,167 @@
+do
+  -- @setup
+  hush
+  setcps (86/120)
+  trbank 4
+  setkey' 0 0 "chromatic"
+  setkey' 1 (-1) "minor"
+  -- all $ swingBy (1/24) 4
+  -- loadSynthPreset "estase" "pads"
+  -- loadSynthPreset "estase" "pads"
+  loadbanks "estase"
+  setI "shuf" "[1 [8|16]!3]*2"
+
+  all $ swingBy (1/12) 4
+    . byshuf (shuffle "^shuf")
+    . byacc (chop "[16|8|4]" . (|* amp 0.3))
+    -- . (inside 2 . whenmod 8 7) (lock (1/4) 1)
+    -- . (inside 2 . whenmod 8 7) (lock (1/4) 2)
+    -- . (inside 2 . whenmod 8 7) (# amp 0)
+    -- . (inside 2 . whenmod 8 7) (lock (1/8) 0.25)
+    -- . (# sus 0.15)
+    -- . lock 2 0
+    -- . lock 1 1.5
+
+do
+  -- @name intro
+  -- hush
+  ch $ fast 2 $ "0*2" # amp "0.45 0.2"
+  rs $ "~ 0" # amp 0.5
+
+do
+  -- mt
+  --   $ note "[0@3 0@3 0@2. ~]/4"
+  --   # ctrl "[100@3 -100@5 . ~]/4"
+  --   # sus "[100@3 100@3 10@2 . ~]/4"
+  -- mt silence
+
+do
+  bass
+    $ nok 0 "[12@3 6@3 ~@2 . ~@2 0(3,8)@8 ~@6]/4"
+    -- # ctrl "[100@3 -100@5 . 0]/4"
+    -- # sus "[100@3 100@3 100@2 . 100]/4"
+    # octave 3
+
+do
+  lead2
+    $ (0.5 <~)
+    $ every 4 (# amp 0.2)
+    $ nok 1 "[0,4,7]"
+    # sus 0.1
+    # amp 0
+    # octave 7
+
+do
+  keys $ nok 0 "{ 14 10 7 5 4 \
+    \ 14 10 7 5 4 \
+    \ 14 10 7 \
+    \ 15 11 8 \
+    \ 14 10 7 5 4 \
+    \ 0 1 5 12 8 \
+    \ 14 10 7 5 4 \
+    \ 10 9 7 6 \
+    \ 14 10 7 5 4 \
+    \ 14 10 7 5 4 \
+    \ 11 7 4 2 1 \
+    \ 14 10 7 5 4 \
+    \ 14 10 7 5 4 \
+    \ 6 4 1 -2 -6 \
+    \ }%8"
+    # amp (range 0.5 0.7 rand |* 0.55)
+    # sus 1
+    # octave 4
+
+hush
+
+-- TODO: Gradually distort
+
+do
+  bd $ "0 0 . ~"
+  mt $ "~ ~ . ~@3 0"
+  sd $ "~ 0"
+
+do
+  pads
+    $ slow 4
+    $ note "0'maj -3'min . -1'min7"
+    -- # octave 4
+  bass
+    $ nok 0
+      ("[0(3,8) . -3(3,8) . -1@3 -1@3 -1 2 . [[~@2 6 9 . ~] | ~ | [~@2 2 1] | [~@4 2 -1 2 4]] ]/4" |- 12)
+    # sus 0.3
+  keys silence
+
+do
+  keys
+    $ (# amp (range 0.6 0.8 rand))
+    $ (# sus 1)
+    $ (# octave 4)
+    $ (# amp 0.8)
+    $ (# ctrl 0.7)
+    $ nok 1
+    $ (|+ "1")
+    "{ 9 8 6 4 3 \
+     \ 9 8 6 4 3 \
+     \ 9 8 6 \
+     \ 11 10 8 \
+     \ 10 9 6 4 3 \
+     \ 2 3 4 8 6 \
+     \ 10 9 6 4 3 \
+     \ 10 9 6 4 3 \
+     \ 6 5 3 1 -1 \
+     \ }%8"
+
+do
+  -- hush
+  ch $ fast 2 $ n "0 0"
+  rc $ fast 2 $ n "0 0"
+  sd $ n "~ 2" # amp 0.45
+  bd $ n "<[0 0] [~ ~ 0 ~]> . ~@3 0" # amp 0.6
+  --  bd $ degrade $ n "~@7 0" # amp 0.45 # note 12
+  sd $ stack
+    [ n "~ 2" # amp 0.45
+    , degradeBy 0.2 $ fast 4 $ n "~ 0*<3 1!3>" # amp (range 0.1 0.2 $ rand)
+    ]
+
+
+
+
+
+
+
+  all $ swingBy (1/12) 4
+    . byshuf (shuffle "^shuf")
+    . byacc (chop "[16|8|4]" . (|* amp 0.3))
+    -- . (inside 2 . whenmod 8 7) (lock (1/4) 1)
+    -- . lock 0.5 0
+
+
+do
+  keys
+    $ (# amp (range 0.6 0.8 rand))
+    $ (# sus 1)
+    $ (# octave 5)
+    $ (# amp 0.8)
+    $ (# ctrl 0.7)
+    $ nok 0
+    $ (|+ "1")
+    "{ 9 8 6 4 3 \
+     \ 9 8 6 4 3 \
+     \ 9 8 6 \
+     \ 11 10 8 \
+     \ 10 9 6 4 3 \
+     \ 2 3 4 8 6 \
+     \ 10 9 6 4 3 \
+     \ 10 9 6 4 3 \
+     \ 6 5 3 1 -1 \
+     \ }%8"
+
+do
+  bass
+    -- $ nok 0 ("0(3,8)" |- 12 |+ "<0 -2 1 1>")
+    $ nok 0 ("0(3,8)" |+ "<0 -1 1 3>")
+    # sus 0.3
+    # octave 4
+  pads
+    $ nok 0 (s2 $ "0" |+ "<[0,2,4,6] [0,3,5,7]>")
+  setkey' 0 0 "dorian"

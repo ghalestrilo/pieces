@@ -8,10 +8,17 @@ do
   all $ swingBy 0.1 4
   bank "mc" 90
   bank "mm" 30
+  loadbanks "voto"
+
+let antiswing = swingBy (-0.1) 4
+
+
+all $ swingBy 0.1 4 . lock 0.5 0
 
 do
-  -- drums
+  -- @name intro`
   hush
+  setF "drumkill" 0
   setF "pianosus" 0.15
   setI "tinknotes" $ randcat [-5,-3,0,2,3,4,6,7,10]
   setI "tinkchord" "[0,2,3,4,6]"
@@ -19,64 +26,63 @@ do
   setF "tinkdegrade" 1
   setF "tinkopen" 0.35
   setI "tinkfreq" 16
-  setI "snaure" "~0"
-  trs [ n "0@2 0?@3 0?@2 0"
-     , n (cN_ "snare")
-    --  , n "[0*[1|2]? 0!3]*2" # sus (fast 2 $ 0.5 <~ "0.5 0.1@7")
-     ]
-  ch $ fast 4
-        -- $ (# open (cF 0.35 "tinkopen"))
-        $ t . (|- 7)
+  lead1 $ fast 4
+        $ nok 0
         $ every (cI 16 "tinkfreq") (const $ strum 3 $ cI_ "tinkchord")
         $ density (cT 1 "tinkdensity")
         $ degradeBy (cF 0 "tinkdegrade")
         $ fast "[1|2]"
         $ cI0 "tinknotes"
-  -- mamps $ repeat 0.6
+  ch $ degradeBy (cF0 "drumkill") $ "[0*[1|2]? 0 0? 0]*2"
+  oh $ degradeBy (cF0 "drumkill") $ "[~ 0?]*2"
+  bd $ degradeBy (cF0 "drumkill") $ n "0@2 0?@3 0?@2 0" # amp 0.6
+  sd $ degradeBy (cF0 "drumkill") $ n "~ 0"
+  rs $ degradeBy (cF0 "drumkill") $ n "~ 0"
 
 
-
+all id
 
 do
   -- @section theme
-  setI "ostinato" "11@4 11@3 11@3 <11 [11 . 4 6 7 10]>@6"
+  setI "ostinato" "11@4 11@3 11@3 <11 [11 . ~ 4 6 7 10 ~]>@6"
+  -- setI "ostinato" "11@4 11@3 11@3 <11 [11@3 4 6 ~ 7 10 ~]>@6"
+  -- setI "ostinato" "11@4 11@3 11@3 <11 [11@3 4 6 ~ 7 10 ~]>@6"
+  setI "ostinato" "11@4 11@3 11@3 <11 [11@3 4@2 6 7@2 10]>@6"
+  -- setI "ostinato" "11@4 11@3 11@3 <11 [11@3 4@3 6 7 10]>@6"
   setI "chordshape" "-12'min"
   setI "chordbase" "0@3 2@3 1@3 0@7"
   setF "pianogain" $ range 0.3 0.4 rand
-  reface
+  keys
+  --  $ fmask "0 0 0 1" antiswing
    $ slow 2
    $ stack
-   [ t' 0 $ cI_ "ostinato"
-   , (t' 0 $ cI_ "chordbase") |+ note (cN_ "chordshape")
+   [ nok 0 $ cI_ "ostinato"
+   , (nok 0 $ cI_ "chordbase") |+ note (cN_ "chordshape")
    ] # octave 4
 
 do
   -- @section theme
-  mamp 0 0
-  reface
+  -- mamp 0 0
+  keys
    $ slow 2
    $ stack
-     [ t' 0 "11@4 11@3 11@3 11@6"
-     , (t' 0 "0@3 2@3 1@3 0@7") |+ note "-12'min"
+     [ nok 0 "11@4 11@3 11@3 11@6"
+     , (nok 0 "0@3 2@3 1@3 0@7") |+ note "-12'min"
      ]
      # octave 4
 
-do
-  --
-  mamp 0 0.45
 
 do
   -- @section theme
-  mamp 3 0.2
   setI "tinkfreq" 8
   setI "tinkchord" "[3,4,6,7,9]"
   setF "tinkdegrade" 0.4
-  reface
+  keys
    $ slow 2
    $ cat [ note "8'maj7 . 5'min7 7'min7" |+ t "-7"
    , stack
-       [ t' 0 "11@4 11@3 11@3 11@6"
-       , (t' 0 "0@3 2@3 1@3 0@7") |+ note "-12'min"
+       [ nok 0 "11@4 11@3 11@3 11@6"
+       , (nok 0 "0@3 2@3 1@3 0@7") |+ note "-12'min"
        ]
     ]
     # octave 4
@@ -84,54 +90,55 @@ do
 do
   -- @section resolve
   setF "tinkdegrade" 0.1
-  reface
+  keys
    $ slow 2
    $ stack
-   [ t' 0 $ "0@4 0@3 0@3 0@3 [[2|3|-2]@3  [~ | ~ | -2 -1 | 2 1]]@3" |+ 8
-   , (t' 0 "0@3 2@3 1@3 0@7") |+ note "-9'maj"
+   [ nok 0 $ "0@4 0@3 0@3 0@3 [[2|3|-2]@3  [~ | ~ | -2 -1 | 2 1]]@3" |+ 8
+   , (nok 0 "0@3 2@3 1@3 0@7") |+ note "-9'maj"
    ]
    # octave 4
+  mt $ degradeBy (cF0 "drumkill") $ "[~ 0] [~ 0]? ~ [~ 0]"
+  rc $ degradeBy (cF0 "drumkill") $ "0*4" # amp "[0.3 0.4]*2"
 
-ma 0 0.8
 
 do
    -- @section deepen
-   mamps [0,0,0,0.6]
+   setF "drumkill" 1
    setI "tinkchord" "[0,2,3,4]"
    setF "tinkdensity" 1
    setF "tinkdegrade" 0
-   reface
+   keys
     $ slow 2
     $ stack
-    [ t' 1 $ "0@4 0@3 0@3 0@3 -2@3" |+ 11
-    , t' 1 $ ("2@3 -2@3 0@3 -1@7" |+ "[0,4,6]" |+ 1 |- 7)
+    [ nok 1 $ "0@4 0@3 0@3 0@3 -2@3" |+ 11
+    , nok 1 $ ("2@3 -2@3 0@3 -1@7" |+ "[0,4,6]" |+ 1 |- 7)
     ]
     # octave 4
 
 do
-  -- @section slow return
-  mamps [0,0.2,0.3,0.4,0.4]
+  setF "drumkill" 0
 
 do
   -- @section bass
 -- mamps $ [0] ++ repeat 0.6
-  mm
-    $ nok 1
+  -- setF "drumkill" 0
+  bass $ nok 1
     "{ ~@2 [2 3@6] 2 \
      \ ~@2 [-1 0@6] -1 \
      \ ~@2 -2 -1 0 -5@4 -4@4 -6@4 \
      \ ~@3 -7 [-9 ~@2]!3 ~}%8"
-     # octave 3
+     # octave 4
+
+do
+  setF "drumkill" 0
 
 do
   -- @section deepen
-  mamp 0 0.6
-  mamp 1 "0.3 0.5"
-  reface
+  keys
    $ slow 2
    $ stack
-   [ t' 1 $ "0@4 0@3 0@3 0@3 -2@3" |+ 11
-   , t' 1 $ ("0@3 -2@3 -1@3 0@7" |+ "[0,4,6]" |+ 1 |- 7)
+   [ nok 1 $ "0@4 0@3 0@3 0@3 -2@3" |+ 11
+   , nok 1 $ ("0@3 -2@3 -1@3 0@7" |+ "[0,4,6]" |+ 1 |- 7)
    ]
    # octave 4
 
@@ -148,7 +155,8 @@ do
 
 do
   -- @section mess
-  mamps [0,0,0,0.6,0.6]
+  bd silence
+  sd silence
   setF "tinkopen" (range 0.18 0.25 $ slow 16 sine)
   setI "tinknotes" $ randcat [-7,-6,-5,-3,0,2,3,4,6,7,10,11]
   setF "tinkdensity" 8
@@ -157,7 +165,10 @@ do
 
 do
   -- @hold
-  mm silence
+  setF "drumkill" 1
+  bass silence
+  keys silence
+
 
 do
   hush

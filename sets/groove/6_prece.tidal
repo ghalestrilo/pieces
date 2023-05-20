@@ -19,6 +19,8 @@ do
   setcps (94/120)
   setcps (90/120)
 
+
+
 do
   -- @setup themes
   setI "theme" $ cat [ "[~ 6 11 7,0@3 2]"
@@ -115,7 +117,8 @@ do
     [ slow 4 $ cat
       [ nok 0 $ "[ [-7@3 -5 . -10 ~@3]/2 , 9@2 5 4]*4"
       , nok 0 $ "[ [-7@3 -5 . -10 ~@3]/2 , 9@2 5 4]*4" |- 2
-      ] # amp 0.2 # sus 3
+      ] # amp 0.2
+      -- # sus 3
     , nok 0 "[~ 6 11 7 5 3 9 11]/2" # octave 4
     ]
     # amp 0.2
@@ -220,11 +223,11 @@ do
   keys
     $ nok 1 "^stairs2" # amp 0.1
     #octave "[4]/8"
-    #sus 3
+    # sus 3
   lead2
     $ nok 1 "^stairs" # amp 0.3
     # octave "[6 5]/8"
-    # sus 8
+    -- # sus 8
   hc $ "~ 0" # amp 0.5
   ht
     $ (|+ note "2")

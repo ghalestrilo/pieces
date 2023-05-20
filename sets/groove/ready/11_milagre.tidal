@@ -15,8 +15,8 @@ do
   setkey' 3 "c" "lydian" 
   setkey' 4 ("fs" |- 11) "locrian"
   setkey' 5 ("f" |- 7) "mixolydian"
-  bank "mc" 91
-  bank "lead" 31
+  -- bank "mc" 91 
+  loadbanks "milagre"
   setcps (98/60/2)
   trbank 10
 
@@ -24,6 +24,7 @@ do
   -- @env rec
   all id
 
+hush
 
 do
   let mphrases = ((|+ 5) <$> ["[-3 0] 0!2 0*2", "0 [0*2]!3", "0 [0*2]!2 0", "0!4", "1!2 -1!2"] :: [Pattern Int])
@@ -31,7 +32,7 @@ do
   setI "m1" $ randcat mphrases
   setI "m2" $ randcat mphrases
   -- lead1 $ nok 0 "^m1" # sus 0.05 # amp 0.1 # octave 6
-  lead2 $ nok 0 "^m2" # sus 0.05 # amp 0.1 # octave 6
+  lead2 $ nok 0 "^m2" # amp 0.1 # octave 4
 
 
 -- trm 3 $ trn $ (|- 12) $ k 2 $ "[7 [7 ~@2]*3 [7 ~@3]!2 3 4 6 [~ 7@3|7]@4 0 [2 ~] [3 ~] [6 ~] [5 ~] . 4 3 2 4 [[0,-3] ~@2 [-1,-4] ~@2]@3 [0,-3]@5 3 4 6 ~]/8"
@@ -49,7 +50,6 @@ do
     $ slow 4
     $ (squeeze index . fmap note) [strum 38 $ k 0 "[-3,0,2,6]", strum 16 $ k 1 "[-3,0,2,6]"]
     # sus "^pianosus"
-    # amp 0.65
     # amp 0.4
     # octave 5
 
@@ -73,31 +73,14 @@ do
   setI "sn" silence
   bd $ n "^kicks" # amp ("^kickgain" |* 0.5)
   sd "[~ 20]"
-  ch $ fast 2 $ n "5*2" # amp "0.5 0.1"
+  ch $ fast 2 $ n "5*2" # amp "0.9 0.6"
   -- hc $ degradeBy "0 . 1 0@7" $ stack ["<[~ 20] [~ [21*3] ~@2 . 20] ~ ~>", degrade "0*8" # amp (range 0.3 0.5 rand)]
   hc silence
   setI "lead" $ "[0 9 5 6 1 2 4 0@2 9 5 6 1 2 4 -1]/4"
   -- lt $ nok 0 ("^lead" |+ 7) |+ note "^leadoffset"
-  bass $ nok 0 "^lead" # octave 4 # sus 0.2
+  bass $ nok 0 "^lead" # octave 4 # sus "[0.15@7 <0.6 0.3>]/2"
 
 
-
-hush
-
--- do
---   setI "kicks" $ "<13 13(3,8) [~@3 13] [13@3 13]>"
---   setI "snaux" $ "<[~ 20] [~ [21*3] ~@2 . 20] ~ ~>"
---   setI "sn" $ "[~ 20]"
---   setF "drumgain" 0.87
---     -- |* gain 0.9
-
-lead silence
-
-hush
-
-all $ lock 1 0
-
-all id
 
 do
   -- @name theme
@@ -153,7 +136,7 @@ do
     , "0@2 -2 4 2 5 4 2"
     , "0@2 2 4 6 5 3 -1"
     ]
-    # sus "1 0.2@3"
+    # sus "0.7 0.2@3"
     # octave 4
 
 
@@ -162,6 +145,8 @@ do
 
 do
   all $ lock 2 5.75
+  all $ lock 1 0
+  all $ lock 1 5 . (|* sus 0.5)
   all id
   pads
     $ ((1/4) <~)
@@ -172,6 +157,7 @@ do
     , "[0, 2, ~@3 6@3 7 ~, ~@3 2@3 3 ~]"
     , "[0 -1, 2 1, 2@2 [3 ~] [4 ~] 3@2 [2 ~] [1 ~], 0@2 [-1 ~] [-2 ~] -3@2 [-2 ~] [-1 ~]]" + 2
     ]
+    # octave 4
 
 do
   lead1
@@ -194,3 +180,9 @@ do
   all id
 
 hush
+
+
+all $ byshuf (shuffle "1 8@3")
+
+
+all $ lock 1 (-1/4)

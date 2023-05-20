@@ -14,12 +14,12 @@ do
   setkey' 0 10 "mixolydian"
   setkey' 1 5 "lydian"
   ch $ fast 2 $ n "0*2" # amp "0.51 0.4"
-  oh $ almostNever (chop 2) $ (n . press) "0*4" # amp 0.01
+  -- oh $ almostNever (chop 2) $ (n . press) "0*4" # amp 0.01
   bd
     $ n "[0 . 0@3 0@5 . ~ 0@3 . [0 0?] [~ 0@3]]/4"
     # amp 0.45
   sd $ n "[~ 0 . ~@3 0 . ~ 0 ~@2 0@4 . ~ 0]/4" # amp "0.3 0.4"
-  oh $ degradeBy "0 . 1 0@7" $ stack ["<[~ ~] [~ [0*3] ~@2 . ~ ]>", degrade $ "0*8" ] # amp (range 0.4 0.5 rand)
+  -- oh $ degradeBy "0 . 1 0@7" $ stack ["<[~ ~] [~ [0*3] ~@2 . ~ ]>", degrade $ "0*8" ] # amp (range 0.4 0.5 rand)
   lead1 $ nok 1 (cI_ "phrase") # octave 4
   lt $ nok 1 $ slow 2 ("[0@3 7 . <[0 ~ 0 ~@2 7@3] [0@2 0@3 7@3]>]" |+ "[0!3 1]/2")
   setI "phrase" $ slow 2 (cat
@@ -73,3 +73,4 @@ do
       [ k 1 ("[0]/2" |+ "[-7,-3,-1,2,6]")
       , k 0 (slow 2 $ "~@5 0@3" |+ "<[0,-6,2] [-6,0,2,4]>")
       ]
+

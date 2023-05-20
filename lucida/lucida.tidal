@@ -315,3 +315,57 @@ do
     , Prelude.take 4 $ repeat $ fast 4 $ "0 ~ ~ 0" |+ "<0 -3>" |- 14
     , byshuf (shuffle "[8|16]" . density "[2|4]") <$> ["[~ 2 0 -3 -1 0 1 ~ 2 ~@2 0@2 2 4 7]", "[~ 11 11 11 9 7 6 6@5 2 4 6 6]", "~ 7 6 2 4 5 6@2 6@4 7 6 5 3"," ~ 5 6 2 4 5 6 5@5 2 3 4 5"]
     ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
+
+
+
+
+
+import System.Directory (getDirectoryContents)
+
+let synthBankDir = "/Library/Audio/Presets/u-he/Diva/MIDI Programs"
+    synthBanks = getDirectoryContents "/Library/Audio/Presets/u-he/Diva/MIDI Programs"
+in synthBanks
+
+  do str <- synthBanks
+
+    --  mapM_ (putStrLn . (!!0) . reverse . filter ((>= 1) . length) . words) str
+
+
+getDirectoryContents "/Library/Audio/Presets/u-he/Diva/MIDI Programs"
+
+
+
+let a = [".","..","astro_2 keys.h2p","astro_2 lead1.h2p","astro_2 pads.h2p","chroma bass.h2p","Midi.Bank.Cache.txt"]
+    b = getDirectoryContents "/Library/Audio/Presets/u-he/Diva/MIDI Programs"
+    instruments = ["keys"]
+    -- treatName = map reverse . filter ((>= 2) . length) . map words
+    -- ignoreDotAndParent = drop 2
+    -- treatName = map reverse . filter ((>= 2) . length . fst) . zipWith [0..] . map words . ignoreDotAndParent
+    -- treatName = zipWith [0..] . map words . ignoreDotAndParent
+    -- setbank (name:bank:rest) = name ++ " " ++ bank
+    -- setbank = id
+    -- loadbank songname instrument = a
+    -- loadbanks songname = map (loadbank songname) ["keys"]
+in b
