@@ -116,7 +116,7 @@ do
   ch $ fast 2 $ n "0 0"
   rc $ fast 2 $ n "0 0"
   sd $ n "~ 2" # amp 0.45
-  bd $ n "<[0 0] [~ ~ 0 ~]> . ~@3 0" # amp 0.6
+  bd $ n "<[0 0] [~ ~ 0 ~]> . ~@3 0" # amp 0.5
   --  bd $ degrade $ n "~@7 0" # amp 0.45 # note 12
   sd $ stack
     [ n "~ 2" # amp 0.45

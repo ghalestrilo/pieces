@@ -27,6 +27,18 @@ do
     # octave 5
   -- lead1 $ fast 2  $ nok 0 $ cat ["9 0", "2 3 4 5", "6 0", "2 3 4 5", "8 6 4 2"]
 
+all $ id 
+    . lock 1 0
+    -- . lock 0.5 2
+
+    -- . (inside 2 . whenmod 8 7) (lock (1/4) 2)
+
+  -- . (inside 2 . whenmod 8 7) (lock (1/8) 1.5)
+  -- . (inside 2 . whenmod 8 7) (lock (1/8) 0.25)
+  -- . (inside 2 . whenmod 8 6) (lock (1/2) 3.5)
+
+mt $ "~@3 [~ 0]"
+
 do
   rs silence
   sd
@@ -59,7 +71,7 @@ do
     # octave 4
 
 do
-  -- reface
+  -- @name full
   bd $ "<[13!2 [~@3 13]@2] [~ 13 ~@1.5 13@0.5] [13!2 ~ [~ 13]]>" # amp 0.55
   sd $ stack ["[~ 20]" # amp 0.6, degradeBy 0.3 $ f4 $ chop "<1 [1|2] 1 1>" $ press $ "0" # amp (range 0.1 0.2 rand)]
   ch silence

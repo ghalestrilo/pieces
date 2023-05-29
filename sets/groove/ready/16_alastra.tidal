@@ -26,6 +26,16 @@ do
     # octave 5
 
 
+  all
+    $ byshuf (shuffle "[[1 4@3]*2 | 1 4@7]" . chop "1 [1|2]@3")
+    . byacc (chop 2)
+    -- . byacc press
+    -- . (inside 2 . whenmod 8 7) (lock (1/8) 1)
+    -- . (inside 2 . whenmod 8 7) (lock (cat [1/8, 1/16]) 1.75)
+    -- . slow 2
+    -- . lock 2 0
+    -- . lock 0.5 0.5
+    -- . lock 0.5 1.5
 
 
 do
@@ -114,7 +124,7 @@ do
 --   rs $ shuffle "^drumshuf" $ chop 2 $ "[<0 ~> ~ ~ ~]*2" # amp 0.3
 --   -- bd $ shuffle "^drumshuf" $ chop 2 $ "[0@7 0 . [~ 0]!4]/2"
 --   bd $ shuffle "^drumshuf" $ chop 2 $ "[~ 0]*4"
---   ch $ shuffle "^drumshuf" $ chop 2 $ "0*8" # amp "[0.45 0.25]*4" # sus 0.1
+  ch $ shuffle "^drumshuf" $ chop 2 $ "0*8" # amp "[0.45 0.25]*4" # sus 0.1
 --   oh silence
 
 do

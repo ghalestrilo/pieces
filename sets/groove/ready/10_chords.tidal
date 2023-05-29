@@ -13,18 +13,13 @@ do
   bank "mc" 24
   -- trbank 9
   setcps (130/120/2)
-  
+
   all
     $ slow 2
     . byshuf (shuffle "^shuf")
     . byacc (chop "[16|8|4]" . (|* amp 0.3))
     -- . someCyclesBy 1 (lock (1/4) 2)
     -- . someCyclesBy 0.5 (lock (1/8) 0.5)
-
-  all
-    $ f2
-    . byshuf (shuffle "^shuf")
-    . byacc (chop "[16|8|4]" . (|* amp 0.3))
 
 
 -- do
@@ -37,7 +32,7 @@ do
 
 do
   resetCycles
-  setF "shuf" "1 2@2 1"
+  setF "shuf" "1 4@2 1"
   hush
   -- @section chords (mm)
   setI "base" "0"

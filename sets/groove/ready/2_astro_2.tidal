@@ -16,9 +16,9 @@ all
   -- . (inside 2 . whenmod 8 7) (lock (1/4) 1.5)
   -- . (inside 2 . whenmod 8 7) (lock (1/8) 1.5)
   -- . (inside 2 . whenmod 8 7) (lock (1/8) 0.25)
-  . (inside 2 . whenmod 8 6) (lock (1/2) 3.5)
+  -- . (inside 2 . whenmod 8 6) (lock (1/2) 3.5)
   -- . (# sus 0.15)
-  -- . lock 2 0
+  . lock 2 0
   -- . lock 0.25 3.5
   -- . lock 0.25 0
   -- . (# amp 0.25)
@@ -67,7 +67,7 @@ do
   -- @name drums
   ch $ fast 8
     $ byshuf (chop "2 1") $ n "0*2"
-    # amp "<0.42 0.33>"
+    # amp "[0.5 0.3]*2"
 
 do
   -- @name preface
@@ -269,6 +269,7 @@ do
     , k 0 $ "[-3,0,4,7]" |+ 2
     , k 0 $ "[0,2,3 4,7 5]" |+ 1
     , k 1 $ "[0,2 3,5 4,7 6]" |- 5
+
     ] # amp 0.4 # octave 5
   keys . f2
     $ ((1 / 8) <~)
@@ -278,6 +279,7 @@ do
     , "1@2 2 3 1@2 2 3"
     , "0@2 1 2 -1@2 1 2"
     ]
+
   lead2
     $ fast 2
     $ (# octave 5)
@@ -299,10 +301,12 @@ do
   bd $ "0 ~ ~ ~ 0 ~ 0 ~ ~ ~ 0 ~ 0 ~ ~ ~" # amp 0.48
   sd $ "~ ~ ~ 0 ~ ~ ~ ~ ~ 0 ~ ~ ~ ~ ~ 0"
   rc $ fast 4 $ n "0*2" # amp "0.45 0.42"
+
   ch $ fast 4
     $ n "0 0 0*2 0"
     # amp "<0.42 0.33>"
     # sus (rarely (const "6 0.5@3") 0.5 |/ 10)
+
   setI "shuf" "[1 [8|16]!3]*2"
   ht silence
 
@@ -319,4 +323,4 @@ do
 all
   $ swingBy (1/8) 8
   . byshuf (shuffle "^shuf")
-  . byacc (chop "[16|8|4]" . (|* amp 0.3))
+  . byacc (chop "1 [16|8|4]" . (|* amp 0.3))
